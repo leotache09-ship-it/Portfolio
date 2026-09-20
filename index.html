@@ -144,14 +144,6 @@
   }
   .section-sub{ max-width: 52ch; color: var(--ink-soft); font-size:1rem; margin:0 0 calc(var(--unit)*3); }
 
-  .tv-card{ display:block; min-width:0; }
-  .tv-card .head{ display:flex; align-items:baseline; gap:10px; margin: 14px 0 8px; }
-  .tv-card .idx{ font-family:"Roboto Mono"; font-size:.74rem; color: var(--blue); flex:none; }
-  .tv-card h3{ font-weight:700; font-size: clamp(1.02rem,1.5vw,1.22rem); line-height:1.2; }
-  .tv-card .meta{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
-  .tv-card .tag{ font-family:"Roboto Mono"; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:4px 8px; border-radius:2px; border:1px solid var(--ink-faint); color: var(--ink-soft); }
-  .tv-card .tag.client{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); }
-  .tv-card .year{ font-family:"Roboto Mono"; font-size:.7rem; color: var(--ink-faint); }
 
   .shots{ display:flex; gap: var(--unit); flex-wrap:wrap; }
   .shots .frame{
@@ -220,37 +212,93 @@
     .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
   }
 
-  /* ================= TRAVAUX — par famille, glissement horizontal lié au scroll ================= */
-  #travaux{ border-top:1px solid var(--line); padding-bottom: calc(var(--unit)*2); }
-  .travaux-intro{
-    max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
-    padding: calc(var(--unit)*6) var(--gutter) calc(var(--unit)*2);
+  /* ================= TRAVAUX — carré d'entrée + défilement linéaire par famille ================= */
+  #travaux{ position:relative; }
+  .tv3-track{ position:relative; height: 210svh; }
+  .tv3-stage{
+    position:sticky; top:0; height:100svh; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--tv3-bg, #0D0D0F);
+    transition: background-color .9s cubic-bezier(.22,.61,.36,1);
+    color:#fff;
   }
 
-  .tv-category{ padding: calc(var(--unit)*3.5) 0 calc(var(--unit)*5); overflow:hidden; }
-  .tv-cat-head{
-    max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
-    padding: 0 var(--gutter) calc(var(--unit)*1.75);
+  .tv3-square{
+    position:absolute; left:50%; top:50%; width:120px; height:120px; margin:-60px 0 0 -60px;
+    border-radius:20px; background:#189CD8; z-index:4;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    transform: scale(1); opacity:1;
+    transition: transform 1s cubic-bezier(.65,0,.35,1), border-radius 1s cubic-bezier(.65,0,.35,1), opacity .35s linear;
   }
-  .tv-cat-num{ font-family:"Roboto Mono"; font-size:.78rem; color: var(--blue); display:block; margin-bottom:10px; }
-  .tv-cat-title{
-    font-family:"Archivo Black"; text-transform:uppercase;
-    font-size: clamp(2.2rem, 6.4vw, 5rem); line-height:.92; letter-spacing:-.005em; max-width:16ch;
+  .tv3-square.is-full{ transform: scale(var(--tv3-scale,40)); border-radius:0; }
+  .tv3-square.is-hidden{ opacity:0; }
+  .tv3-square-label{
+    font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
+    font-size: clamp(.7rem,2.2vw,.9rem); line-height:1.2; padding:0 12px;
+    transition: opacity .3s linear;
   }
+  .tv3-square.is-growing .tv3-square-label, .tv3-square.is-full .tv3-square-label{ opacity:0; }
 
-  .tv-cat-row{
-    max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
+  .tv3-line{
+    position:absolute; left:8%; right:8%; top:50%; height:1px; background:#fff;
+    transform: scaleX(0); opacity:0; z-index:5; pointer-events:none;
+    transition: transform .6s cubic-bezier(.22,.61,.36,1), opacity .6s linear;
+  }
+  .tv3-line.is-on{ transform: scaleX(1); opacity:.9; }
+
+  .tv3-slides{ position:relative; width:100%; height:100%; z-index:2; }
+  .tv3-slide{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
     padding: 0 var(--gutter);
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
-    gap: calc(var(--unit)*3) calc(var(--unit)*1.6); align-items:start;
-    will-change: transform;
+    opacity:0; pointer-events:none;
+    text-decoration:none; color:inherit;
+    transition: opacity .68s cubic-bezier(.22,.61,.36,1), transform .68s cubic-bezier(.22,.61,.36,1);
+  }
+  .tv3-slide.is-active{ opacity:1; transform:none !important; pointer-events:auto; }
+
+  .tv3-slide-title{
+    font-family:"Archivo Black"; text-transform:uppercase; text-align:center;
+    font-size: clamp(2.3rem,7vw,5.4rem); line-height:.95; max-width:18ch;
+  }
+
+  .tv3-slide-project{
+    display:flex; align-items:center; gap: calc(var(--gutter)*1.3);
+    max-width: calc(var(--tile)*16); width:100%; justify-content:center;
+    text-decoration:none; color:inherit;
+  }
+  .tv3-project-media{ display:block; flex:none; width:min(38vw,320px); aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.08); }
+  .tv3-project-media img{ width:100%; height:100%; object-fit:cover; }
+  .tv3-project-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.4rem,3.4vw,2.6rem); line-height:1.03; }
+  .tv3-project-date{ display:block; margin-top:10px; font-family:"Roboto Mono"; font-size:.76rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
+
+  .tv3-arrow{
+    position:absolute; top:50%; margin-top:-22px; width:44px; height:44px; border-radius:50%;
+    border:1px solid #fff; background:transparent; color:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:6;
+    opacity:.65; transition: opacity .3s, background-color .3s, color .3s;
+  }
+  .tv3-arrow:hover{ opacity:1; background:#fff; color:#000; }
+  .tv3-arrow[disabled]{ opacity:.15; pointer-events:none; }
+  .tv3-arrow--prev{ left: var(--gutter); }
+  .tv3-arrow--next{ right: var(--gutter); }
+  .tv3-arrow svg{ width:16px; height:16px; }
+
+  .tv3-noscript{ padding-top: calc(var(--unit)*4); padding-bottom: calc(var(--unit)*4); }
+  .tv3-noscript ul{ list-style:none; margin: var(--unit) 0 0; padding:0; display:grid; gap:10px; }
+  .tv3-noscript a{ text-decoration:none; }
+  .tv3-noscript a:hover{ color: var(--blue); }
+
+  @media (max-width:760px){
+    .tv3-slide-project{ flex-direction:column; gap: calc(var(--unit)*1.5); }
+    .tv3-project-media{ width:min(64vw,300px); }
+    .tv3-arrow{ width:38px; height:38px; }
   }
 
   @media (prefers-reduced-motion: reduce){
-    .tv-cat-row{ transform:none !important; opacity:1 !important; }
-  }
-  @media (max-width:620px){
-    .tv-cat-row{ grid-template-columns: 1fr; }
+    .tv3-square{ transition: opacity .2s linear; }
+    .tv3-line{ transition: opacity .2s linear; }
+    .tv3-slide{ transition: opacity .2s linear; }
+    .tv3-stage{ transition: background-color .2s linear; }
   }
 
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
@@ -414,192 +462,41 @@
   </section>
 
   <section id="travaux">
-    <div class="travaux-intro pre-reveal">
-      <p class="eyebrow"><span class="num">01 à 11</span></p>
-      <h2 class="section-title balance">Mes travaux.</h2>
-      <p class="section-sub">Onze projets, cinq familles : clients réels, marques fictives, affiches, sport design, édition.</p>
-    </div>
+    <div class="tv3-track">
+      <div class="tv3-stage" id="tv3Stage">
+        <div class="tv3-square" id="tv3Square">
+          <span class="tv3-square-label">Mes travaux.</span>
+        </div>
+        <div class="tv3-line" id="tv3Line" aria-hidden="true"></div>
+        <div class="tv3-slides" id="tv3Slides"></div>
 
-    <div class="tv-category" data-dir="-1">
-      <div class="tv-cat-head">
-        <span class="tv-cat-num mono">01 – 03</span>
-        <h3 class="tv-cat-title balance">Des vrais clients.</h3>
-      </div>
-      <div class="tv-cat-row">
-        <article class="tv-card" id="chearn" style="--glow:#e7010e">
-          <div class="shots">
-              <a class="frame peek-frame" href="chearn.html" style="--ar:1080/1380">
-              <img src="assets/chearn/cover.jpg" alt="Chearn, identité visuelle complète" loading="lazy">
-              <img class="peek" src="assets/chearn/flatlay.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">01</span><h3>Chearn</h3></div>
-          <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Affiche</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
-        </article>
-
-        <article class="tv-card" id="afmbb" style="--glow:#c71517">
-          <div class="shots">
-              <a class="frame peek-frame" href="afmbb.html" style="--ar:900/1150">
-              <img src="assets/afmbb/logo.jpg" alt="Logo AFMBB" loading="lazy">
-              <img class="peek" src="assets/afmbb/flyer.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">02</span><h3>AFMBB</h3></div>
-          <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Flyer</span><span class="year">Avril 2026</span></div>
-        </article>
-
-        <article class="tv-card" id="partie-ailleurs" style="--glow:#41bcda">
-          <div class="shots">
-              <a class="frame peek-frame" href="partie-ailleurs.html" style="--ar:878/1122">
-              <img src="assets/partie-ailleurs/thumb.jpg" alt="Affiche La Partie d'Ailleurs sur un panneau urbain" loading="lazy">
-              <img class="peek" src="assets/partie-ailleurs/rollup-bar.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">03</span><h3>La Partie d'Ailleurs</h3></div>
-          <div class="meta"><span class="tag client">Client réel</span><span class="tag">Affiche</span><span class="tag">Roll-up</span><span class="tag">Template</span><span class="year">Mars 2026</span></div>
-        </article>
+        <button class="tv3-arrow tv3-arrow--prev" type="button" aria-label="Précédent">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="tv3-arrow tv3-arrow--next" type="button" aria-label="Suivant">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </div>
 
-    <div class="tv-category" data-dir="1">
-      <div class="tv-cat-head">
-        <span class="tv-cat-num mono">04 – 05</span>
-        <h3 class="tv-cat-title balance">Marques fictives.</h3>
+    <noscript>
+      <div class="tv3-noscript block">
+        <h2 class="section-title balance">Mes travaux.</h2>
+        <ul>
+          <li><a href="chearn.html">Chearn</a></li>
+          <li><a href="afmbb.html">AFMBB</a></li>
+          <li><a href="partie-ailleurs.html">La Partie d'Ailleurs</a></li>
+          <li><a href="richol.html">Richol</a></li>
+          <li><a href="meublon.html">Meublon</a></li>
+          <li><a href="cervin.html">Cervin, Flow State</a></li>
+          <li><a href="fragments.html">Fragments of Silence</a></li>
+          <li><a href="riat.html">Damien Riat</a></li>
+          <li><a href="rogers.html">Morgan Rogers</a></li>
+          <li><a href="serigraphie.html">Sérigraphie &amp; Tampographie</a></li>
+          <li><a href="losangeles.html">Magazine Los Angeles</a></li>
+        </ul>
       </div>
-      <div class="tv-cat-row">
-        <article class="tv-card" id="richol" style="--glow:#db6661">
-          <div class="shots">
-              <a class="frame peek-frame" href="richol.html" style="--ar:1080/1380">
-              <img src="assets/richol/fraise-can.jpg" alt="Charte graphique Richol, canette Richol Fraise" loading="lazy">
-              <img class="peek" src="assets/richol/limoncello-photo.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">04</span><h3>Richol</h3></div>
-          <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Charte graphique</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
-        </article>
-
-        <article class="tv-card" id="meublon" style="--glow:#e0231a">
-          <div class="shots">
-              <a class="frame video-frame" href="meublon.html" style="--ar:1080/1380">
-              <img src="assets/meublon/logo.jpg" alt="Meublon, logotype et baseline « Le mobilier en carton qui a du caractère »" loading="lazy">
-              <video data-start="6.6" poster="assets/meublon/poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/meublon/meublon.mp4" type="video/mp4"></video>
-              <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">05</span><h3>Meublon</h3></div>
-          <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="tag">Vidéo</span><span class="year">Sept. 2026</span></div>
-        </article>
-      </div>
-    </div>
-
-    <div class="tv-category" data-dir="-1">
-      <div class="tv-cat-head">
-        <span class="tv-cat-num mono">06 – 07</span>
-        <h3 class="tv-cat-title balance">Affiches.</h3>
-      </div>
-      <div class="tv-cat-row">
-        <article class="tv-card" id="cervin" style="--glow:#b7260e">
-          <div class="shots">
-              <a class="frame video-frame" href="cervin.html" style="--ar:2480/3508">
-              <img src="assets/cervin/poster.jpg" alt="Affiche Flow State, le Cervin" loading="lazy">
-              <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/cervin/cervin.mp4" type="video/mp4"></video>
-              <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">06</span><h3>Cervin, Flow State</h3></div>
-          <div class="meta"><span class="tag">Affiche</span><span class="tag">Vidéo</span><span class="year">Juin 2026</span></div>
-        </article>
-
-        <article class="tv-card" id="fragments" style="--glow:#ca0a54">
-          <div class="shots">
-              <a class="frame peek-frame" href="fragments.html" style="--ar:2480/3508">
-              <img src="assets/fragments/mockup.jpg" alt="Affiche Fragments of Silence affichée sur un panneau urbain" loading="lazy">
-              <img class="peek" src="assets/fragments/affiche-fr.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">07</span><h3>Fragments of Silence</h3></div>
-          <div class="meta"><span class="tag">Affiche</span><span class="year">Mars 2026</span></div>
-        </article>
-      </div>
-    </div>
-
-    <div class="tv-category" data-dir="1">
-      <div class="tv-cat-head">
-        <span class="tv-cat-num mono">08 – 09</span>
-        <h3 class="tv-cat-title balance">Sport design.</h3>
-      </div>
-      <div class="tv-cat-row">
-        <article class="tv-card" id="riat" style="--glow:#e02222">
-          <div class="shots">
-              <a class="frame peek-frame" href="riat.html" style="--ar:1417/1811">
-              <img src="assets/riat/poster.jpg" alt="Affiche sport design Damien Riat, capitaine du Lausanne HC" loading="lazy">
-              <img class="peek" src="assets/riat/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">08</span><h3>Damien Riat</h3></div>
-          <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
-        </article>
-
-        <article class="tv-card" id="rogers" style="--glow:#2f6fd0">
-          <div class="shots">
-              <a class="frame peek-frame" href="rogers.html" style="--ar:1134/1417">
-              <img src="assets/rogers/poster.jpg" alt="Affiche sport design Morgan Rogers, football" loading="lazy">
-              <img class="peek" src="assets/rogers/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">09</span><h3>Morgan Rogers</h3></div>
-          <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
-        </article>
-      </div>
-    </div>
-
-    <div class="tv-category" data-dir="-1">
-      <div class="tv-cat-head">
-        <span class="tv-cat-num mono">10 – 11</span>
-        <h3 class="tv-cat-title balance">Édition &amp; print.</h3>
-      </div>
-      <div class="tv-cat-row">
-        <article class="tv-card" id="serigraphie" style="--glow:#e2963e">
-          <div class="shots">
-              <a class="frame peek-frame" href="serigraphie.html" style="--ar:1500/1125">
-              <img src="assets/serigraphie/cover-mockup.jpg" alt="Le cahier Sérigraphie et Tampographie" loading="lazy">
-              <img class="peek" src="assets/serigraphie/spread-bleu.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">10</span><h3>Sérigraphie &amp; Tampographie</h3></div>
-          <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Juin 2026</span></div>
-        </article>
-
-        <article class="tv-card" id="losangeles" style="--glow:#189cd8">
-          <div class="shots">
-              <a class="frame peek-frame" href="losangeles.html" style="--ar:1500/1125">
-              <img src="assets/losangeles/mockup-histoire.jpg" alt="Guide touristique Los Angeles, livre ouvert" loading="lazy">
-              <img class="peek" src="assets/losangeles/grid.jpg" alt="" loading="lazy" aria-hidden="true">
-              <span class="peek-veil" aria-hidden="true"></span>
-              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-              </a>
-          </div>
-          <div class="head"><span class="idx">11</span><h3>Magazine Los Angeles</h3></div>
-          <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Mars 2026</span></div>
-        </article>
-      </div>
-    </div>
+    </noscript>
   </section>
 
   <section id="parcours">
@@ -940,5 +837,301 @@
       }
     });
   });
+})();
+</script>
+
+<script>
+/*
+ * ============================================================
+ * TRAVAUX — carré d'entrée, puis défilement linéaire par famille
+ * ============================================================
+ * Pour ajouter/retirer/réordonner un projet ou une famille, modifier
+ * uniquement TRAVAUX_FAMILIES ci-dessous (couleur, titre, sens
+ * d'entrée/sortie, projets). Le reste (carré qui grandit, couleur de
+ * fond, glissement des titres/projets, trait de transition, nav
+ * clavier/molette/glisser/tactile) est un système générique qui
+ * s'applique à n'importe quel nombre de familles/projets.
+ *
+ * dir 'rtl' = la famille entre par la droite et sort par la gauche.
+ * dir 'ltr' = la famille entre par la gauche et sort par la droite.
+ */
+var TRAVAUX_FAMILIES = [
+  {
+    title: 'Des vrais clients.', color: '#189CD8', dir: 'rtl',
+    projects: [
+      { name:'Chearn', href:'chearn.html', img:'assets/chearn/cover.jpg', ar:'1080/1380', date:'Avril 2026' },
+      { name:'AFMBB', href:'afmbb.html', img:'assets/afmbb/logo.jpg', ar:'900/1150', date:'Avril 2026' },
+      { name:"La Partie d'Ailleurs", href:'partie-ailleurs.html', img:'assets/partie-ailleurs/thumb.jpg', ar:'878/1122', date:'Mars 2026' }
+    ]
+  },
+  {
+    title: 'Marques fictives.', color: '#EE8B2D', dir: 'ltr',
+    projects: [
+      { name:'Richol', href:'richol.html', img:'assets/richol/fraise-can.jpg', ar:'1080/1380', date:'Avril 2026' },
+      { name:'Meublon', href:'meublon.html', img:'assets/meublon/poster.jpg', ar:'1080/1380', date:'Sept. 2026' }
+    ]
+  },
+  {
+    title: 'Affiches.', color: '#2FAE66', dir: 'rtl',
+    projects: [
+      { name:'Cervin, Flow State', href:'cervin.html', img:'assets/cervin/poster.jpg', ar:'2480/3508', date:'Juin 2026' },
+      { name:'Fragments of Silence', href:'fragments.html', img:'assets/fragments/mockup.jpg', ar:'2480/3508', date:'Mars 2026' }
+    ]
+  },
+  {
+    title: 'Sport design.', color: '#D9A62E', dir: 'ltr',
+    projects: [
+      { name:'Damien Riat', href:'riat.html', img:'assets/riat/poster.jpg', ar:'1417/1811', date:'Sept. 2026' },
+      { name:'Morgan Rogers', href:'rogers.html', img:'assets/rogers/poster.jpg', ar:'1134/1417', date:'Sept. 2026' }
+    ]
+  },
+  {
+    title: 'Édition &amp; print.', color: '#0D0D0F', dir: 'rtl',
+    projects: [
+      { name:'Sérigraphie &amp; Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', ar:'1500/1125', date:'Juin 2026' },
+      { name:'Magazine Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', ar:'1500/1125', date:'Mars 2026' }
+    ]
+  }
+];
+
+(function(){
+  var section = document.getElementById('travaux');
+  var track = section && section.querySelector('.tv3-track');
+  var stage = document.getElementById('tv3Stage');
+  var square = document.getElementById('tv3Square');
+  var line = document.getElementById('tv3Line');
+  var slidesWrap = document.getElementById('tv3Slides');
+  if (!section || !track || !stage || !square || !slidesWrap) return;
+
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var BASE_BG = '#0D0D0F';
+
+  /* ---- aplati les familles en une piste linéaire de slides (titre, puis ses projets) ---- */
+  var slides = [];
+  TRAVAUX_FAMILIES.forEach(function(fam){
+    slides.push({ type:'title', title: fam.title, color: fam.color, dir: fam.dir });
+    fam.projects.forEach(function(p){
+      slides.push({ type:'project', project: p, color: fam.color, dir: fam.dir });
+    });
+  });
+
+  /* ---- construit le DOM à partir des données ---- */
+  slides.forEach(function(s){
+    var el = document.createElement(s.type === 'project' ? 'a' : 'div');
+    el.className = 'tv3-slide';
+    if (s.type === 'title'){
+      el.innerHTML = '<h3 class="tv3-slide-title balance">' + s.title + '</h3>';
+    } else {
+      el.href = s.project.href;
+      el.innerHTML =
+        '<span class="tv3-slide-project">' +
+          '<span class="tv3-project-media" style="--ar:' + s.project.ar + '"><img src="' + s.project.img + '" alt="' + s.project.name.replace(/(<([^>]+)>)/gi,'') + '" loading="lazy"></span>' +
+          '<span><span class="tv3-project-name">' + s.project.name + '</span><span class="tv3-project-date">' + s.project.date + '</span></span>' +
+        '</span>';
+    }
+    slidesWrap.appendChild(el);
+  });
+  var slideEls = Array.prototype.slice.call(slidesWrap.children);
+  var prevBtn = section.querySelector('.tv3-arrow--prev');
+  var nextBtn = section.querySelector('.tv3-arrow--next');
+
+  var idx = -1; /* -1 = carré au repos, 0..N-1 = slides */
+  var animating = false;
+
+  function sign(dir, edge){
+    if (dir === 'rtl') return edge === 'enter' ? 1 : -1;
+    return edge === 'enter' ? -1 : 1;
+  }
+  function setBg(hex){ stage.style.setProperty('--tv3-bg', hex); }
+  function updateArrows(){
+    if (prevBtn) prevBtn.disabled = (idx === -1);
+    if (nextBtn) nextBtn.disabled = (idx === slides.length - 1);
+  }
+
+  function computeScale(){
+    var vw = window.innerWidth, vh = window.innerHeight;
+    square.style.setProperty('--tv3-scale', String(Math.ceil(Math.sqrt(vw*vw+vh*vh) / 120) + 2));
+  }
+  computeScale();
+  window.addEventListener('resize', computeScale);
+
+  /* ---- transition normale entre deux slides (même famille ou changement de famille) ---- */
+  function transitionTo(newIdx){
+    if (animating || newIdx === idx || newIdx < 0 || newIdx >= slides.length) return;
+    var forward = newIdx > idx;
+    var oldEl = slideEls[idx], newEl = slideEls[newIdx];
+    var oldS = slides[idx], newS = slides[newIdx];
+    animating = true;
+
+    if (reducedMotion){
+      oldEl.classList.remove('is-active');
+      newEl.classList.add('is-active');
+      if (newS.color !== oldS.color) setBg(newS.color);
+      idx = newIdx; animating = false; updateArrows();
+      return;
+    }
+
+    var DIST = 64;
+    var oldExitSign = forward ? sign(oldS.dir,'exit') : sign(oldS.dir,'enter');
+    var newEnterSign = forward ? sign(newS.dir,'enter') : sign(newS.dir,'exit');
+
+    newEl.style.transform = 'translateX(' + (newEnterSign * DIST) + 'px)';
+    oldEl.style.transform = 'translateX(' + (oldExitSign * DIST) + 'px)';
+    oldEl.classList.remove('is-active');
+
+    if (newS.color !== oldS.color){
+      setBg(newS.color);
+      line.classList.add('is-on');
+      setTimeout(function(){ line.classList.remove('is-on'); }, 620);
+    }
+
+    void newEl.offsetWidth;
+    newEl.classList.add('is-active');
+
+    setTimeout(function(){
+      oldEl.style.transform = '';
+      idx = newIdx;
+      animating = false;
+      updateArrows();
+    }, 700);
+  }
+
+  /* ---- ouverture : le petit carré bleu grandit jusqu'à couvrir l'écran, devient le
+     fond de la première famille, puis s'efface pour révéler « Des vrais clients. » ---- */
+  function enterFromSquare(){
+    if (animating) return;
+    animating = true;
+    square.classList.add('is-growing');
+    requestAnimationFrame(function(){ square.classList.add('is-full'); });
+
+    setTimeout(function(){ setBg(slides[0].color); }, 920);
+    setTimeout(function(){ square.classList.add('is-hidden'); }, 960);
+    setTimeout(function(){
+      square.classList.remove('is-growing','is-full');
+      slideEls[0].classList.add('is-active');
+    }, 1000);
+    setTimeout(function(){
+      idx = 0; animating = false; updateArrows();
+    }, 1350);
+  }
+
+  /* ---- retour : la première famille sort, le carré replein l'écran (même bleu, donc
+     invisible) puis se rétracte en révélant le fond sombre du repos ---- */
+  function exitToSquare(){
+    if (animating) return;
+    animating = true;
+    slideEls[0].classList.remove('is-active');
+    square.classList.remove('is-hidden');
+    square.classList.add('is-full');
+    void square.offsetWidth;
+    setBg(BASE_BG);
+    setTimeout(function(){ square.classList.remove('is-full'); }, 60);
+    setTimeout(function(){ idx = -1; animating = false; updateArrows(); }, 1120);
+  }
+
+  function step(goingNext){
+    if (animating) return;
+    if (goingNext){
+      if (idx === -1) enterFromSquare();
+      else if (idx < slides.length - 1) transitionTo(idx + 1);
+    } else {
+      if (idx === 0) exitToSquare();
+      else if (idx > -1) transitionTo(idx - 1);
+    }
+  }
+
+  /* ---- init ---- */
+  updateArrows();
+
+  /* ---- la scène n'intercepte le scroll que pendant qu'elle est épinglée en haut du
+     viewport, et seulement s'il reste une étape à jouer dans ce sens ; sinon le scroll
+     natif reprend la main et la section sort normalement de l'écran ---- */
+  function pinned(){
+    var r = track.getBoundingClientRect();
+    return r.top <= 1 && r.bottom > window.innerHeight;
+  }
+  function willCapture(goingNext){
+    if (!pinned()) return false;
+    return goingNext ? idx < slides.length - 1 : idx > -1;
+  }
+
+  var wheelFreeUntil = 0;
+  window.addEventListener('wheel', function(e){
+    var goingNext = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY > 0 : e.deltaX > 0;
+    if (!willCapture(goingNext)) return;
+    var now = Date.now();
+    if (now < wheelFreeUntil){ e.preventDefault(); return; }
+    e.preventDefault();
+    wheelFreeUntil = now + (idx === -1 ? 1400 : 780);
+    step(goingNext);
+  }, { passive:false });
+
+  window.addEventListener('keydown', function(e){
+    var forward = e.key === 'ArrowRight' || e.key === 'ArrowDown';
+    var back = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+    if (!forward && !back) return;
+    if (!willCapture(forward)) return;
+    e.preventDefault();
+    step(forward);
+  });
+
+  var touchX = 0, touchY = 0, touchAxis = null, touchOn = false;
+  stage.addEventListener('touchstart', function(e){
+    if (!pinned()){ touchOn = false; return; }
+    var t = e.touches[0];
+    touchX = t.clientX; touchY = t.clientY; touchAxis = null; touchOn = true;
+  }, { passive:true });
+
+  stage.addEventListener('touchmove', function(e){
+    if (!touchOn) return;
+    var t = e.touches[0];
+    var dx = t.clientX - touchX, dy = t.clientY - touchY;
+    if (touchAxis === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)){
+      touchAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    }
+    if (touchAxis && willCapture((touchAxis === 'x' ? dx : dy) < 0)) e.preventDefault();
+  }, { passive:false });
+
+  stage.addEventListener('touchend', function(e){
+    if (!touchOn) return;
+    touchOn = false;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - touchX, dy = t.clientY - touchY;
+    var delta = touchAxis === 'x' ? dx : dy;
+    if (Math.abs(delta) < 42) return;
+    var goingNext = delta < 0;
+    if (willCapture(goingNext)) step(goingNext);
+  }, { passive:true });
+
+  var dragX = null;
+  stage.addEventListener('pointerdown', function(e){
+    if (e.pointerType === 'touch' || !pinned()) return;
+    dragX = e.clientX;
+  });
+  window.addEventListener('pointerup', function(e){
+    if (dragX === null) return;
+    var dx = e.clientX - dragX;
+    dragX = null;
+    if (Math.abs(dx) < 70) return;
+    var goingNext = dx < 0;
+    if (willCapture(goingNext)) step(goingNext);
+  });
+
+  if (prevBtn) prevBtn.addEventListener('click', function(){ step(false); });
+  if (nextBtn) nextBtn.addEventListener('click', function(){ step(true); });
+
+  /* réinitialise la scène quand on revient au début via le menu */
+  var navLink = document.querySelector('header.nav a[href="#travaux"]');
+  if (navLink){
+    navLink.addEventListener('click', function(){
+      if (idx !== -1){
+        slideEls[idx].classList.remove('is-active');
+        square.classList.remove('is-growing','is-full','is-hidden');
+        idx = -1; animating = false;
+        setBg(BASE_BG);
+        updateArrows();
+      }
+    });
+  }
 })();
 </script>
