@@ -247,12 +247,16 @@
   .tv-cat-arrow{ flex:none; width:clamp(36px,5vw,56px); height:auto; opacity:.85; }
   .tv-cat-arrow--rev{ transform:scaleX(-1); }
 
-  .tv-card{ flex:0 0 auto; width:min(52vw,300px); text-decoration:none; color:inherit; }
+  .tv-card{
+    flex:0 0 auto; width:min(66vw,440px); text-decoration:none; color:inherit;
+    display:flex; align-items:center; gap: calc(var(--gutter)*.6);
+  }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
-  .tv-card-media{ display:block; width:100%; aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
+  .tv-card-info{ flex:1 1 auto; min-width:0; }
+  .tv-card-media{ display:block; flex:none; width:min(36vw,190px); aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
   .tv-card-media img{ width:100%; height:100%; object-fit:cover; }
-  .tv-card-name{ display:block; margin-top:12px; font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1rem,1.6vw,1.3rem); line-height:1.1; }
-  .tv-card-date{ display:block; margin-top:4px; font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
+  .tv-card-name{ display:block; font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1rem,1.8vw,1.4rem); line-height:1.12; }
+  .tv-card-date{ display:block; margin-top:10px; font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
 
   .tv3-noscript{ padding-top: calc(var(--unit)*4); padding-bottom: calc(var(--unit)*4); }
   .tv3-noscript ul{ list-style:none; margin: var(--unit) 0 0; padding:0; display:grid; gap:10px; }
@@ -260,7 +264,8 @@
   .tv3-noscript a:hover{ color: var(--blue); }
 
   @media (max-width:640px){
-    .tv-card{ width:68vw; }
+    .tv-card{ width:84vw; }
+    .tv-card-media{ width:38vw; }
     .tv-title-card{ width:84vw; }
     .tv-cat-arrow{ width:36px; }
   }
@@ -832,16 +837,18 @@ var TRAVAUX_FAMILIES = [
 
     var cards = fam.projects.map(function(p){
       return '<a class="tv-card" href="' + p.href + '">' +
+          '<span class="tv-card-info">' +
+            '<span class="tv-card-name">' + p.name + '</span>' +
+            '<span class="tv-card-date">' + p.date + '</span>' +
+          '</span>' +
           '<span class="tv-card-media" style="--ar:' + p.ar + '"><img src="' + p.img + '" alt="' + p.name.replace(/(<([^>]+)>)/gi,'') + '" loading="lazy" draggable="false"></span>' +
-          '<span class="tv-card-name">' + p.name + '</span>' +
-          '<span class="tv-card-date">' + p.date + '</span>' +
         '</a>';
     }).join('');
 
     var titleCard =
       '<div class="tv-title-card">' +
-        '<h2 class="tv-cat-title balance">' + fam.title + '</h2>' +
         ARROW.replace('tv-cat-arrow"', 'tv-cat-arrow' + (dir === -1 ? ' tv-cat-arrow--rev' : '') + '"') +
+        '<h2 class="tv-cat-title balance">' + fam.title + '</h2>' +
       '</div>';
 
     var cat = document.createElement('div');
