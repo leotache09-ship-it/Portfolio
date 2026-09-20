@@ -87,15 +87,18 @@
   .cover-role{
     margin: calc(var(--unit)*1.2) 0 0; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-soft);
   }
+  /* carré décoratif (pas un bouton, pointer-events:none) : à moitié coupé par
+     le bas de l'écran au repos, il grandit et prend tout le fond au scroll
+     (voir le script dédié) — jamais de transition CSS ici, tout est piloté
+     image par image pour rester exactement synchronisé avec le scroll. */
   .cover-hint{
-    position:absolute; left:50%; bottom: clamp(14px,4vh,40px); transform:translateX(-50%);
+    position:fixed; left:50%; bottom: calc(clamp(88px,11vw,116px) / -2);
     width: clamp(88px,11vw,116px); height: clamp(88px,11vw,116px); border-radius:8px;
-    background: var(--blue); text-decoration:none;
+    background: var(--blue); pointer-events:none; z-index:400;
     display:flex; align-items:center; justify-content:center; text-align:center; padding:0 8px;
     box-shadow: 0 14px 32px rgba(0,0,0,.4);
-    transition: transform .25s cubic-bezier(.2,.7,.2,1);
+    transform: translateX(-50%);
   }
-  .cover-hint:hover{ transform:translateX(-50%) translateY(-4px); }
   .cover-hint span{
     font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
     font-size: clamp(.68rem,1.5vw,.86rem); line-height:1.15;
@@ -120,14 +123,12 @@
     position:relative; z-index:1;
     animation: rise .8s cubic-bezier(.2,.7,.2,1) both;
   }
-  #cover .cover-hint{ z-index:1; animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
   #cover .logo{ animation-delay: 0s; }
   #cover .eyebrow{ animation-delay: .12s; }
   #cover .cover-name{ animation-delay: .22s; }
   #cover .cover-role{ animation-delay: .34s; }
-  #cover .cover-hint{ animation-delay: .6s; }
   @media (prefers-reduced-motion: reduce){
-    #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-role, #cover .cover-hint{ animation:none; }
+    #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-role{ animation:none; }
   }
 
   .eyebrow{
@@ -442,7 +443,7 @@
     <p class="eyebrow">Portfolio</p>
     <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
     <p class="cover-role mono">Étudiant en communication visuelle · CPNV Sainte-Croix</p>
-    <a class="cover-hint" href="#travaux"><span>Mes travaux.</span></a>
+    <div class="cover-hint" id="coverHint"><span>Mes travaux.</span></div>
   </section>
 
   <section id="travaux">
@@ -784,6 +785,43 @@
 
 
 <script>
+/* Carré "Mes travaux." du hero : décoratif, coupé par le bas au repos, il
+   grandit jusqu'à couvrir tout l'écran puis s'efface pendant le premier
+   écran de scroll — piloté en continu par la position de scroll (pas de
+   transition CSS, pas d'étape chronométrée) pour rester exactement
+   synchronisé quelle que soit la vitesse du geste. */
+(function(){
+  var hint = document.getElementById('coverHint');
+  if (!hint) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var MAX_SCALE = 20;
+  function computeScale(){
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var size = hint.getBoundingClientRect().width || 116;
+    MAX_SCALE = Math.sqrt(vw * vw + vh * vh) / size + 2;
+  }
+  computeScale();
+  window.addEventListener('resize', computeScale);
+
+  function tick(){
+    var vh = window.innerHeight;
+    var t = Math.max(0, Math.min(1, window.scrollY / vh));
+    var scale = 1 + t * (MAX_SCALE - 1);
+    hint.style.transform = 'translateX(-50%) scale(' + scale.toFixed(3) + ')';
+    var fadeT = Math.max(0, Math.min(1, (t - 0.7) / 0.3));
+    hint.style.opacity = String(1 - fadeT);
+    hint.style.visibility = fadeT >= 1 ? 'hidden' : 'visible';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+  tick();
+})();
+</script>
+
+
+
+<script>
 /*
  * ============================================================
  * TRAVAUX — une bande empilée par famille
@@ -805,28 +843,28 @@ var TRAVAUX_FAMILIES = [
     ]
   },
   {
-    title: 'Marques fictives.', color: '#EE8B2D',
+    title: 'Marques fictives.', color: '#A855F7',
     projects: [
       { name:'Richol', href:'richol.html', img:'assets/richol/fraise-can.jpg', ar:'1080/1380', date:'Avril 2026' },
       { name:'Meublon', href:'meublon.html', img:'assets/meublon/poster.jpg', ar:'1080/1380', date:'Sept. 2026' }
     ]
   },
   {
-    title: 'Affiches.', color: '#2FAE66',
+    title: 'Affiches.', color: '#E5B800',
     projects: [
       { name:'Flow State', href:'cervin.html', img:'assets/cervin/poster.jpg', ar:'2480/3508', date:'Juin 2026' },
       { name:'Fragments<br>of Silence', href:'fragments.html', img:'assets/fragments/mockup.jpg', ar:'2480/3508', date:'Mars 2026' }
     ]
   },
   {
-    title: 'Sport design.', color: '#D9A62E',
+    title: 'Sport design.', color: '#FF5A1F',
     projects: [
       { name:'Damien Riat', href:'riat.html', img:'assets/riat/poster.jpg', ar:'1417/1811', date:'Sept. 2026' },
       { name:'Morgan Rogers', href:'rogers.html', img:'assets/rogers/poster.jpg', ar:'1134/1417', date:'Sept. 2026' }
     ]
   },
   {
-    title: 'Édition &amp; print.', color: '#0D0D0F',
+    title: 'Édition &amp; print.', color: '#16A085',
     projects: [
       { name:'Sérigraphie &amp;<br>Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', ar:'1500/1125', date:'Juin 2026' },
       { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', ar:'1500/1125', date:'Mars 2026' }
@@ -862,6 +900,10 @@ var TRAVAUX_FAMILIES = [
     var cat = document.createElement('div');
     cat.className = 'tv-cat';
     cat.style.background = fam.color;
+    /* dernière catégorie : texte dans la couleur de l'avant-dernière (Sport design) */
+    if (ci === TRAVAUX_FAMILIES.length - 1){
+      cat.style.color = TRAVAUX_FAMILIES[ci - 1].color;
+    }
     cat.innerHTML =
       '<div class="tv-cat-inner">' +
         '<div class="tv-strip"><div class="tv-strip-row">' + titleCard + arrow + cards + '</div></div>' +
