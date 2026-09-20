@@ -246,7 +246,7 @@
 
   .tv-card{
     flex:0 0 auto; width:min(52vw,300px); scroll-snap-align:start; text-decoration:none; color:inherit;
-    opacity:0; transform:translateX(48px); will-change:opacity, transform;
+    opacity:0; transform:translateX(220px); will-change:opacity, transform;
   }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
   .tv-card-media{ display:block; width:100%; aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
@@ -865,6 +865,7 @@ var TRAVAUX_FAMILIES = [
      remonte avant la sortie complète. ---- */
   var REVEAL_START = 0.25; /* fraction du trajet total (entrée en bas -> sortie en haut) */
   var REVEAL_END = 0.55;
+  var TRAVEL_PX = 220; /* distance parcourue depuis la droite — doit rester lisible comme une vraie arrivée */
 
   function tick(){
     var vh = window.innerHeight;
@@ -875,7 +876,7 @@ var TRAVAUX_FAMILIES = [
       var p = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
       band.cards.forEach(function(card){
         card.style.opacity = String(p);
-        card.style.transform = 'translateX(' + ((1 - p) * 48).toFixed(1) + 'px)';
+        card.style.transform = 'translateX(' + ((1 - p) * TRAVEL_PX).toFixed(1) + 'px)';
       });
     });
     requestAnimationFrame(tick);
