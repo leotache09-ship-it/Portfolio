@@ -187,6 +187,38 @@
   }
 </style>
 
+<style>
+  #lt-loader{
+    position: fixed; inset: 0; z-index: 9999;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: clamp(16px,3vw,28px);
+    background: var(--paper, #F3F3F3);
+    transition: opacity .5s ease;
+  }
+  #lt-loader.lt-loader--done{ opacity:0; pointer-events:none; }
+  #lt-loader .lt-loader__stage{ width: min(26vw, 26vh, 160px); }
+  #lt-loader .lt-loader__stage svg{ display:block; width:100%; height:auto; overflow:hidden; }
+  #lt-loader .lt-loader__piece{ fill: var(--ink, #1D1D1B); }
+  #lt-loader .lt-loader__pct{
+    font-family:"Roboto Mono","SFMono-Regular",monospace;
+    font-size:.78rem; letter-spacing:.14em;
+    color: var(--ink-soft, rgba(29,29,27,.62));
+    min-width:3ch; text-align:center;
+  }
+</style>
+
+<div id="lt-loader" aria-hidden="true">
+  <div class="lt-loader__stage">
+    <svg viewBox="-1133.9 -1006.6 4926.5 4926.5" xmlns="http://www.w3.org/2000/svg">
+      <path class="lt-loader__piece" id="lt-loader-red"></path>
+      <path class="lt-loader__piece" id="lt-loader-blue"></path>
+      <path class="lt-loader__piece" id="lt-loader-green"></path>
+    </svg>
+  </div>
+  <div class="lt-loader__pct" id="lt-loader-pct">0%</div>
+</div>
+<script src="assets/loader.js"></script>
+
 <a id="top" href="#top" tabindex="-1" aria-hidden="true"></a>
 <header class="nav">
   <a class="back" href="index.html#partie-ailleurs"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
