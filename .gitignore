@@ -16,3 +16,6 @@ $RECYCLE.BIN/
 # Fichiers de travail
 node_modules/
 *.log
+
+# Outils locaux
+.claude/
