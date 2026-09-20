@@ -249,7 +249,7 @@
 
   .tv-card{
     flex:0 0 auto; width:min(66vw,440px); text-decoration:none; color:inherit;
-    display:flex; align-items:center; gap: calc(var(--gutter)*.6);
+    display:flex; align-items:center; gap: calc(var(--unit)*.7);
   }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
   .tv-card-info{ flex:1 1 auto; min-width:0; }
@@ -881,7 +881,12 @@ var TRAVAUX_FAMILIES = [
       var total = vh + rect.height;
       var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
       var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
-      var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth);
+      /* clientWidth inclut le padding gauche/droit du strip, alors que la
+         rangée s'y cale déjà (padding réservé par le flux normal) : il faut
+         le rajouter, sinon la dernière carte reste tronquée d'un padding. */
+      var stripCs = getComputedStyle(band.strip);
+      var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
+      var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
       band.row.style.transform = 'translateX(' + (-hp * maxTravel).toFixed(1) + 'px)';
     });
     requestAnimationFrame(tick);
