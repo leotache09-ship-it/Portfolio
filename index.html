@@ -224,24 +224,25 @@
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
     margin:0 auto; padding: 0 var(--gutter);
   }
-  .tv-cat-head{
-    display:flex; align-items:center; justify-content:space-between; gap: var(--gutter);
-    margin-bottom: calc(var(--unit)*2);
-  }
-  .tv-cat-head--rev{ flex-direction:row-reverse; }
-  .tv-cat-title{
-    font-family:"Archivo Black"; text-transform:uppercase; margin:0;
-    font-size: clamp(1.8rem,5.2vw,3.4rem); line-height:1;
-  }
-  .tv-cat-arrow{ flex:none; width:clamp(40px,6vw,64px); height:auto; opacity:.85; }
-  .tv-cat-arrow--rev{ transform:scaleX(-1); }
-
   .tv-strip{
-    display:flex; gap: calc(var(--gutter)*.8);
+    display:flex; align-items:stretch; gap: calc(var(--gutter)*.8);
     overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:thin;
     scroll-snap-type:x proximity;
     margin: 0 calc(var(--gutter)*-1); padding: 0 var(--gutter) var(--unit);
   }
+  /* le titre est la première "carte" de la bande : swiper le fait sortir à
+     gauche pendant que les projets suivent, en un seul geste continu. */
+  .tv-title-card{
+    flex:0 0 auto; width:min(78vw,560px); scroll-snap-align:start;
+    display:flex; align-items:center; justify-content:space-between; gap: var(--gutter);
+  }
+  .tv-cat-title{
+    font-family:"Archivo Black"; text-transform:uppercase; margin:0;
+    font-size: clamp(1.8rem,5.2vw,3.2rem); line-height:1;
+  }
+  .tv-cat-arrow{ flex:none; width:clamp(36px,5vw,56px); height:auto; opacity:.85; }
+  .tv-cat-arrow--rev{ transform:scaleX(-1); }
+
   .tv-card{ flex:0 0 auto; width:min(52vw,300px); scroll-snap-align:start; text-decoration:none; color:inherit; }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
   .tv-card-media{ display:block; width:100%; aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
@@ -256,6 +257,7 @@
 
   @media (max-width:640px){
     .tv-card{ width:68vw; }
+    .tv-title-card{ width:84vw; }
     .tv-cat-arrow{ width:36px; }
   }
 
@@ -825,16 +827,18 @@ var TRAVAUX_FAMILIES = [
         '</a>';
     }).join('');
 
+    var titleCard =
+      '<div class="tv-title-card">' +
+        '<h2 class="tv-cat-title balance">' + fam.title + '</h2>' +
+        ARROW.replace('tv-cat-arrow"', 'tv-cat-arrow' + (dir === -1 ? ' tv-cat-arrow--rev' : '') + '"') +
+      '</div>';
+
     var cat = document.createElement('div');
     cat.className = 'tv-cat';
     cat.style.background = fam.color;
     cat.innerHTML =
       '<div class="tv-cat-inner">' +
-        '<div class="tv-cat-head' + (dir === -1 ? ' tv-cat-head--rev' : '') + '">' +
-          '<h2 class="tv-cat-title balance">' + fam.title + '</h2>' +
-          ARROW.replace('tv-cat-arrow"', 'tv-cat-arrow' + (dir === -1 ? ' tv-cat-arrow--rev' : '') + '"') +
-        '</div>' +
-        '<div class="tv-strip">' + cards + '</div>' +
+        '<div class="tv-strip">' + titleCard + cards + '</div>' +
       '</div>';
     root.appendChild(cat);
   });
