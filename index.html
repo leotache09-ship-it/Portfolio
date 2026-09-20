@@ -7,15 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@700&family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    color-scheme: light;
+    color-scheme: dark;
     --blue: #189CD8;
-    --paper: #F3F3F3;
-    --card: #FFFFFF;
-    --ink: #1D1D1B;
-    --ink-soft: rgba(29,29,27,.62);
-    --ink-faint: rgba(29,29,27,.34);
-    --line: rgba(29,29,27,.16);
-    --on-blue: #F3F3F3;
+    --paper: #0D0D0F;
+    --card: #18181B;
+    --ink: #F2F2F2;
+    --ink-soft: rgba(242,242,242,.66);
+    --ink-faint: rgba(242,242,242,.34);
+    --line: rgba(242,242,242,.14);
+    --on-blue: #0D0D0F;
     --unit: 16px;
     --gutter: clamp(calc(var(--unit)*2), 5vw, calc(var(--unit)*4));
     --tile: 64px;
@@ -45,18 +45,18 @@
     position: fixed; top: env(safe-area-inset-top, 0px); left:0; right:0; z-index: 500;
     display:flex; align-items:center; justify-content:space-between;
     padding: var(--unit) var(--gutter);
-    background: rgba(243,243,243,.82); backdrop-filter: blur(6px);
+    background: rgba(13,13,15,.82); backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--line);
   }
   header.nav .mark{ display:flex; align-items:center; }
-  header.nav .mark img{ height:22px; width:auto; display:block; }
+  header.nav .mark img{ height:22px; width:auto; display:block; filter: invert(1); }
   header.nav nav{ display:flex; gap: clamp(14px,3vw,32px); }
   header.nav nav a{ text-decoration:none; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; font-weight:500; color: var(--ink-soft); }
   header.nav nav a:hover{ color: var(--blue); }
 
   section{ position:relative; }
   .grid-pattern{
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 25 V39 M25 32 H39' stroke='%231D1D1B' stroke-opacity='0.12' stroke-width='1.3'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 25 V39 M25 32 H39' stroke='%23F2F2F2' stroke-opacity='0.1' stroke-width='1.3'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-origin: content-box;
     background-position: 0 0;
@@ -76,7 +76,7 @@
     min-height: 100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center; position:relative;
   }
-  #cover .logo{ height: clamp(48px,9vw,84px); width:auto; margin-bottom: calc(var(--unit)*1.5); }
+  #cover .logo{ height: clamp(48px,9vw,84px); width:auto; margin-bottom: calc(var(--unit)*1.5); filter: invert(1); }
   #cover .eyebrow{ justify-content:center; }
   #cover .eyebrow::after{ display:none; }
   h1.cover-name{
@@ -144,18 +144,14 @@
   }
   .section-sub{ max-width: 52ch; color: var(--ink-soft); font-size:1rem; margin:0 0 calc(var(--unit)*3); }
 
-  .rows{
-    display:grid; grid-template-columns: repeat(3, minmax(0,1fr));
-    gap: calc(var(--unit)*3) calc(var(--unit)*1.6); align-items:start;
-  }
-  .row{ display:block; min-width:0; padding:0; border-top:none; }
-  .row .head{ display:flex; align-items:baseline; gap:10px; margin: 14px 0 8px; }
-  .row .idx{ font-family:"Roboto Mono"; font-size:.74rem; color: var(--blue); flex:none; }
-  .row h3{ font-weight:700; font-size: clamp(1.02rem,1.5vw,1.22rem); line-height:1.2; }
-  .row .meta{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
-  .row .tag{ font-family:"Roboto Mono"; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:4px 8px; border-radius:2px; border:1px solid var(--ink-faint); color: var(--ink-soft); }
-  .row .tag.client{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); }
-  .row .year{ font-family:"Roboto Mono"; font-size:.7rem; color: var(--ink-faint); }
+  .tv-card{ display:block; min-width:0; }
+  .tv-card .head{ display:flex; align-items:baseline; gap:10px; margin: 14px 0 8px; }
+  .tv-card .idx{ font-family:"Roboto Mono"; font-size:.74rem; color: var(--blue); flex:none; }
+  .tv-card h3{ font-weight:700; font-size: clamp(1.02rem,1.5vw,1.22rem); line-height:1.2; }
+  .tv-card .meta{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .tv-card .tag{ font-family:"Roboto Mono"; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:4px 8px; border-radius:2px; border:1px solid var(--ink-faint); color: var(--ink-soft); }
+  .tv-card .tag.client{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); }
+  .tv-card .year{ font-family:"Roboto Mono"; font-size:.7rem; color: var(--ink-faint); }
 
   .shots{ display:flex; gap: var(--unit); flex-wrap:wrap; }
   .shots .frame{
@@ -224,63 +220,37 @@
     .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
   }
 
-  /* ================= TRAVAUX — galerie horizontale au scroll ================= */
-  #travaux{ border-top:1px solid var(--line); padding-bottom: calc(var(--unit)*4); }
+  /* ================= TRAVAUX — par famille, glissement horizontal lié au scroll ================= */
+  #travaux{ border-top:1px solid var(--line); padding-bottom: calc(var(--unit)*2); }
   .travaux-intro{
     max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
     padding: calc(var(--unit)*6) var(--gutter) calc(var(--unit)*2);
   }
-  .tv-hint{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:"Roboto Mono"; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color: var(--blue);
-  }
-  .tv-hint svg{ width:15px; height:15px; animation: tvArrow 1.6s ease-in-out infinite; }
-  @keyframes tvArrow{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(6px);} }
 
-  .travaux-track{ position:relative; }
-  .travaux-stage{ position:sticky; top:0; height:100svh; overflow:hidden; display:flex; align-items:center; }
-  .travaux-rail{ display:flex; align-items:center; height:100%; padding:0 var(--gutter); will-change:transform; }
-
-  .travaux-rail .row{
-    flex:0 0 auto; display:flex; flex-direction:row; align-items:center;
-    gap: calc(var(--gutter)*.9); height:auto; margin-right: calc(var(--gutter)*1.8);
+  .tv-category{ padding: calc(var(--unit)*3.5) 0 calc(var(--unit)*5); overflow:hidden; }
+  .tv-cat-head{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
+    padding: 0 var(--gutter) calc(var(--unit)*1.75);
   }
-  .travaux-rail .shots{ flex:none; flex-wrap:nowrap; height:min(58vh,540px); }
-  .travaux-rail .shots .frame{ flex:none; height:100%; width:auto; }
-  .tv-info{ display:flex; flex-direction:column; align-items:flex-start; gap:16px; max-width:min(30vw,440px); }
-  .tv-info .head{ margin:0; }
-  .tv-info .idx{ font-size:.82rem; }
-  .tv-info h3{
-    font-family:"Archivo Black"; text-transform:uppercase; font-weight:400;
-    font-size:clamp(1.9rem,3.8vw,3.6rem); line-height:.98;
+  .tv-cat-num{ font-family:"Roboto Mono"; font-size:.78rem; color: var(--blue); display:block; margin-bottom:10px; }
+  .tv-cat-title{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(2.2rem, 6.4vw, 5rem); line-height:.92; letter-spacing:-.005em; max-width:16ch;
   }
 
-  .tv-divider{
-    flex:0 0 auto; width:min(38vw,360px); height:min(58vh,540px);
-    display:flex; flex-direction:column; justify-content:center;
-    padding-right: calc(var(--gutter)*1.3); margin-right: calc(var(--gutter)*1.1);
-    border-right:1px solid var(--line);
+  .tv-cat-row{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
+    padding: 0 var(--gutter);
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: calc(var(--unit)*3) calc(var(--unit)*1.6); align-items:start;
+    will-change: transform;
   }
-  .tv-divider-num{ font-family:"Roboto Mono"; font-size:.78rem; color: var(--blue); margin-bottom:14px; display:block; }
-  .tv-divider-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size:clamp(1.7rem,3.6vw,2.8rem); line-height:.98; margin:0 0 14px; }
-  .tv-divider-sub{ color: var(--ink-soft); font-size:.92rem; line-height:1.55; max-width:32ch; margin:0; }
-
-  .tv-outro{
-    flex:0 0 auto; width:min(42vw,400px); height:min(58vh,540px);
-    display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:20px;
-  }
-  .tv-outro p{ font-family:"Archivo Black"; text-transform:uppercase; font-size:clamp(1.4rem,3vw,2.1rem); line-height:1.05; margin:0; }
-  .tv-outro a{
-    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-    font-family:"Roboto Mono"; font-size:.76rem; letter-spacing:.1em; text-transform:uppercase;
-    color: var(--blue); border-bottom:1px solid var(--blue); padding-bottom:4px;
-  }
-  .tv-outro svg{ width:15px; height:15px; }
 
   @media (prefers-reduced-motion: reduce){
-    .tv-hint svg{ animation:none; }
-    .travaux-stage{ position:static; height:auto; overflow:visible; }
-    .travaux-rail{ overflow-x:auto; transform:none !important; }
+    .tv-cat-row{ transform:none !important; opacity:1 !important; }
+  }
+  @media (max-width:620px){
+    .tv-cat-row{ grid-template-columns: 1fr; }
   }
 
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
@@ -368,19 +338,6 @@
   }
 
   @media (max-width: 760px){
-    .travaux-stage{ position:static; height:auto; overflow:visible; }
-    .travaux-track{ height:auto !important; }
-    .travaux-rail{
-      overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
-      transform:none !important; padding:0 var(--gutter); align-items:flex-start;
-    }
-    .travaux-rail .row, .tv-divider, .tv-outro{ scroll-snap-align:start; opacity:1 !important; transform:none !important; }
-    .travaux-rail .row{ flex-direction:column; align-items:flex-start; width:78vw; gap:18px; }
-    .travaux-rail .shots{ height:48vh; }
-    .tv-info{ max-width:100%; }
-    .tv-divider{ width:78vw; height:auto; padding:24px 0; margin-right: var(--gutter); border-right:none; border-bottom:1px solid var(--line); }
-    .tv-outro{ width:78vw; height:auto; padding:24px 0; }
-
     .shots{ flex-direction:column; }
     .contact-grid{ grid-template-columns:1fr; }
     .mail{ flex-direction:column; align-items:flex-start; gap: var(--unit); }
@@ -461,212 +418,186 @@
       <p class="eyebrow"><span class="num">01 à 11</span></p>
       <h2 class="section-title balance">Mes travaux.</h2>
       <p class="section-sub">Onze projets, cinq familles : clients réels, marques fictives, affiches, sport design, édition.</p>
-      <span class="tv-hint"><span>Faire défiler</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </div>
 
-    <div class="travaux-track">
-      <div class="travaux-stage">
-        <div class="travaux-rail" id="travauxRail">
-
-          <div class="tv-divider" style="--glow:#e7010e">
-            <span class="tv-divider-num mono">01 – 03</span>
-            <h3 class="tv-divider-title balance">Des vrais<br>clients.</h3>
-            <p class="tv-divider-sub">Comprendre, échanger, conseiller et transformer les besoins du client en idées graphiques.</p>
+    <div class="tv-category" data-dir="-1">
+      <div class="tv-cat-head">
+        <span class="tv-cat-num mono">01 – 03</span>
+        <h3 class="tv-cat-title balance">Des vrais clients.</h3>
+      </div>
+      <div class="tv-cat-row">
+        <article class="tv-card" id="chearn" style="--glow:#e7010e">
+          <div class="shots">
+              <a class="frame peek-frame" href="chearn.html" style="--ar:1080/1380">
+              <img src="assets/chearn/cover.jpg" alt="Chearn, identité visuelle complète" loading="lazy">
+              <img class="peek" src="assets/chearn/flatlay.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
           </div>
+          <div class="head"><span class="idx">01</span><h3>Chearn</h3></div>
+          <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Affiche</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
+        </article>
 
-          <article class="row" id="chearn" style="--glow:#e7010e">
-            <div class="shots">
-                <a class="frame peek-frame" href="chearn.html" style="--ar:1080/1380">
-                <img src="assets/chearn/cover.jpg" alt="Chearn, identité visuelle complète" loading="lazy">
-                <img class="peek" src="assets/chearn/flatlay.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">01</span><h3>Chearn</h3></div>
-            <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Affiche</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
-            </div>
-          </article>
-
-          <article class="row" id="afmbb" style="--glow:#c71517">
-            <div class="shots">
-                <a class="frame peek-frame" href="afmbb.html" style="--ar:900/1150">
-                <img src="assets/afmbb/logo.jpg" alt="Logo AFMBB" loading="lazy">
-                <img class="peek" src="assets/afmbb/flyer.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">02</span><h3>AFMBB</h3></div>
-            <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Flyer</span><span class="year">Avril 2026</span></div>
-            </div>
-          </article>
-
-          <article class="row" id="partie-ailleurs" style="--glow:#41bcda">
-            <div class="shots">
-                <a class="frame peek-frame" href="partie-ailleurs.html" style="--ar:878/1122">
-                <img src="assets/partie-ailleurs/thumb.jpg" alt="Affiche La Partie d'Ailleurs sur un panneau urbain" loading="lazy">
-                <img class="peek" src="assets/partie-ailleurs/rollup-bar.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">03</span><h3>La Partie d'Ailleurs</h3></div>
-            <div class="meta"><span class="tag client">Client réel</span><span class="tag">Affiche</span><span class="tag">Roll-up</span><span class="tag">Template</span><span class="year">Mars 2026</span></div>
-            </div>
-          </article>
-
-          <div class="tv-divider" style="--glow:#db6661">
-            <span class="tv-divider-num mono">04 – 05</span>
-            <h3 class="tv-divider-title balance">Marques<br>fictives.</h3>
-            <p class="tv-divider-sub">Pas de client, pas de brief, mais des projets menés avec le même sérieux.</p>
+        <article class="tv-card" id="afmbb" style="--glow:#c71517">
+          <div class="shots">
+              <a class="frame peek-frame" href="afmbb.html" style="--ar:900/1150">
+              <img src="assets/afmbb/logo.jpg" alt="Logo AFMBB" loading="lazy">
+              <img class="peek" src="assets/afmbb/flyer.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
           </div>
+          <div class="head"><span class="idx">02</span><h3>AFMBB</h3></div>
+          <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Flyer</span><span class="year">Avril 2026</span></div>
+        </article>
 
-          <article class="row" id="richol" style="--glow:#db6661">
-            <div class="shots">
-                <a class="frame peek-frame" href="richol.html" style="--ar:1080/1380">
-                <img src="assets/richol/fraise-can.jpg" alt="Charte graphique Richol, canette Richol Fraise" loading="lazy">
-                <img class="peek" src="assets/richol/limoncello-photo.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">04</span><h3>Richol</h3></div>
-            <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Charte graphique</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
-            </div>
-          </article>
-
-          <article class="row" id="meublon" style="--glow:#e0231a">
-            <div class="shots">
-                <a class="frame video-frame" href="meublon.html" style="--ar:1080/1380">
-                <img src="assets/meublon/logo.jpg" alt="Meublon, logotype et baseline « Le mobilier en carton qui a du caractère »" loading="lazy">
-                <video data-start="6.6" poster="assets/meublon/poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/meublon/meublon.mp4" type="video/mp4"></video>
-                <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">05</span><h3>Meublon</h3></div>
-            <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="tag">Vidéo</span><span class="year">Sept. 2026</span></div>
-            </div>
-          </article>
-
-          <div class="tv-divider" style="--glow:#b7260e">
-            <span class="tv-divider-num mono">06 – 07</span>
-            <h3 class="tv-divider-title balance">Affiches.</h3>
-            <p class="tv-divider-sub">Des envies soudaines, des idées qui prennent forme.</p>
+        <article class="tv-card" id="partie-ailleurs" style="--glow:#41bcda">
+          <div class="shots">
+              <a class="frame peek-frame" href="partie-ailleurs.html" style="--ar:878/1122">
+              <img src="assets/partie-ailleurs/thumb.jpg" alt="Affiche La Partie d'Ailleurs sur un panneau urbain" loading="lazy">
+              <img class="peek" src="assets/partie-ailleurs/rollup-bar.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
           </div>
+          <div class="head"><span class="idx">03</span><h3>La Partie d'Ailleurs</h3></div>
+          <div class="meta"><span class="tag client">Client réel</span><span class="tag">Affiche</span><span class="tag">Roll-up</span><span class="tag">Template</span><span class="year">Mars 2026</span></div>
+        </article>
+      </div>
+    </div>
 
-          <article class="row" id="cervin" style="--glow:#b7260e">
-            <div class="shots">
-                <a class="frame video-frame" href="cervin.html" style="--ar:2480/3508">
-                <img src="assets/cervin/poster.jpg" alt="Affiche Flow State, le Cervin" loading="lazy">
-                <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/cervin/cervin.mp4" type="video/mp4"></video>
-                <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">06</span><h3>Cervin, Flow State</h3></div>
-            <div class="meta"><span class="tag">Affiche</span><span class="tag">Vidéo</span><span class="year">Juin 2026</span></div>
-            </div>
-          </article>
-
-          <article class="row" id="fragments" style="--glow:#ca0a54">
-            <div class="shots">
-                <a class="frame peek-frame" href="fragments.html" style="--ar:2480/3508">
-                <img src="assets/fragments/mockup.jpg" alt="Affiche Fragments of Silence affichée sur un panneau urbain" loading="lazy">
-                <img class="peek" src="assets/fragments/affiche-fr.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">07</span><h3>Fragments of Silence</h3></div>
-            <div class="meta"><span class="tag">Affiche</span><span class="year">Mars 2026</span></div>
-            </div>
-          </article>
-
-          <div class="tv-divider" style="--glow:#e02222">
-            <span class="tv-divider-num mono">08 – 09</span>
-            <h3 class="tv-divider-title balance">Sport<br>design.</h3>
-            <p class="tv-divider-sub">Précision, maîtrise et souci du détail, jusque dans les finitions.</p>
+    <div class="tv-category" data-dir="1">
+      <div class="tv-cat-head">
+        <span class="tv-cat-num mono">04 – 05</span>
+        <h3 class="tv-cat-title balance">Marques fictives.</h3>
+      </div>
+      <div class="tv-cat-row">
+        <article class="tv-card" id="richol" style="--glow:#db6661">
+          <div class="shots">
+              <a class="frame peek-frame" href="richol.html" style="--ar:1080/1380">
+              <img src="assets/richol/fraise-can.jpg" alt="Charte graphique Richol, canette Richol Fraise" loading="lazy">
+              <img class="peek" src="assets/richol/limoncello-photo.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
           </div>
+          <div class="head"><span class="idx">04</span><h3>Richol</h3></div>
+          <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Charte graphique</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
+        </article>
 
-          <article class="row" id="riat" style="--glow:#e02222">
-            <div class="shots">
-                <a class="frame peek-frame" href="riat.html" style="--ar:1417/1811">
-                <img src="assets/riat/poster.jpg" alt="Affiche sport design Damien Riat, capitaine du Lausanne HC" loading="lazy">
-                <img class="peek" src="assets/riat/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">08</span><h3>Damien Riat</h3></div>
-            <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
-            </div>
-          </article>
-
-          <article class="row" id="rogers" style="--glow:#2f6fd0">
-            <div class="shots">
-                <a class="frame peek-frame" href="rogers.html" style="--ar:1134/1417">
-                <img src="assets/rogers/poster.jpg" alt="Affiche sport design Morgan Rogers, football" loading="lazy">
-                <img class="peek" src="assets/rogers/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">09</span><h3>Morgan Rogers</h3></div>
-            <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
-            </div>
-          </article>
-
-          <div class="tv-divider" style="--glow:#e2963e">
-            <span class="tv-divider-num mono">10 – 11</span>
-            <h3 class="tv-divider-title balance">Édition<br>&amp; print.</h3>
-            <p class="tv-divider-sub">Grilles, hiérarchie typographique et pagination, pour penser la page comme un système.</p>
+        <article class="tv-card" id="meublon" style="--glow:#e0231a">
+          <div class="shots">
+              <a class="frame video-frame" href="meublon.html" style="--ar:1080/1380">
+              <img src="assets/meublon/logo.jpg" alt="Meublon, logotype et baseline « Le mobilier en carton qui a du caractère »" loading="lazy">
+              <video data-start="6.6" poster="assets/meublon/poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/meublon/meublon.mp4" type="video/mp4"></video>
+              <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
+              </a>
           </div>
+          <div class="head"><span class="idx">05</span><h3>Meublon</h3></div>
+          <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="tag">Vidéo</span><span class="year">Sept. 2026</span></div>
+        </article>
+      </div>
+    </div>
 
-          <article class="row" id="serigraphie" style="--glow:#e2963e">
-            <div class="shots">
-                <a class="frame peek-frame" href="serigraphie.html" style="--ar:1500/1125">
-                <img src="assets/serigraphie/cover-mockup.jpg" alt="Le cahier Sérigraphie et Tampographie" loading="lazy">
-                <img class="peek" src="assets/serigraphie/spread-bleu.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">10</span><h3>Sérigraphie &amp; Tampographie</h3></div>
-            <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Juin 2026</span></div>
-            </div>
-          </article>
-
-          <article class="row" id="losangeles" style="--glow:#189cd8">
-            <div class="shots">
-                <a class="frame peek-frame" href="losangeles.html" style="--ar:1500/1125">
-                <img src="assets/losangeles/mockup-histoire.jpg" alt="Guide touristique Los Angeles, livre ouvert" loading="lazy">
-                <img class="peek" src="assets/losangeles/grid.jpg" alt="" loading="lazy" aria-hidden="true">
-                <span class="peek-veil" aria-hidden="true"></span>
-                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-                </a>
-            </div>
-            <div class="tv-info">
-            <div class="head"><span class="idx">11</span><h3>Magazine Los Angeles</h3></div>
-            <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Mars 2026</span></div>
-            </div>
-          </article>
-
-          <div class="tv-outro">
-            <p>Onze projets,<br>une passion.</p>
-            <a href="#parcours"><span>Voir mon parcours</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <div class="tv-category" data-dir="-1">
+      <div class="tv-cat-head">
+        <span class="tv-cat-num mono">06 – 07</span>
+        <h3 class="tv-cat-title balance">Affiches.</h3>
+      </div>
+      <div class="tv-cat-row">
+        <article class="tv-card" id="cervin" style="--glow:#b7260e">
+          <div class="shots">
+              <a class="frame video-frame" href="cervin.html" style="--ar:2480/3508">
+              <img src="assets/cervin/poster.jpg" alt="Affiche Flow State, le Cervin" loading="lazy">
+              <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/cervin/cervin.mp4" type="video/mp4"></video>
+              <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
+              </a>
           </div>
+          <div class="head"><span class="idx">06</span><h3>Cervin, Flow State</h3></div>
+          <div class="meta"><span class="tag">Affiche</span><span class="tag">Vidéo</span><span class="year">Juin 2026</span></div>
+        </article>
 
-        </div>
+        <article class="tv-card" id="fragments" style="--glow:#ca0a54">
+          <div class="shots">
+              <a class="frame peek-frame" href="fragments.html" style="--ar:2480/3508">
+              <img src="assets/fragments/mockup.jpg" alt="Affiche Fragments of Silence affichée sur un panneau urbain" loading="lazy">
+              <img class="peek" src="assets/fragments/affiche-fr.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
+          </div>
+          <div class="head"><span class="idx">07</span><h3>Fragments of Silence</h3></div>
+          <div class="meta"><span class="tag">Affiche</span><span class="year">Mars 2026</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="tv-category" data-dir="1">
+      <div class="tv-cat-head">
+        <span class="tv-cat-num mono">08 – 09</span>
+        <h3 class="tv-cat-title balance">Sport design.</h3>
+      </div>
+      <div class="tv-cat-row">
+        <article class="tv-card" id="riat" style="--glow:#e02222">
+          <div class="shots">
+              <a class="frame peek-frame" href="riat.html" style="--ar:1417/1811">
+              <img src="assets/riat/poster.jpg" alt="Affiche sport design Damien Riat, capitaine du Lausanne HC" loading="lazy">
+              <img class="peek" src="assets/riat/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
+          </div>
+          <div class="head"><span class="idx">08</span><h3>Damien Riat</h3></div>
+          <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
+        </article>
+
+        <article class="tv-card" id="rogers" style="--glow:#2f6fd0">
+          <div class="shots">
+              <a class="frame peek-frame" href="rogers.html" style="--ar:1134/1417">
+              <img src="assets/rogers/poster.jpg" alt="Affiche sport design Morgan Rogers, football" loading="lazy">
+              <img class="peek" src="assets/rogers/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
+          </div>
+          <div class="head"><span class="idx">09</span><h3>Morgan Rogers</h3></div>
+          <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="tv-category" data-dir="-1">
+      <div class="tv-cat-head">
+        <span class="tv-cat-num mono">10 – 11</span>
+        <h3 class="tv-cat-title balance">Édition &amp; print.</h3>
+      </div>
+      <div class="tv-cat-row">
+        <article class="tv-card" id="serigraphie" style="--glow:#e2963e">
+          <div class="shots">
+              <a class="frame peek-frame" href="serigraphie.html" style="--ar:1500/1125">
+              <img src="assets/serigraphie/cover-mockup.jpg" alt="Le cahier Sérigraphie et Tampographie" loading="lazy">
+              <img class="peek" src="assets/serigraphie/spread-bleu.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
+          </div>
+          <div class="head"><span class="idx">10</span><h3>Sérigraphie &amp; Tampographie</h3></div>
+          <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Juin 2026</span></div>
+        </article>
+
+        <article class="tv-card" id="losangeles" style="--glow:#189cd8">
+          <div class="shots">
+              <a class="frame peek-frame" href="losangeles.html" style="--ar:1500/1125">
+              <img src="assets/losangeles/mockup-histoire.jpg" alt="Guide touristique Los Angeles, livre ouvert" loading="lazy">
+              <img class="peek" src="assets/losangeles/grid.jpg" alt="" loading="lazy" aria-hidden="true">
+              <span class="peek-veil" aria-hidden="true"></span>
+              <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+              </a>
+          </div>
+          <div class="head"><span class="idx">11</span><h3>Magazine Los Angeles</h3></div>
+          <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Mars 2026</span></div>
+        </article>
       </div>
     </div>
   </section>
@@ -938,46 +869,28 @@
     parcoursUpdate();
   })();
 
-  /* ---- travaux : galerie horizontale, bloquée pendant le défilement ---- */
+  /* ---- travaux : chaque famille glisse horizontalement au fil du scroll normal (jamais bloqué) ---- */
   var travauxUpdate = null;
   (function(){
-    var section = document.getElementById('travaux');
-    var track   = section && section.querySelector('.travaux-track');
-    var stage   = section && section.querySelector('.travaux-stage');
-    var rail    = document.getElementById('travauxRail');
-    if (!section || !track || !stage || !rail) return;
+    var cats = Array.prototype.slice.call(document.querySelectorAll('.tv-category'));
+    if (!cats.length) return;
+    if (reduced) return;
 
-    var mq = window.matchMedia('(max-width: 760px)');
-    var panels = Array.prototype.slice.call(rail.children);
-    var span = 0;
-
-    function nativeMode(){ return reduced || mq.matches; }
-
-    function measure(){
-      if (nativeMode()) { track.style.height = ''; rail.style.transform = ''; span = 0; return; }
-      span = Math.max(0, rail.scrollWidth - stage.clientWidth);
-      track.style.height = (window.innerHeight + span) + 'px';
-    }
-    measure();
-    window.addEventListener('resize', measure);
-    mq.addEventListener ? mq.addEventListener('change', measure) : mq.addListener(measure);
+    var items = cats.map(function(cat){
+      return { row: cat.querySelector('.tv-cat-row'), dir: parseFloat(cat.getAttribute('data-dir')) || 1 };
+    }).filter(function(it){ return it.row; });
 
     travauxUpdate = function(){
-      if (nativeMode() || span <= 0) return;
-      var vh = window.innerHeight;
-      var rect = track.getBoundingClientRect();
-      var localSpan = rect.height - vh;
-      var t = localSpan > 0 ? (-rect.top) / localSpan : 0;
-      t = Math.max(0, Math.min(1, t));
-      var x = -t * span;
-      rail.style.transform = 'translateX(' + x + 'px)';
-
-      var viewportCenter = stage.clientWidth / 2;
-      panels.forEach(function(p){
-        var pc = p.offsetLeft + p.offsetWidth / 2 + x;
-        var d = Math.min(1, Math.abs(pc - viewportCenter) / (stage.clientWidth * 0.65));
-        p.style.opacity = String(1 - d * 0.55);
-        p.style.transform = 'scale(' + (1 - d * 0.06) + ')';
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      items.forEach(function(it){
+        var rect = it.row.getBoundingClientRect();
+        // 0 quand la rangée entre par le bas, 1 une fois bien installée dans l'écran
+        var start = vh, end = vh * 0.4;
+        var t = (start - rect.top) / (start - end);
+        t = Math.max(0, Math.min(1, t));
+        var dist = Math.min(140, vh * 0.16);
+        it.row.style.transform = 'translateX(' + ((1 - t) * it.dir * dist) + 'px)';
+        it.row.style.opacity = String(0.25 + t * 0.75);
       });
     };
     travauxUpdate();
