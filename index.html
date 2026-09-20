@@ -90,16 +90,23 @@
   /* carré décoratif (pas un bouton, pointer-events:none) : à moitié coupé par
      le bas de l'écran au repos, il grandit et prend tout le fond au scroll
      (voir le script dédié) — jamais de transition CSS ici, tout est piloté
-     image par image pour rester exactement synchronisé avec le scroll. */
+     image par image pour rester exactement synchronisé avec le scroll.
+     z-index négatif : il reste toujours DERRIÈRE le contenu normal de la
+     page (travaux, textes), jamais devant. Seul .cover-hint-bg est mis à
+     l'échelle ; le texte reste à taille fixe, superposé par-dessus. */
   .cover-hint{
     position:fixed; left:50%; bottom: calc(clamp(88px,11vw,116px) / -2);
-    width: clamp(88px,11vw,116px); height: clamp(88px,11vw,116px); border-radius:8px;
-    background: var(--blue); pointer-events:none; z-index:400;
+    width: clamp(88px,11vw,116px); height: clamp(88px,11vw,116px);
+    pointer-events:none; z-index:-1;
     display:flex; align-items:center; justify-content:center; text-align:center; padding:0 8px;
-    box-shadow: 0 14px 32px rgba(0,0,0,.4);
     transform: translateX(-50%);
   }
+  .cover-hint-bg{
+    position:absolute; inset:0; border-radius:8px;
+    background: var(--blue); box-shadow: 0 14px 32px rgba(0,0,0,.4);
+  }
   .cover-hint span{
+    position:relative; z-index:1;
     font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
     font-size: clamp(.68rem,1.5vw,.86rem); line-height:1.15;
   }
@@ -264,9 +271,25 @@
      contenu, donc l'écart avec le visuel reste le même "gap" fixe pour
      tous les projets, plutôt qu'un blanc variable selon la longueur du nom. */
   .tv-card-info{ flex:0 0 auto; max-width:38vw; }
-  .tv-card-media{ display:block; flex:none; width:min(36vw,190px); aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
-  .tv-card-media img{ width:100%; height:100%; object-fit:cover; }
-  .tv-card-name{ display:block; font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1rem,1.8vw,1.4rem); line-height:1.12; }
+  .tv-card-media{
+    display:block; flex:none; width:var(--mw, min(36vw,190px)); aspect-ratio: var(--ar,4/5);
+    overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12);
+    box-shadow: 0 0 0 0 rgba(0,0,0,0);
+    transition: box-shadow .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .tv-card-media img{
+    width:100%; height:100%; object-fit:cover;
+    transition: transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  /* aperçu au survol : léger zoom + halo dans la couleur de la famille */
+  .tv-card:hover .tv-card-media{
+    box-shadow: 0 0 0 1px var(--glow, var(--blue)), 0 0 40px 6px color-mix(in srgb, var(--glow, var(--blue)) 40%, transparent);
+  }
+  .tv-card:hover .tv-card-media img{ transform: scale(1.07); }
+  @media (prefers-reduced-motion: reduce){
+    .tv-card-media, .tv-card-media img{ transition-duration:.01ms; }
+  }
+  .tv-card-name{ display:block; font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.2rem,2.2vw,1.7rem); line-height:1.1; }
   .tv-card-date{ display:block; margin-top:10px; font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
 
   .tv3-noscript{ padding-top: calc(var(--unit)*4); padding-bottom: calc(var(--unit)*4); }
@@ -443,7 +466,7 @@
     <p class="eyebrow">Portfolio</p>
     <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
     <p class="cover-role mono">Étudiant en communication visuelle · CPNV Sainte-Croix</p>
-    <div class="cover-hint" id="coverHint"><span>Mes travaux.</span></div>
+    <div class="cover-hint" id="coverHint"><div class="cover-hint-bg" id="coverHintBg"></div><span>Mes travaux.</span></div>
   </section>
 
   <section id="travaux">
@@ -792,9 +815,12 @@
    synchronisé quelle que soit la vitesse du geste. */
 (function(){
   var hint = document.getElementById('coverHint');
-  if (!hint) return;
+  var bg = document.getElementById('coverHintBg');
+  if (!hint || !bg) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  /* seul le fond (bg) est mis à l'échelle : le conteneur (hint), qui centre
+     le texte, ne bouge jamais — le texte garde donc toujours la même taille. */
   var MAX_SCALE = 20;
   function computeScale(){
     var vw = window.innerWidth, vh = window.innerHeight;
@@ -808,7 +834,7 @@
     var vh = window.innerHeight;
     var t = Math.max(0, Math.min(1, window.scrollY / vh));
     var scale = 1 + t * (MAX_SCALE - 1);
-    hint.style.transform = 'translateX(-50%) scale(' + scale.toFixed(3) + ')';
+    bg.style.transform = 'scale(' + scale.toFixed(3) + ')';
     var fadeT = Math.max(0, Math.min(1, (t - 0.7) / 0.3));
     hint.style.opacity = String(1 - fadeT);
     hint.style.visibility = fadeT >= 1 ? 'hidden' : 'visible';
@@ -866,8 +892,8 @@ var TRAVAUX_FAMILIES = [
   {
     title: 'Édition &amp; print.', color: '#16A085',
     projects: [
-      { name:'Sérigraphie &amp;<br>Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', ar:'1500/1125', date:'Juin 2026' },
-      { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', ar:'1500/1125', date:'Mars 2026' }
+      { name:'Sérigraphie &amp;<br>Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', ar:'1500/1125', date:'Juin 2026', mw:'min(46vw,250px)' },
+      { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', ar:'1500/1125', date:'Mars 2026', mw:'min(46vw,250px)' }
     ]
   }
 ];
@@ -885,12 +911,13 @@ var TRAVAUX_FAMILIES = [
 
     var cards = fam.projects.map(function(p){
       var altText = p.name.replace(/<[^>]+>/gi, ' ').replace(/\s+/g, ' ').trim();
-      return '<a class="tv-card" href="' + p.href + '">' +
+      var mediaStyle = '--ar:' + p.ar + ';' + (p.mw ? ' --mw:' + p.mw + ';' : '');
+      return '<a class="tv-card" href="' + p.href + '" style="--glow:' + fam.color + '">' +
           '<span class="tv-card-info">' +
             '<span class="tv-card-name">' + p.name + '</span>' +
             '<span class="tv-card-date">' + p.date + '</span>' +
           '</span>' +
-          '<span class="tv-card-media" style="--ar:' + p.ar + '"><img src="' + p.img + '" alt="' + altText + '" loading="lazy" draggable="false"></span>' +
+          '<span class="tv-card-media" style="' + mediaStyle + '"><img src="' + p.img + '" alt="' + altText + '" loading="lazy" draggable="false"></span>' +
         '</a>';
     }).join('');
 
@@ -900,10 +927,6 @@ var TRAVAUX_FAMILIES = [
     var cat = document.createElement('div');
     cat.className = 'tv-cat';
     cat.style.background = fam.color;
-    /* dernière catégorie : texte dans la couleur de l'avant-dernière (Sport design) */
-    if (ci === TRAVAUX_FAMILIES.length - 1){
-      cat.style.color = TRAVAUX_FAMILIES[ci - 1].color;
-    }
     cat.innerHTML =
       '<div class="tv-cat-inner">' +
         '<div class="tv-strip"><div class="tv-strip-row">' + titleCard + arrow + cards + '</div></div>' +
