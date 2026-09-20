@@ -89,8 +89,24 @@
     display:flex; flex-direction:column; align-items:center; gap:10px;
     font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color: var(--ink-faint);
   }
+
+  /* ---- photo en fond du hero : emplacement prêt, invisible tant qu'aucune photo n'est fournie ---- */
+  .cover-portrait-slot{
+    position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+    display:flex; align-items:flex-end; justify-content:center;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 80%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 80%, transparent 100%);
+  }
+  .cover-portrait{
+    height:88%; width:auto; max-width:80vw; object-fit:cover; object-position:top center;
+    filter: grayscale(1) contrast(1.08) brightness(1.03);
+    opacity:.92;
+  }
+  .cover-portrait-tint{ position:absolute; inset:0; background: var(--blue); mix-blend-mode:color; opacity:.4; }
+
   @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none; } }
   #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-hint{
+    position:relative; z-index:1;
     animation: rise .8s cubic-bezier(.2,.7,.2,1) both;
   }
   #cover .logo{ animation-delay: 0s; }
@@ -240,6 +256,66 @@
     .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
   }
 
+  /* ================= TRAVAUX — galerie horizontale au scroll ================= */
+  #travaux{ border-top:1px solid var(--line); padding-bottom: calc(var(--unit)*4); }
+  .travaux-intro{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto;
+    padding: calc(var(--unit)*6) var(--gutter) calc(var(--unit)*2);
+  }
+  .tv-hint{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:"Roboto Mono"; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color: var(--blue);
+  }
+  .tv-hint svg{ width:15px; height:15px; animation: tvArrow 1.6s ease-in-out infinite; }
+  @keyframes tvArrow{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(6px);} }
+
+  .travaux-track{ position:relative; }
+  .travaux-stage{ position:sticky; top:0; height:100svh; overflow:hidden; display:flex; align-items:center; }
+  .travaux-rail{ display:flex; align-items:center; height:100%; padding:0 var(--gutter); will-change:transform; }
+
+  .travaux-rail .row{ flex:0 0 auto; display:flex; flex-direction:column; height:auto; margin-right: calc(var(--gutter)*1.1); }
+  .travaux-rail .shots{ flex-wrap:nowrap; height:min(58vh,540px); }
+  .travaux-rail .shots .frame{ flex:none; height:100%; width:auto; }
+  .travaux-rail .row .head{ margin-top:16px; }
+
+  .tv-divider{
+    flex:0 0 auto; width:min(38vw,360px); height:min(58vh,540px);
+    display:flex; flex-direction:column; justify-content:center;
+    padding-right: calc(var(--gutter)*1.3); margin-right: calc(var(--gutter)*1.1);
+    border-right:1px solid var(--line);
+  }
+  .tv-divider-num{ font-family:"Roboto Mono"; font-size:.78rem; color: var(--blue); margin-bottom:14px; display:block; }
+  .tv-divider-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size:clamp(1.7rem,3.6vw,2.8rem); line-height:.98; margin:0 0 14px; }
+  .tv-divider-sub{ color: var(--ink-soft); font-size:.92rem; line-height:1.55; max-width:32ch; margin:0; }
+
+  .tv-outro{
+    flex:0 0 auto; width:min(42vw,400px); height:min(58vh,540px);
+    display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:20px;
+  }
+  .tv-outro p{ font-family:"Archivo Black"; text-transform:uppercase; font-size:clamp(1.4rem,3vw,2.1rem); line-height:1.05; margin:0; }
+  .tv-outro a{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:"Roboto Mono"; font-size:.76rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--blue); border-bottom:1px solid var(--blue); padding-bottom:4px;
+  }
+  .tv-outro svg{ width:15px; height:15px; }
+
+  .tv-ticker{ overflow:hidden; width:100%; margin-bottom:10px; }
+  .tv-ticker-track{ display:flex; width:max-content; animation: tvTicker 18s linear infinite; }
+  .tv-ticker.rev .tv-ticker-track{ animation-direction:reverse; }
+  @keyframes tvTicker{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  .tv-ticker-track span{
+    font-family:"Archivo Black"; text-transform:uppercase; white-space:nowrap;
+    font-size:clamp(.85rem,1.8vw,1.15rem); color: var(--ink-faint); padding-right:1.2ch;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .tv-hint svg{ animation:none; }
+    .tv-ticker-track{ animation:none; }
+    .travaux-stage{ position:static; height:auto; overflow:visible; }
+    .travaux-rail{ overflow-x:auto; transform:none !important; }
+  }
+
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
   h2.contact-title em{ font-style:normal; color: var(--blue); }
   .contact-lede{ font-size: clamp(1rem,1.7vw,1.2rem); line-height:1.65; color: var(--ink-soft); max-width:52ch; margin:0 0 calc(var(--unit)*2.5); }
@@ -324,13 +400,18 @@
     .shots .frame img{ transition:none; opacity:1; transform:none; }
   }
 
-  @media (max-width: 1020px){
-    .rows{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-  }
-  @media (max-width: 620px){
-    .rows{ grid-template-columns: 1fr; }
-  }
   @media (max-width: 760px){
+    .travaux-stage{ position:static; height:auto; overflow:visible; }
+    .travaux-track{ height:auto !important; }
+    .travaux-rail{
+      overflow-x:auto; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+      transform:none !important; padding:0 var(--gutter); align-items:flex-start;
+    }
+    .travaux-rail .row, .tv-divider, .tv-outro{ scroll-snap-align:start; opacity:1 !important; transform:none !important; }
+    .travaux-rail .shots{ height:48vh; }
+    .tv-divider{ width:78vw; height:auto; padding:24px 0; margin-right: var(--gutter); border-right:none; border-bottom:1px solid var(--line); }
+    .tv-outro{ width:78vw; height:auto; padding:24px 0; }
+
     .profil-wrap{ grid-template-columns:1fr; }
     .headshot{ max-width:220px; }
     .profil-facts{ grid-template-columns:1fr; }
@@ -399,6 +480,10 @@
 
 <main>
   <section id="cover" class="grid-pattern">
+    <div class="cover-portrait-slot" aria-hidden="true">
+      <img class="cover-portrait" src="assets/leo-portrait.jpg" alt="" onerror="this.closest('.cover-portrait-slot').style.display='none'">
+      <div class="cover-portrait-tint"></div>
+    </div>
     <img class="logo" src="assets/logo-black.png" alt="">
     <p class="eyebrow">Portfolio</p>
     <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
@@ -439,184 +524,207 @@
     </div>
   </section>
 
-  <section class="block grid-pattern pre-reveal">
-    <p class="eyebrow"><span class="num">01 à 03</span></p>
-    <h2 class="section-title balance">Des vrais clients.</h2>
-    <p class="section-sub">Comprendre, échanger, conseiller et transformer les besoins du client en idées graphiques.</p>
-
-    <div class="rows">
-      <article class="row pre-reveal" id="chearn" style="--glow:#e7010e">
-        <div class="shots">
-            <a class="frame peek-frame" href="chearn.html" style="--ar:1080/1380">
-            <img src="assets/chearn/cover.jpg" alt="Chearn, identité visuelle complète" loading="lazy">
-            <img class="peek" src="assets/chearn/flatlay.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">01</span><h3>Chearn</h3></div>
-        <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Affiche</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
-      </article>
-
-      <article class="row pre-reveal" id="afmbb" style="--glow:#c71517">
-        <div class="shots">
-            <a class="frame peek-frame" href="afmbb.html" style="--ar:900/1150">
-            <img src="assets/afmbb/logo.jpg" alt="Logo AFMBB" loading="lazy">
-            <img class="peek" src="assets/afmbb/flyer.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">02</span><h3>AFMBB</h3></div>
-        <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Flyer</span><span class="year">Avril 2026</span></div>
-      </article>
-
-      <article class="row pre-reveal" id="partie-ailleurs" style="--glow:#41bcda">
-        <div class="shots">
-            <a class="frame peek-frame" href="partie-ailleurs.html" style="--ar:878/1122">
-            <img src="assets/partie-ailleurs/thumb.jpg" alt="Affiche La Partie d'Ailleurs sur un panneau urbain" loading="lazy">
-            <img class="peek" src="assets/partie-ailleurs/rollup-bar.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">03</span><h3>La Partie d'Ailleurs</h3></div>
-        <div class="meta"><span class="tag client">Client réel</span><span class="tag">Affiche</span><span class="tag">Roll-up</span><span class="tag">Template</span><span class="year">Mars 2026</span></div>
-      </article>
+  <section id="travaux">
+    <div class="travaux-intro pre-reveal">
+      <p class="eyebrow"><span class="num">01 à 11</span></p>
+      <h2 class="section-title balance">Mes travaux.</h2>
+      <p class="section-sub">Onze projets, cinq familles : clients réels, marques fictives, affiches, sport design, édition.</p>
+      <span class="tv-hint"><span>Faire défiler</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </div>
-  </section>
 
-  <section class="block grid-pattern pre-reveal">
-    <p class="eyebrow"><span class="num">04 à 05</span></p>
-    <h2 class="section-title balance">Marques fictives.</h2>
-    <p class="section-sub">Pas de client, pas de brief, mais des projets menés avec le même sérieux.</p>
+    <div class="travaux-track">
+      <div class="travaux-stage">
+        <div class="travaux-rail" id="travauxRail">
 
-    <div class="rows">
-      <article class="row pre-reveal" id="richol" style="--glow:#db6661">
-        <div class="shots">
-            <a class="frame peek-frame" href="richol.html" style="--ar:1080/1380">
-            <img src="assets/richol/fraise-can.jpg" alt="Charte graphique Richol, canette Richol Fraise" loading="lazy">
-            <img class="peek" src="assets/richol/limoncello-photo.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
+          <div class="tv-divider" style="--glow:#e7010e">
+            <span class="tv-divider-num mono">01 – 03</span>
+            <h3 class="tv-divider-title balance">Des vrais<br>clients.</h3>
+            <p class="tv-divider-sub">Comprendre, échanger, conseiller et transformer les besoins du client en idées graphiques.</p>
+          </div>
+
+          <article class="row" id="chearn" style="--glow:#e7010e">
+            <div class="tv-ticker" aria-hidden="true"><div class="tv-ticker-track"><span>Chearn — </span><span>Chearn — </span><span>Chearn — </span><span>Chearn — </span><span>Chearn — </span><span>Chearn — </span><span>Chearn — </span><span>Chearn — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="chearn.html" style="--ar:1080/1380">
+                <img src="assets/chearn/cover.jpg" alt="Chearn, identité visuelle complète" loading="lazy">
+                <img class="peek" src="assets/chearn/flatlay.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">01</span><h3>Chearn</h3></div>
+            <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Affiche</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
+          </article>
+
+          <article class="row" id="afmbb" style="--glow:#c71517">
+            <div class="tv-ticker rev" aria-hidden="true"><div class="tv-ticker-track"><span>AFMBB — </span><span>AFMBB — </span><span>AFMBB — </span><span>AFMBB — </span><span>AFMBB — </span><span>AFMBB — </span><span>AFMBB — </span><span>AFMBB — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="afmbb.html" style="--ar:900/1150">
+                <img src="assets/afmbb/logo.jpg" alt="Logo AFMBB" loading="lazy">
+                <img class="peek" src="assets/afmbb/flyer.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">02</span><h3>AFMBB</h3></div>
+            <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Flyer</span><span class="year">Avril 2026</span></div>
+          </article>
+
+          <article class="row" id="partie-ailleurs" style="--glow:#41bcda">
+            <div class="tv-ticker" aria-hidden="true"><div class="tv-ticker-track"><span>La Partie d'Ailleurs — </span><span>La Partie d'Ailleurs — </span><span>La Partie d'Ailleurs — </span><span>La Partie d'Ailleurs — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="partie-ailleurs.html" style="--ar:878/1122">
+                <img src="assets/partie-ailleurs/thumb.jpg" alt="Affiche La Partie d'Ailleurs sur un panneau urbain" loading="lazy">
+                <img class="peek" src="assets/partie-ailleurs/rollup-bar.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">03</span><h3>La Partie d'Ailleurs</h3></div>
+            <div class="meta"><span class="tag client">Client réel</span><span class="tag">Affiche</span><span class="tag">Roll-up</span><span class="tag">Template</span><span class="year">Mars 2026</span></div>
+          </article>
+
+          <div class="tv-divider" style="--glow:#db6661">
+            <span class="tv-divider-num mono">04 – 05</span>
+            <h3 class="tv-divider-title balance">Marques<br>fictives.</h3>
+            <p class="tv-divider-sub">Pas de client, pas de brief, mais des projets menés avec le même sérieux.</p>
+          </div>
+
+          <article class="row" id="richol" style="--glow:#db6661">
+            <div class="tv-ticker rev" aria-hidden="true"><div class="tv-ticker-track"><span>Richol — </span><span>Richol — </span><span>Richol — </span><span>Richol — </span><span>Richol — </span><span>Richol — </span><span>Richol — </span><span>Richol — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="richol.html" style="--ar:1080/1380">
+                <img src="assets/richol/fraise-can.jpg" alt="Charte graphique Richol, canette Richol Fraise" loading="lazy">
+                <img class="peek" src="assets/richol/limoncello-photo.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">04</span><h3>Richol</h3></div>
+            <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Charte graphique</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
+          </article>
+
+          <article class="row" id="meublon" style="--glow:#e0231a">
+            <div class="tv-ticker" aria-hidden="true"><div class="tv-ticker-track"><span>Meublon — </span><span>Meublon — </span><span>Meublon — </span><span>Meublon — </span><span>Meublon — </span><span>Meublon — </span><span>Meublon — </span><span>Meublon — </span></div></div>
+            <div class="shots">
+                <a class="frame video-frame" href="meublon.html" style="--ar:1080/1380">
+                <img src="assets/meublon/logo.jpg" alt="Meublon, logotype et baseline « Le mobilier en carton qui a du caractère »" loading="lazy">
+                <video data-start="6.6" poster="assets/meublon/poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/meublon/meublon.mp4" type="video/mp4"></video>
+                <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">05</span><h3>Meublon</h3></div>
+            <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="tag">Vidéo</span><span class="year">Sept. 2026</span></div>
+          </article>
+
+          <div class="tv-divider" style="--glow:#b7260e">
+            <span class="tv-divider-num mono">06 – 07</span>
+            <h3 class="tv-divider-title balance">Affiches.</h3>
+            <p class="tv-divider-sub">Des envies soudaines, des idées qui prennent forme.</p>
+          </div>
+
+          <article class="row" id="cervin" style="--glow:#b7260e">
+            <div class="tv-ticker rev" aria-hidden="true"><div class="tv-ticker-track"><span>Cervin — </span><span>Cervin — </span><span>Cervin — </span><span>Cervin — </span><span>Cervin — </span><span>Cervin — </span><span>Cervin — </span><span>Cervin — </span></div></div>
+            <div class="shots">
+                <a class="frame video-frame" href="cervin.html" style="--ar:2480/3508">
+                <img src="assets/cervin/poster.jpg" alt="Affiche Flow State, le Cervin" loading="lazy">
+                <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/cervin/cervin.mp4" type="video/mp4"></video>
+                <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">06</span><h3>Cervin, Flow State</h3></div>
+            <div class="meta"><span class="tag">Affiche</span><span class="tag">Vidéo</span><span class="year">Juin 2026</span></div>
+          </article>
+
+          <article class="row" id="fragments" style="--glow:#ca0a54">
+            <div class="tv-ticker" aria-hidden="true"><div class="tv-ticker-track"><span>Fragments of Silence — </span><span>Fragments of Silence — </span><span>Fragments of Silence — </span><span>Fragments of Silence — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="fragments.html" style="--ar:2480/3508">
+                <img src="assets/fragments/mockup.jpg" alt="Affiche Fragments of Silence affichée sur un panneau urbain" loading="lazy">
+                <img class="peek" src="assets/fragments/affiche-fr.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">07</span><h3>Fragments of Silence</h3></div>
+            <div class="meta"><span class="tag">Affiche</span><span class="year">Mars 2026</span></div>
+          </article>
+
+          <div class="tv-divider" style="--glow:#e02222">
+            <span class="tv-divider-num mono">08 – 09</span>
+            <h3 class="tv-divider-title balance">Sport<br>design.</h3>
+            <p class="tv-divider-sub">Précision, maîtrise et souci du détail, jusque dans les finitions.</p>
+          </div>
+
+          <article class="row" id="riat" style="--glow:#e02222">
+            <div class="tv-ticker rev" aria-hidden="true"><div class="tv-ticker-track"><span>Damien Riat — </span><span>Damien Riat — </span><span>Damien Riat — </span><span>Damien Riat — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="riat.html" style="--ar:1417/1811">
+                <img src="assets/riat/poster.jpg" alt="Affiche sport design Damien Riat, capitaine du Lausanne HC" loading="lazy">
+                <img class="peek" src="assets/riat/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">08</span><h3>Damien Riat</h3></div>
+            <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
+          </article>
+
+          <article class="row" id="rogers" style="--glow:#2f6fd0">
+            <div class="tv-ticker" aria-hidden="true"><div class="tv-ticker-track"><span>Morgan Rogers — </span><span>Morgan Rogers — </span><span>Morgan Rogers — </span><span>Morgan Rogers — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="rogers.html" style="--ar:1134/1417">
+                <img src="assets/rogers/poster.jpg" alt="Affiche sport design Morgan Rogers, football" loading="lazy">
+                <img class="peek" src="assets/rogers/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">09</span><h3>Morgan Rogers</h3></div>
+            <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
+          </article>
+
+          <div class="tv-divider" style="--glow:#e2963e">
+            <span class="tv-divider-num mono">10 – 11</span>
+            <h3 class="tv-divider-title balance">Édition<br>&amp; print.</h3>
+            <p class="tv-divider-sub">Grilles, hiérarchie typographique et pagination, pour penser la page comme un système.</p>
+          </div>
+
+          <article class="row" id="serigraphie" style="--glow:#e2963e">
+            <div class="tv-ticker rev" aria-hidden="true"><div class="tv-ticker-track"><span>Sérigraphie &amp; Tampographie — </span><span>Sérigraphie &amp; Tampographie — </span><span>Sérigraphie &amp; Tampographie — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="serigraphie.html" style="--ar:1500/1125">
+                <img src="assets/serigraphie/cover-mockup.jpg" alt="Le cahier Sérigraphie et Tampographie" loading="lazy">
+                <img class="peek" src="assets/serigraphie/spread-bleu.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">10</span><h3>Sérigraphie &amp; Tampographie</h3></div>
+            <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Juin 2026</span></div>
+          </article>
+
+          <article class="row" id="losangeles" style="--glow:#189cd8">
+            <div class="tv-ticker" aria-hidden="true"><div class="tv-ticker-track"><span>Magazine Los Angeles — </span><span>Magazine Los Angeles — </span><span>Magazine Los Angeles — </span></div></div>
+            <div class="shots">
+                <a class="frame peek-frame" href="losangeles.html" style="--ar:1500/1125">
+                <img src="assets/losangeles/mockup-histoire.jpg" alt="Guide touristique Los Angeles, livre ouvert" loading="lazy">
+                <img class="peek" src="assets/losangeles/grid.jpg" alt="" loading="lazy" aria-hidden="true">
+                <span class="peek-veil" aria-hidden="true"></span>
+                <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+                </a>
+            </div>
+            <div class="head"><span class="idx">11</span><h3>Magazine Los Angeles</h3></div>
+            <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Mars 2026</span></div>
+          </article>
+
+          <div class="tv-outro">
+            <p>Onze projets,<br>une passion.</p>
+            <a href="#parcours"><span>Voir mon parcours</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+
         </div>
-        <div class="head"><span class="idx">04</span><h3>Richol</h3></div>
-        <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Charte graphique</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
-      </article>
-
-      <article class="row pre-reveal" id="meublon" style="--glow:#e0231a">
-        <div class="shots">
-            <a class="frame video-frame" href="meublon.html" style="--ar:1080/1380">
-            <img src="assets/meublon/logo.jpg" alt="Meublon, logotype et baseline « Le mobilier en carton qui a du caractère »" loading="lazy">
-            <video data-start="6.6" poster="assets/meublon/poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/meublon/meublon.mp4" type="video/mp4"></video>
-            <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">05</span><h3>Meublon</h3></div>
-        <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="tag">Vidéo</span><span class="year">Sept. 2026</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="block grid-pattern pre-reveal">
-    <p class="eyebrow"><span class="num">06 à 07</span></p>
-    <h2 class="section-title balance">Affiches.</h2>
-    <p class="section-sub">Des envies soudaines, des idées qui prennent forme.</p>
-
-    <div class="rows">
-      <article class="row pre-reveal" id="cervin" style="--glow:#b7260e">
-        <div class="shots">
-            <a class="frame video-frame" href="cervin.html" style="--ar:2480/3508">
-            <img src="assets/cervin/poster.jpg" alt="Affiche Flow State, le Cervin" loading="lazy">
-            <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/cervin/cervin.mp4" type="video/mp4"></video>
-            <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">06</span><h3>Cervin, Flow State</h3></div>
-        <div class="meta"><span class="tag">Affiche</span><span class="tag">Vidéo</span><span class="year">Juin 2026</span></div>
-      </article>
-
-      <article class="row pre-reveal" id="fragments" style="--glow:#ca0a54">
-        <div class="shots">
-            <a class="frame peek-frame" href="fragments.html" style="--ar:2480/3508">
-            <img src="assets/fragments/mockup.jpg" alt="Affiche Fragments of Silence affichée sur un panneau urbain" loading="lazy">
-            <img class="peek" src="assets/fragments/affiche-fr.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">07</span><h3>Fragments of Silence</h3></div>
-        <div class="meta"><span class="tag">Affiche</span><span class="year">Mars 2026</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section id="travaux" class="block grid-pattern pre-reveal">
-    <p class="eyebrow"><span class="num">08 à 09</span> Retouche</p>
-    <h2 class="section-title balance">Sport design.</h2>
-    <p class="section-sub">Précision, maîtrise et souci du détail, jusque dans les finitions.</p>
-
-    <div class="rows">
-      <article class="row pre-reveal" id="riat" style="--glow:#e02222">
-        <div class="shots">
-            <a class="frame peek-frame" href="riat.html" style="--ar:1417/1811">
-            <img src="assets/riat/poster.jpg" alt="Affiche sport design Damien Riat, capitaine du Lausanne HC" loading="lazy">
-            <img class="peek" src="assets/riat/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">08</span><h3>Damien Riat</h3></div>
-        <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
-      </article>
-
-      <article class="row pre-reveal" id="rogers" style="--glow:#2f6fd0">
-        <div class="shots">
-            <a class="frame peek-frame" href="rogers.html" style="--ar:1134/1417">
-            <img src="assets/rogers/poster.jpg" alt="Affiche sport design Morgan Rogers, football" loading="lazy">
-            <img class="peek" src="assets/rogers/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">09</span><h3>Morgan Rogers</h3></div>
-        <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
-      </article>
-    </div>
-  </section>
-
-  <section class="block grid-pattern pre-reveal">
-    <p class="eyebrow"><span class="num">10 à 11</span></p>
-    <h2 class="section-title balance">Édition &amp; print.</h2>
-    <p class="section-sub">Grilles, hiérarchie typographique et pagination, pour penser la page comme un système.</p>
-
-    <div class="rows">
-      <article class="row pre-reveal" id="serigraphie" style="--glow:#e2963e">
-        <div class="shots">
-            <a class="frame peek-frame" href="serigraphie.html" style="--ar:1500/1125">
-            <img src="assets/serigraphie/cover-mockup.jpg" alt="Le cahier Sérigraphie et Tampographie" loading="lazy">
-            <img class="peek" src="assets/serigraphie/spread-bleu.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">10</span><h3>Sérigraphie &amp; Tampographie</h3></div>
-        <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Juin 2026</span></div>
-      </article>
-
-      <article class="row pre-reveal" id="losangeles" style="--glow:#189cd8">
-        <div class="shots">
-            <a class="frame peek-frame" href="losangeles.html" style="--ar:1500/1125">
-            <img src="assets/losangeles/mockup-histoire.jpg" alt="Guide touristique Los Angeles, livre ouvert" loading="lazy">
-            <img class="peek" src="assets/losangeles/grid.jpg" alt="" loading="lazy" aria-hidden="true">
-            <span class="peek-veil" aria-hidden="true"></span>
-            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
-            </a>
-        </div>
-        <div class="head"><span class="idx">11</span><h3>Magazine Los Angeles</h3></div>
-        <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Mars 2026</span></div>
-      </article>
+      </div>
     </div>
   </section>
 
@@ -887,6 +995,51 @@
     parcoursUpdate();
   })();
 
+  /* ---- travaux : galerie horizontale, bloquée pendant le défilement ---- */
+  var travauxUpdate = null;
+  (function(){
+    var section = document.getElementById('travaux');
+    var track   = section && section.querySelector('.travaux-track');
+    var stage   = section && section.querySelector('.travaux-stage');
+    var rail    = document.getElementById('travauxRail');
+    if (!section || !track || !stage || !rail) return;
+
+    var mq = window.matchMedia('(max-width: 760px)');
+    var panels = Array.prototype.slice.call(rail.children);
+    var span = 0;
+
+    function nativeMode(){ return reduced || mq.matches; }
+
+    function measure(){
+      if (nativeMode()) { track.style.height = ''; rail.style.transform = ''; span = 0; return; }
+      span = Math.max(0, rail.scrollWidth - stage.clientWidth);
+      track.style.height = (window.innerHeight + span) + 'px';
+    }
+    measure();
+    window.addEventListener('resize', measure);
+    mq.addEventListener ? mq.addEventListener('change', measure) : mq.addListener(measure);
+
+    travauxUpdate = function(){
+      if (nativeMode() || span <= 0) return;
+      var vh = window.innerHeight;
+      var rect = track.getBoundingClientRect();
+      var localSpan = rect.height - vh;
+      var t = localSpan > 0 ? (-rect.top) / localSpan : 0;
+      t = Math.max(0, Math.min(1, t));
+      var x = -t * span;
+      rail.style.transform = 'translateX(' + x + 'px)';
+
+      var viewportCenter = stage.clientWidth / 2;
+      panels.forEach(function(p){
+        var pc = p.offsetLeft + p.offsetWidth / 2 + x;
+        var d = Math.min(1, Math.abs(pc - viewportCenter) / (stage.clientWidth * 0.65));
+        p.style.opacity = String(1 - d * 0.55);
+        p.style.transform = 'scale(' + (1 - d * 0.06) + ')';
+      });
+    };
+    travauxUpdate();
+  })();
+
   if (!reduced && 'IntersectionObserver' in window) {
     var targets = document.querySelectorAll('.pre-reveal');
     var obs = new IntersectionObserver(function(entries){
@@ -916,6 +1069,7 @@
     var trackH = track.clientHeight - 7;
     prog.style.top = Math.max(0, Math.min(1, pct)) * trackH + 'px';
     if (parcoursUpdate) parcoursUpdate();
+    if (travauxUpdate) travauxUpdate();
   }
   document.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll, {passive:true});
