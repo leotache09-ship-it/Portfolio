@@ -212,76 +212,65 @@
     .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
   }
 
-  /* ================= TRAVAUX — carré d'entrée + défilement linéaire par famille ================= */
+  /* ================= TRAVAUX — carré d'entrée + bande continue asservie au scroll =================
+     Rien n'est chronométré : la position, la couleur et les lignes sont une fonction
+     directe de la position de scroll, recalculée à chaque tick. Un grand coup de
+     molette, un glisser de la scrollbar ou la touche Fin traversent tout instantanément
+     — aucune animation ne « capture » le geste ni ne force à attendre. ---- */
   #travaux{ position:relative; }
-  .tv3-track{ position:relative; height: 210svh; }
+  .tv3-track{ position:relative; height: 1400vh; }
   .tv3-stage{
     position:sticky; top:0; height:100svh; overflow:hidden;
-    display:flex; align-items:center; justify-content:center;
-    background: var(--tv3-bg, #0D0D0F);
-    transition: background-color .9s cubic-bezier(.22,.61,.36,1);
+    background: #0D0D0F;
     color:#fff;
   }
 
   .tv3-square{
     position:absolute; left:50%; top:50%; width:120px; height:120px; margin:-60px 0 0 -60px;
-    border-radius:20px; background:#189CD8; z-index:4;
+    background:#189CD8; z-index:4;
     display:flex; align-items:center; justify-content:center; text-align:center;
-    transform: scale(1); opacity:1;
-    transition: transform 1s cubic-bezier(.65,0,.35,1), border-radius 1s cubic-bezier(.65,0,.35,1), opacity .35s linear;
   }
-  .tv3-square.is-full{ transform: scale(var(--tv3-scale,40)); border-radius:0; }
-  .tv3-square.is-hidden{ opacity:0; }
   .tv3-square-label{
     font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
     font-size: clamp(.7rem,2.2vw,.9rem); line-height:1.2; padding:0 12px;
-    transition: opacity .3s linear;
   }
-  .tv3-square.is-growing .tv3-square-label, .tv3-square.is-full .tv3-square-label{ opacity:0; }
 
-  .tv3-line{
-    position:absolute; left:8%; right:8%; top:50%; height:1px; background:#fff;
-    transform: scaleX(0); opacity:0; z-index:5; pointer-events:none;
-    transition: transform .6s cubic-bezier(.22,.61,.36,1), opacity .6s linear;
+  /* lignes graphiques fines, présentes en permanence pendant tout le parcours */
+  .tv3-frame-line{
+    position:absolute; left:6%; right:6%; height:1px; background:#fff;
+    z-index:3; pointer-events:none;
   }
-  .tv3-line.is-on{ transform: scaleX(1); opacity:.9; }
+  .tv3-frame-line--top{ top: 13%; }
+  .tv3-frame-line--bottom{ bottom: 13%; }
 
-  .tv3-slides{ position:relative; width:100%; height:100%; z-index:2; }
+  .tv3-row{
+    position:absolute; top:0; left:0; height:100%;
+    display:flex; align-items:center; gap: calc(var(--gutter)*1.4);
+    z-index:2;
+  }
+
   .tv3-slide{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    padding: 0 var(--gutter);
-    opacity:0; pointer-events:none;
+    flex:0 0 auto; width:min(72vw,860px); height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding: 0 calc(var(--gutter)*.7);
     text-decoration:none; color:inherit;
-    transition: opacity .68s cubic-bezier(.22,.61,.36,1), transform .68s cubic-bezier(.22,.61,.36,1);
   }
-  .tv3-slide.is-active{ opacity:1; transform:none !important; pointer-events:auto; }
+  .tv3-slide, .tv3-slide *{ -webkit-user-drag:none; user-select:none; }
 
   .tv3-slide-title{
     font-family:"Archivo Black"; text-transform:uppercase; text-align:center;
-    font-size: clamp(2.3rem,7vw,5.4rem); line-height:.95; max-width:18ch;
+    font-size: clamp(2.3rem,6.4vw,5.2rem); line-height:.95;
   }
 
   .tv3-slide-project{
-    display:flex; align-items:center; gap: calc(var(--gutter)*1.3);
-    max-width: calc(var(--tile)*16); width:100%; justify-content:center;
+    display:flex; align-items:center; gap: calc(var(--gutter)*1.1);
+    width:100%; justify-content:center;
     text-decoration:none; color:inherit;
   }
-  .tv3-project-media{ display:block; flex:none; width:min(38vw,320px); aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.08); }
-  .tv3-project-media img{ width:100%; height:100%; object-fit:cover; }
-  .tv3-project-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.4rem,3.4vw,2.6rem); line-height:1.03; }
-  .tv3-project-date{ display:block; margin-top:10px; font-family:"Roboto Mono"; font-size:.76rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
-
-  .tv3-arrow{
-    position:absolute; top:50%; margin-top:-22px; width:44px; height:44px; border-radius:50%;
-    border:1px solid #fff; background:transparent; color:#fff;
-    display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:6;
-    opacity:.65; transition: opacity .3s, background-color .3s, color .3s;
-  }
-  .tv3-arrow:hover{ opacity:1; background:#fff; color:#000; }
-  .tv3-arrow[disabled]{ opacity:.15; pointer-events:none; }
-  .tv3-arrow--prev{ left: var(--gutter); }
-  .tv3-arrow--next{ right: var(--gutter); }
-  .tv3-arrow svg{ width:16px; height:16px; }
+  .tv3-project-media{ display:block; flex:none; width:min(30vw,300px); aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.08); pointer-events:none; }
+  .tv3-project-media img{ width:100%; height:100%; object-fit:cover; pointer-events:none; }
+  .tv3-project-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.2rem,2.6vw,2rem); line-height:1.05; }
+  .tv3-project-date{ display:block; margin-top:10px; font-family:"Roboto Mono"; font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
 
   .tv3-noscript{ padding-top: calc(var(--unit)*4); padding-bottom: calc(var(--unit)*4); }
   .tv3-noscript ul{ list-style:none; margin: var(--unit) 0 0; padding:0; display:grid; gap:10px; }
@@ -289,16 +278,20 @@
   .tv3-noscript a:hover{ color: var(--blue); }
 
   @media (max-width:760px){
-    .tv3-slide-project{ flex-direction:column; gap: calc(var(--unit)*1.5); }
-    .tv3-project-media{ width:min(64vw,300px); }
-    .tv3-arrow{ width:38px; height:38px; }
+    .tv3-slide{ width:86vw; }
+    .tv3-slide-project{ flex-direction:column; gap: calc(var(--unit)*1.4); }
+    .tv3-project-media{ width:min(58vw,280px); }
   }
 
+  /* mouvement réduit : plus de scroll-jack, tout s'affiche en liste normale */
   @media (prefers-reduced-motion: reduce){
-    .tv3-square{ transition: opacity .2s linear; }
-    .tv3-line{ transition: opacity .2s linear; }
-    .tv3-slide{ transition: opacity .2s linear; }
-    .tv3-stage{ transition: background-color .2s linear; }
+    .tv3-track{ height:auto !important; }
+    .tv3-stage{ position:static; height:auto; overflow:visible; background:#0D0D0F; padding: calc(var(--unit)*4) 0; }
+    .tv3-square{ display:none; }
+    .tv3-frame-line{ display:none; }
+    .tv3-row{ position:relative; height:auto; flex-direction:column; gap: calc(var(--unit)*4); padding: 0 var(--gutter); }
+    .tv3-slide{ position:static; width:100%; height:auto; padding:0; }
+    .tv3-slide-project{ flex-direction:column; }
   }
 
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
@@ -467,15 +460,9 @@
         <div class="tv3-square" id="tv3Square">
           <span class="tv3-square-label">Mes travaux.</span>
         </div>
-        <div class="tv3-line" id="tv3Line" aria-hidden="true"></div>
-        <div class="tv3-slides" id="tv3Slides"></div>
-
-        <button class="tv3-arrow tv3-arrow--prev" type="button" aria-label="Précédent">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <button class="tv3-arrow tv3-arrow--next" type="button" aria-label="Suivant">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        <div class="tv3-frame-line tv3-frame-line--top" id="tv3LineTop"></div>
+        <div class="tv3-frame-line tv3-frame-line--bottom" id="tv3LineBottom"></div>
+        <div class="tv3-row" id="tv3Row"></div>
       </div>
     </div>
 
@@ -766,33 +753,6 @@
     parcoursUpdate();
   })();
 
-  /* ---- travaux : chaque famille glisse horizontalement au fil du scroll normal (jamais bloqué) ---- */
-  var travauxUpdate = null;
-  (function(){
-    var cats = Array.prototype.slice.call(document.querySelectorAll('.tv-category'));
-    if (!cats.length) return;
-    if (reduced) return;
-
-    var items = cats.map(function(cat){
-      return { row: cat.querySelector('.tv-cat-row'), dir: parseFloat(cat.getAttribute('data-dir')) || 1 };
-    }).filter(function(it){ return it.row; });
-
-    travauxUpdate = function(){
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      items.forEach(function(it){
-        var rect = it.row.getBoundingClientRect();
-        // 0 quand la rangée entre par le bas, 1 une fois bien installée dans l'écran
-        var start = vh, end = vh * 0.4;
-        var t = (start - rect.top) / (start - end);
-        t = Math.max(0, Math.min(1, t));
-        var dist = Math.min(140, vh * 0.16);
-        it.row.style.transform = 'translateX(' + ((1 - t) * it.dir * dist) + 'px)';
-        it.row.style.opacity = String(0.25 + t * 0.75);
-      });
-    };
-    travauxUpdate();
-  })();
-
   if (!reduced && 'IntersectionObserver' in window) {
     var targets = document.querySelectorAll('.pre-reveal');
     var obs = new IntersectionObserver(function(entries){
@@ -822,7 +782,6 @@
     var trackH = track.clientHeight - 7;
     prog.style.top = Math.max(0, Math.min(1, pct)) * trackH + 'px';
     if (parcoursUpdate) parcoursUpdate();
-    if (travauxUpdate) travauxUpdate();
   }
   document.addEventListener('scroll', onScroll, {passive:true});
   window.addEventListener('resize', onScroll, {passive:true});
@@ -840,24 +799,27 @@
 })();
 </script>
 
+
+
 <script>
 /*
  * ============================================================
- * TRAVAUX — carré d'entrée, puis défilement linéaire par famille
+ * TRAVAUX — carré d'entrée, puis bande continue asservie au scroll
  * ============================================================
  * Pour ajouter/retirer/réordonner un projet ou une famille, modifier
- * uniquement TRAVAUX_FAMILIES ci-dessous (couleur, titre, sens
- * d'entrée/sortie, projets). Le reste (carré qui grandit, couleur de
- * fond, glissement des titres/projets, trait de transition, nav
- * clavier/molette/glisser/tactile) est un système générique qui
- * s'applique à n'importe quel nombre de familles/projets.
+ * uniquement TRAVAUX_FAMILIES ci-dessous (couleur, titre, projets).
  *
- * dir 'rtl' = la famille entre par la droite et sort par la gauche.
- * dir 'ltr' = la famille entre par la gauche et sort par la droite.
+ * Principe : AUCUNE animation chronométrée ne pilote la navigation.
+ * Une seule valeur — la position de scroll dans la piste — détermine
+ * en direct la position du carré/de la bande, la couleur de fond et
+ * l'opacité des lignes. Scroller vite, sauter en bas de page ou
+ * glisser la scrollbar traverse tout instantanément : rien ne peut
+ * « bloquer » le geste de l'utilisateur en attendant qu'une
+ * transition se termine.
  */
 var TRAVAUX_FAMILIES = [
   {
-    title: 'Des vrais clients.', color: '#189CD8', dir: 'rtl',
+    title: 'Des vrais clients.', color: '#189CD8',
     projects: [
       { name:'Chearn', href:'chearn.html', img:'assets/chearn/cover.jpg', ar:'1080/1380', date:'Avril 2026' },
       { name:'AFMBB', href:'afmbb.html', img:'assets/afmbb/logo.jpg', ar:'900/1150', date:'Avril 2026' },
@@ -865,28 +827,28 @@ var TRAVAUX_FAMILIES = [
     ]
   },
   {
-    title: 'Marques fictives.', color: '#EE8B2D', dir: 'ltr',
+    title: 'Marques fictives.', color: '#EE8B2D',
     projects: [
       { name:'Richol', href:'richol.html', img:'assets/richol/fraise-can.jpg', ar:'1080/1380', date:'Avril 2026' },
       { name:'Meublon', href:'meublon.html', img:'assets/meublon/poster.jpg', ar:'1080/1380', date:'Sept. 2026' }
     ]
   },
   {
-    title: 'Affiches.', color: '#2FAE66', dir: 'rtl',
+    title: 'Affiches.', color: '#2FAE66',
     projects: [
       { name:'Cervin, Flow State', href:'cervin.html', img:'assets/cervin/poster.jpg', ar:'2480/3508', date:'Juin 2026' },
       { name:'Fragments of Silence', href:'fragments.html', img:'assets/fragments/mockup.jpg', ar:'2480/3508', date:'Mars 2026' }
     ]
   },
   {
-    title: 'Sport design.', color: '#D9A62E', dir: 'ltr',
+    title: 'Sport design.', color: '#D9A62E',
     projects: [
       { name:'Damien Riat', href:'riat.html', img:'assets/riat/poster.jpg', ar:'1417/1811', date:'Sept. 2026' },
       { name:'Morgan Rogers', href:'rogers.html', img:'assets/rogers/poster.jpg', ar:'1134/1417', date:'Sept. 2026' }
     ]
   },
   {
-    title: 'Édition &amp; print.', color: '#0D0D0F', dir: 'rtl',
+    title: 'Édition &amp; print.', color: '#0D0D0F',
     projects: [
       { name:'Sérigraphie &amp; Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', ar:'1500/1125', date:'Juin 2026' },
       { name:'Magazine Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', ar:'1500/1125', date:'Mars 2026' }
@@ -899,21 +861,25 @@ var TRAVAUX_FAMILIES = [
   var track = section && section.querySelector('.tv3-track');
   var stage = document.getElementById('tv3Stage');
   var square = document.getElementById('tv3Square');
-  var line = document.getElementById('tv3Line');
-  var slidesWrap = document.getElementById('tv3Slides');
-  if (!section || !track || !stage || !square || !slidesWrap) return;
+  var label = square && square.querySelector('.tv3-square-label');
+  var lineTop = document.getElementById('tv3LineTop');
+  var lineBottom = document.getElementById('tv3LineBottom');
+  var row = document.getElementById('tv3Row');
+  if (!section || !track || !stage || !square || !row) return;
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var BASE_BG = '#0D0D0F';
+  var STEP_RATIO = 0.55; /* hauteur de scroll par étape, en fraction de la hauteur d'écran */
 
-  /* ---- aplati les familles en une piste linéaire de slides (titre, puis ses projets) ---- */
+  /* ---- aplatit les familles en une bande linéaire (titre, puis ses projets) ---- */
   var slides = [];
   TRAVAUX_FAMILIES.forEach(function(fam){
-    slides.push({ type:'title', title: fam.title, color: fam.color, dir: fam.dir });
+    slides.push({ type:'title', title: fam.title, color: fam.color });
     fam.projects.forEach(function(p){
-      slides.push({ type:'project', project: p, color: fam.color, dir: fam.dir });
+      slides.push({ type:'project', project: p, color: fam.color });
     });
   });
+  var N = slides.length;
 
   /* ---- construit le DOM à partir des données ---- */
   slides.forEach(function(s){
@@ -925,213 +891,122 @@ var TRAVAUX_FAMILIES = [
       el.href = s.project.href;
       el.innerHTML =
         '<span class="tv3-slide-project">' +
-          '<span class="tv3-project-media" style="--ar:' + s.project.ar + '"><img src="' + s.project.img + '" alt="' + s.project.name.replace(/(<([^>]+)>)/gi,'') + '" loading="lazy"></span>' +
+          '<span class="tv3-project-media" style="--ar:' + s.project.ar + '"><img src="' + s.project.img + '" alt="' + s.project.name.replace(/(<([^>]+)>)/gi,'') + '" loading="lazy" draggable="false"></span>' +
           '<span><span class="tv3-project-name">' + s.project.name + '</span><span class="tv3-project-date">' + s.project.date + '</span></span>' +
         '</span>';
     }
-    slidesWrap.appendChild(el);
+    row.appendChild(el);
   });
-  var slideEls = Array.prototype.slice.call(slidesWrap.children);
-  var prevBtn = section.querySelector('.tv3-arrow--prev');
-  var nextBtn = section.querySelector('.tv3-arrow--next');
+  var slideEls = Array.prototype.slice.call(row.children);
 
-  var idx = -1; /* -1 = carré au repos, 0..N-1 = slides */
-  var animating = false;
+  if (reducedMotion) return; /* la media query CSS affiche tout en liste statique */
 
-  function sign(dir, edge){
-    if (dir === 'rtl') return edge === 'enter' ? 1 : -1;
-    return edge === 'enter' ? -1 : 1;
+  function hexToRgb(hex){
+    hex = hex.replace('#','');
+    if (hex.length === 3) hex = hex.split('').map(function(c){ return c+c; }).join('');
+    var n = parseInt(hex, 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
   }
-  function setBg(hex){ stage.style.setProperty('--tv3-bg', hex); }
-  function updateArrows(){
-    if (prevBtn) prevBtn.disabled = (idx === -1);
-    if (nextBtn) nextBtn.disabled = (idx === slides.length - 1);
+  function lerpColor(c1, c2, t){
+    t = Math.max(0, Math.min(1, t));
+    var a = hexToRgb(c1), b = hexToRgb(c2);
+    return 'rgb(' + Math.round(a[0]+(b[0]-a[0])*t) + ',' + Math.round(a[1]+(b[1]-a[1])*t) + ',' + Math.round(a[2]+(b[2]-a[2])*t) + ')';
   }
+  function lerpNum(a, b, t){ return a + (b-a)*t; }
 
+  var MAX_SCALE = 40;
   function computeScale(){
     var vw = window.innerWidth, vh = window.innerHeight;
-    square.style.setProperty('--tv3-scale', String(Math.ceil(Math.sqrt(vw*vw+vh*vh) / 120) + 2));
-  }
-  computeScale();
-  window.addEventListener('resize', computeScale);
-
-  /* ---- transition normale entre deux slides (même famille ou changement de famille) ---- */
-  function transitionTo(newIdx){
-    if (animating || newIdx === idx || newIdx < 0 || newIdx >= slides.length) return;
-    var forward = newIdx > idx;
-    var oldEl = slideEls[idx], newEl = slideEls[newIdx];
-    var oldS = slides[idx], newS = slides[newIdx];
-    animating = true;
-
-    if (reducedMotion){
-      oldEl.classList.remove('is-active');
-      newEl.classList.add('is-active');
-      if (newS.color !== oldS.color) setBg(newS.color);
-      idx = newIdx; animating = false; updateArrows();
-      return;
-    }
-
-    var DIST = 64;
-    var oldExitSign = forward ? sign(oldS.dir,'exit') : sign(oldS.dir,'enter');
-    var newEnterSign = forward ? sign(newS.dir,'enter') : sign(newS.dir,'exit');
-
-    newEl.style.transform = 'translateX(' + (newEnterSign * DIST) + 'px)';
-    oldEl.style.transform = 'translateX(' + (oldExitSign * DIST) + 'px)';
-    oldEl.classList.remove('is-active');
-
-    if (newS.color !== oldS.color){
-      setBg(newS.color);
-      line.classList.add('is-on');
-      setTimeout(function(){ line.classList.remove('is-on'); }, 620);
-    }
-
-    void newEl.offsetWidth;
-    newEl.classList.add('is-active');
-
-    setTimeout(function(){
-      oldEl.style.transform = '';
-      idx = newIdx;
-      animating = false;
-      updateArrows();
-    }, 700);
+    MAX_SCALE = Math.ceil(Math.sqrt(vw*vw + vh*vh) / 120) + 2;
   }
 
-  /* ---- ouverture : le petit carré bleu grandit jusqu'à couvrir l'écran, devient le
-     fond de la première famille, puis s'efface pour révéler « Des vrais clients. » ---- */
-  function enterFromSquare(){
-    if (animating) return;
-    animating = true;
-    square.classList.add('is-growing');
-    requestAnimationFrame(function(){ square.classList.add('is-full'); });
-
-    setTimeout(function(){ setBg(slides[0].color); }, 920);
-    setTimeout(function(){ square.classList.add('is-hidden'); }, 960);
-    setTimeout(function(){
-      square.classList.remove('is-growing','is-full');
-      slideEls[0].classList.add('is-active');
-    }, 1000);
-    setTimeout(function(){
-      idx = 0; animating = false; updateArrows();
-    }, 1350);
+  function metrics(){
+    var w = slideEls[0].getBoundingClientRect().width;
+    var gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap || '0') || 0;
+    return { span: w + gap };
   }
-
-  /* ---- retour : la première famille sort, le carré replein l'écran (même bleu, donc
-     invisible) puis se rétracte en révélant le fond sombre du repos ---- */
-  function exitToSquare(){
-    if (animating) return;
-    animating = true;
-    slideEls[0].classList.remove('is-active');
-    square.classList.remove('is-hidden');
-    square.classList.add('is-full');
-    void square.offsetWidth;
-    setBg(BASE_BG);
-    setTimeout(function(){ square.classList.remove('is-full'); }, 60);
-    setTimeout(function(){ idx = -1; animating = false; updateArrows(); }, 1120);
+  function centerOffset(i){
+    var m = metrics();
+    var stageW = stage.getBoundingClientRect().width;
+    var slideW = slideEls[0].getBoundingClientRect().width;
+    return stageW/2 - (i*m.span + slideW/2);
   }
+  function applyRowX(x){ row.style.transform = 'translateX(' + x + 'px)'; }
 
-  function step(goingNext){
-    if (animating) return;
-    if (goingNext){
-      if (idx === -1) enterFromSquare();
-      else if (idx < slides.length - 1) transitionTo(idx + 1);
-    } else {
-      if (idx === 0) exitToSquare();
-      else if (idx > -1) transitionTo(idx - 1);
-    }
-  }
-
-  /* ---- init ---- */
-  updateArrows();
-
-  /* ---- la scène n'intercepte le scroll que pendant qu'elle est épinglée en haut du
-     viewport, et seulement s'il reste une étape à jouer dans ce sens ; sinon le scroll
-     natif reprend la main et la section sort normalement de l'écran ---- */
-  function pinned(){
-    var r = track.getBoundingClientRect();
-    return r.top <= 1 && r.bottom > window.innerHeight;
-  }
-  function willCapture(goingNext){
-    if (!pinned()) return false;
-    return goingNext ? idx < slides.length - 1 : idx > -1;
-  }
-
-  var wheelFreeUntil = 0;
-  window.addEventListener('wheel', function(e){
-    var goingNext = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY > 0 : e.deltaX > 0;
-    if (!willCapture(goingNext)) return;
-    var now = Date.now();
-    if (now < wheelFreeUntil){ e.preventDefault(); return; }
-    e.preventDefault();
-    wheelFreeUntil = now + (idx === -1 ? 1400 : 780);
-    step(goingNext);
-  }, { passive:false });
-
-  window.addEventListener('keydown', function(e){
-    var forward = e.key === 'ArrowRight' || e.key === 'ArrowDown';
-    var back = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
-    if (!forward && !back) return;
-    if (!willCapture(forward)) return;
-    e.preventDefault();
-    step(forward);
-  });
-
-  var touchX = 0, touchY = 0, touchAxis = null, touchOn = false;
-  stage.addEventListener('touchstart', function(e){
-    if (!pinned()){ touchOn = false; return; }
-    var t = e.touches[0];
-    touchX = t.clientX; touchY = t.clientY; touchAxis = null; touchOn = true;
-  }, { passive:true });
-
-  stage.addEventListener('touchmove', function(e){
-    if (!touchOn) return;
-    var t = e.touches[0];
-    var dx = t.clientX - touchX, dy = t.clientY - touchY;
-    if (touchAxis === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)){
-      touchAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-    }
-    if (touchAxis && willCapture((touchAxis === 'x' ? dx : dy) < 0)) e.preventDefault();
-  }, { passive:false });
-
-  stage.addEventListener('touchend', function(e){
-    if (!touchOn) return;
-    touchOn = false;
-    var t = e.changedTouches[0];
-    var dx = t.clientX - touchX, dy = t.clientY - touchY;
-    var delta = touchAxis === 'x' ? dx : dy;
-    if (Math.abs(delta) < 42) return;
-    var goingNext = delta < 0;
-    if (willCapture(goingNext)) step(goingNext);
-  }, { passive:true });
-
-  var dragX = null;
-  stage.addEventListener('pointerdown', function(e){
-    if (e.pointerType === 'touch' || !pinned()) return;
-    dragX = e.clientX;
-  });
-  window.addEventListener('pointerup', function(e){
-    if (dragX === null) return;
-    var dx = e.clientX - dragX;
-    dragX = null;
-    if (Math.abs(dx) < 70) return;
-    var goingNext = dx < 0;
-    if (willCapture(goingNext)) step(goingNext);
-  });
-
-  if (prevBtn) prevBtn.addEventListener('click', function(){ step(false); });
-  if (nextBtn) nextBtn.addEventListener('click', function(){ step(true); });
-
-  /* réinitialise la scène quand on revient au début via le menu */
-  var navLink = document.querySelector('header.nav a[href="#travaux"]');
-  if (navLink){
-    navLink.addEventListener('click', function(){
-      if (idx !== -1){
-        slideEls[idx].classList.remove('is-active');
-        square.classList.remove('is-growing','is-full','is-hidden');
-        idx = -1; animating = false;
-        setBg(BASE_BG);
-        updateArrows();
-      }
+  function setSlideOpacities(p){
+    slideEls.forEach(function(el, i){
+      var d = Math.min(1, Math.abs(i - p));
+      el.style.opacity = String(1 - d*0.6);
     });
   }
+
+  /* ---- fonction unique : tout l'état visuel dérive de p, en continu ---- */
+  function applyProgress(p){
+    p = Math.max(-1, Math.min(N - 1, p));
+
+    if (p <= 0){
+      var g = 1 + p; /* 0 (petit carré) -> 1 (plein écran) */
+      var scale = 1 + g * (MAX_SCALE - 1);
+      square.style.transform = 'scale(' + scale.toFixed(3) + ')';
+      square.style.borderRadius = (20 * (1 - g)).toFixed(1) + 'px';
+      if (label) label.style.opacity = String(Math.max(0, 1 - g / 0.6));
+
+      var t2 = Math.max(0, Math.min(1, (p + 0.1) / 0.1));
+      square.style.opacity = String(1 - t2);
+      row.style.opacity = String(t2);
+      lineTop.style.opacity = String((0.45 * t2).toFixed(3));
+      lineBottom.style.opacity = String((0.45 * t2).toFixed(3));
+
+      stage.style.backgroundColor = lerpColor(BASE_BG, slides[0].color, g);
+      applyRowX(centerOffset(0));
+      setSlideOpacities(0);
+    } else {
+      square.style.opacity = '0';
+      row.style.opacity = '1';
+      lineTop.style.opacity = '.45';
+      lineBottom.style.opacity = '.45';
+
+      var k = Math.min(N - 2, Math.floor(p));
+      var kNext = Math.min(N - 1, k + 1);
+      var frac = kNext > k ? (p - k) : 0;
+
+      applyRowX(lerpNum(centerOffset(k), centerOffset(kNext), frac));
+      stage.style.backgroundColor = slides[k].color === slides[kNext].color
+        ? slides[k].color
+        : lerpColor(slides[k].color, slides[kNext].color, frac);
+      setSlideOpacities(p);
+    }
+  }
+
+  /* ---- géométrie de la piste : une étape = STEP_RATIO écran de scroll ---- */
+  function measureTrack(){
+    computeScale();
+    var vh = window.innerHeight;
+    var span = vh * STEP_RATIO * N;
+    track.style.height = (vh + span) + 'px';
+  }
+  measureTrack();
+  window.addEventListener('resize', measureTrack);
+
+  function tick(){
+    var vh = window.innerHeight;
+    var rect = track.getBoundingClientRect();
+    var span = rect.height - vh;
+    var t = span > 0 ? (-rect.top) / span : 0;
+    t = Math.max(0, Math.min(1, t));
+    applyProgress(-1 + t * N);
+  }
+
+  /* boucle continue plutôt que l'événement scroll : l'événement natif peut être
+     retardé/regroupé par le navigateur selon l'origine du geste (molette, trackpad,
+     glisser la scrollbar, touche Fin...), ce qui donnerait une impression de retard.
+     requestAnimationFrame relit la position réelle à chaque image, donc l'affichage
+     est toujours exactement synchronisé avec le scroll, quel que soit le geste. */
+  function loop(){
+    tick();
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  tick();
 })();
 </script>
