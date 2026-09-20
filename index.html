@@ -217,93 +217,46 @@
     .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
   }
 
-  /* ================= TRAVAUX — carré d'entrée + bande continue asservie au scroll =================
-     Rien n'est chronométré : la position, la couleur et les lignes sont une fonction
-     directe de la position de scroll, recalculée à chaque tick. Un grand coup de
-     molette, un glisser de la scrollbar ou la touche Fin traversent tout instantanément
-     — aucune animation ne « capture » le geste ni ne force à attendre. ---- */
+  /* ================= TRAVAUX — une bande par famille, empilées ================= */
   #travaux{ position:relative; }
-  .tv3-track{ position:relative; height: 1400vh; }
-  .tv3-stage{
-    position:sticky; top:0; height:100svh; overflow:hidden;
-    background: #0D0D0F;
-    color:#fff;
+  .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
+  .tv-cat-inner{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2);
+    margin:0 auto; padding: 0 var(--gutter);
   }
+  .tv-cat-head{
+    display:flex; align-items:center; justify-content:space-between; gap: var(--gutter);
+    margin-bottom: calc(var(--unit)*2);
+  }
+  .tv-cat-head--rev{ flex-direction:row-reverse; }
+  .tv-cat-title{
+    font-family:"Archivo Black"; text-transform:uppercase; margin:0;
+    font-size: clamp(1.8rem,5.2vw,3.4rem); line-height:1;
+  }
+  .tv-cat-arrow{ flex:none; width:clamp(40px,6vw,64px); height:auto; opacity:.85; }
+  .tv-cat-arrow--rev{ transform:scaleX(-1); }
 
-  .tv3-square{
-    position:absolute; left:50%; top:50%; width:120px; height:120px; margin:-60px 0 0 -60px;
-    background:#189CD8; z-index:4; pointer-events:none;
-    display:flex; align-items:center; justify-content:center; text-align:center;
+  .tv-strip{
+    display:flex; gap: calc(var(--gutter)*.8);
+    overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:thin;
+    scroll-snap-type:x proximity;
+    margin: 0 calc(var(--gutter)*-1); padding: 0 var(--gutter) var(--unit);
   }
-  .tv3-square-label{
-    font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
-    font-size: clamp(.7rem,2.2vw,.9rem); line-height:1.2; padding:0 12px;
-  }
-
-  /* lignes graphiques fines, présentes en permanence pendant tout le parcours */
-  .tv3-frame-line{
-    position:absolute; left:6%; right:6%; height:1px; background:#fff;
-    z-index:3; pointer-events:none;
-  }
-  .tv3-frame-line--top{ top: 13%; }
-  .tv3-frame-line--bottom{ bottom: 13%; }
-
-  .tv3-row{ position:absolute; inset:0; z-index:2; }
-  .tv3-cat-row{
-    position:absolute; inset:0;
-    display:flex; align-items:center; gap: calc(var(--gutter)*1.4);
-    will-change: transform, opacity;
-  }
-  .tv3-cat-row--rev{ flex-direction: row-reverse; }
-
-  .tv3-slide{
-    flex:0 0 auto; width:min(72vw,860px); height:100%;
-    display:flex; align-items:center; justify-content:center;
-    padding: 0 calc(var(--gutter)*.7);
-    text-decoration:none; color:inherit;
-  }
-  .tv3-slide, .tv3-slide *{ -webkit-user-drag:none; user-select:none; }
-
-  .tv3-slide-title{
-    font-family:"Archivo Black"; text-transform:uppercase; text-align:center;
-    font-size: clamp(2.3rem,6.4vw,5.2rem); line-height:.95;
-  }
-
-  .tv3-slide-project{
-    display:flex; align-items:center; gap: calc(var(--gutter)*1.1);
-    width:100%; justify-content:center;
-    text-decoration:none; color:inherit;
-  }
-  .tv3-project-media{ display:block; flex:none; width:min(30vw,300px); aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.08); pointer-events:none; }
-  .tv3-project-media img{ width:100%; height:100%; object-fit:cover; pointer-events:none; }
-  .tv3-project-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.2rem,2.6vw,2rem); line-height:1.05; }
-  .tv3-project-date{ display:block; margin-top:10px; font-family:"Roboto Mono"; font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
+  .tv-card{ flex:0 0 auto; width:min(52vw,300px); scroll-snap-align:start; text-decoration:none; color:inherit; }
+  .tv-card, .tv-card *{ -webkit-user-drag:none; }
+  .tv-card-media{ display:block; width:100%; aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
+  .tv-card-media img{ width:100%; height:100%; object-fit:cover; }
+  .tv-card-name{ display:block; margin-top:12px; font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1rem,1.6vw,1.3rem); line-height:1.1; }
+  .tv-card-date{ display:block; margin-top:4px; font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
 
   .tv3-noscript{ padding-top: calc(var(--unit)*4); padding-bottom: calc(var(--unit)*4); }
   .tv3-noscript ul{ list-style:none; margin: var(--unit) 0 0; padding:0; display:grid; gap:10px; }
   .tv3-noscript a{ text-decoration:none; }
   .tv3-noscript a:hover{ color: var(--blue); }
 
-  @media (max-width:760px){
-    .tv3-slide{ width:86vw; }
-    .tv3-slide-project{ flex-direction:column; gap: calc(var(--unit)*1.4); }
-    .tv3-project-media{ width:min(58vw,280px); }
-  }
-
-  /* mouvement réduit : plus de scroll-jack, tout s'affiche en liste normale */
-  @media (prefers-reduced-motion: reduce){
-    .tv3-track{ height:auto !important; }
-    .tv3-stage{ position:static; height:auto; overflow:visible; background:#0D0D0F; padding: calc(var(--unit)*4) 0; }
-    .tv3-square{ display:none; }
-    .tv3-frame-line{ display:none; }
-    .tv3-row{ position:relative; inset:auto; height:auto; }
-    .tv3-cat-row{
-      position:relative; inset:auto; height:auto; flex-direction:column !important;
-      gap: calc(var(--unit)*4); padding: 0 var(--gutter); margin-bottom: calc(var(--unit)*4);
-      opacity:1 !important; transform:none !important; visibility:visible !important;
-    }
-    .tv3-slide{ position:static; width:100%; height:auto; padding:0; opacity:1 !important; }
-    .tv3-slide-project{ flex-direction:column; }
+  @media (max-width:640px){
+    .tv-card{ width:68vw; }
+    .tv-cat-arrow{ width:36px; }
   }
 
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
@@ -467,16 +420,7 @@
   </section>
 
   <section id="travaux">
-    <div class="tv3-track">
-      <div class="tv3-stage" id="tv3Stage">
-        <div class="tv3-square" id="tv3Square">
-          <span class="tv3-square-label">Mes travaux.</span>
-        </div>
-        <div class="tv3-frame-line tv3-frame-line--top" id="tv3LineTop"></div>
-        <div class="tv3-frame-line tv3-frame-line--bottom" id="tv3LineBottom"></div>
-        <div class="tv3-row" id="tv3Row"></div>
-      </div>
-    </div>
+    <div id="tvCats"></div>
 
     <noscript>
       <div class="tv3-noscript block">
@@ -816,18 +760,14 @@
 <script>
 /*
  * ============================================================
- * TRAVAUX — carré d'entrée, puis bande continue asservie au scroll
+ * TRAVAUX — une bande empilée par famille
  * ============================================================
  * Pour ajouter/retirer/réordonner un projet ou une famille, modifier
  * uniquement TRAVAUX_FAMILIES ci-dessous (couleur, titre, projets).
- *
- * Principe : AUCUNE animation chronométrée ne pilote la navigation.
- * Une seule valeur — la position de scroll dans la piste — détermine
- * en direct la position du carré/de la bande, la couleur de fond et
- * l'opacité des lignes. Scroller vite, sauter en bas de page ou
- * glisser la scrollbar traverse tout instantanément : rien ne peut
- * « bloquer » le geste de l'utilisateur en attendant qu'une
- * transition se termine.
+ * Chaque famille est une section normale du flux de la page (le scroll
+ * n'est jamais capturé) ; à l'intérieur, ses projets se parcourent par
+ * un défilement horizontal natif (molette, trackpad, doigt, glisser-
+ * déposer via la scrollbar) — aucune animation ne bloque quoi que ce soit.
  */
 var TRAVAUX_FAMILIES = [
   {
@@ -869,183 +809,34 @@ var TRAVAUX_FAMILIES = [
 ];
 
 (function(){
-  var section = document.getElementById('travaux');
-  var track = section && section.querySelector('.tv3-track');
-  var stage = document.getElementById('tv3Stage');
-  var square = document.getElementById('tv3Square');
-  var label = square && square.querySelector('.tv3-square-label');
-  var lineTop = document.getElementById('tv3LineTop');
-  var lineBottom = document.getElementById('tv3LineBottom');
-  var row = document.getElementById('tv3Row');
-  if (!section || !track || !stage || !square || !row) return;
+  var root = document.getElementById('tvCats');
+  if (!root) return;
 
-  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var BASE_BG = '#0D0D0F';
-  var STEP_RATIO = 0.55; /* hauteur de scroll par étape, en fraction de la hauteur d'écran */
+  var ARROW = '<svg class="tv-cat-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12H40M28 2L40 12L28 22"/></svg>';
 
-  /* ---- une rangée DOM indépendante par famille, chacune avec sa propre direction :
-     familles paires (0,2,4) entrent par la gauche et sortent à droite ; familles
-     impaires (1,3) entrent par la droite et sortent à gauche. Les rangées sont
-     superposées (position:absolute) dans #tv3Row et chacune gère son propre
-     translateX + fondu, donc il n'y a jamais de collision entre catégories
-     éloignées dans le scroll. ---- */
-  var slides = [];
-  var categories = [];
-  var globalIdx = 0;
   TRAVAUX_FAMILIES.forEach(function(fam, ci){
-    var localSlides = [{ type:'title', title: fam.title }].concat(
-      fam.projects.map(function(p){ return { type:'project', project: p }; })
-    );
-    var dir = (ci % 2 === 0) ? 1 : -1;
-    var rowEl = document.createElement('div');
-    rowEl.className = 'tv3-cat-row' + (dir === 1 ? ' tv3-cat-row--rev' : '');
+    var dir = (ci % 2 === 0) ? 1 : -1; /* +1 = flèche à droite, -1 = flèche à gauche (alterne à chaque famille) */
 
-    var els = localSlides.map(function(s){
-      var el = document.createElement(s.type === 'project' ? 'a' : 'div');
-      el.className = 'tv3-slide';
-      if (s.type === 'title'){
-        el.innerHTML = '<h3 class="tv3-slide-title balance">' + s.title + '</h3>';
-      } else {
-        el.href = s.project.href;
-        el.innerHTML =
-          '<span class="tv3-slide-project">' +
-            '<span class="tv3-project-media" style="--ar:' + s.project.ar + '"><img src="' + s.project.img + '" alt="' + s.project.name.replace(/(<([^>]+)>)/gi,'') + '" loading="lazy" draggable="false"></span>' +
-            '<span><span class="tv3-project-name">' + s.project.name + '</span><span class="tv3-project-date">' + s.project.date + '</span></span>' +
-          '</span>';
-      }
-      rowEl.appendChild(el);
-      return el;
-    });
-    row.appendChild(rowEl);
+    var cards = fam.projects.map(function(p){
+      return '<a class="tv-card" href="' + p.href + '">' +
+          '<span class="tv-card-media" style="--ar:' + p.ar + '"><img src="' + p.img + '" alt="' + p.name.replace(/(<([^>]+)>)/gi,'') + '" loading="lazy" draggable="false"></span>' +
+          '<span class="tv-card-name">' + p.name + '</span>' +
+          '<span class="tv-card-date">' + p.date + '</span>' +
+        '</a>';
+    }).join('');
 
-    slides.push({ color: fam.color });
-    fam.projects.forEach(function(){ slides.push({ color: fam.color }); });
-
-    categories.push({ color: fam.color, dir: dir, rowEl: rowEl, els: els, M: fam.projects.length, startIdx: globalIdx });
-    globalIdx += localSlides.length;
+    var cat = document.createElement('div');
+    cat.className = 'tv-cat';
+    cat.style.background = fam.color;
+    cat.innerHTML =
+      '<div class="tv-cat-inner">' +
+        '<div class="tv-cat-head' + (dir === -1 ? ' tv-cat-head--rev' : '') + '">' +
+          '<h2 class="tv-cat-title balance">' + fam.title + '</h2>' +
+          ARROW.replace('tv-cat-arrow"', 'tv-cat-arrow' + (dir === -1 ? ' tv-cat-arrow--rev' : '') + '"') +
+        '</div>' +
+        '<div class="tv-strip">' + cards + '</div>' +
+      '</div>';
+    root.appendChild(cat);
   });
-  var N = globalIdx;
-
-  if (reducedMotion) return; /* la media query CSS affiche tout en liste statique */
-
-  function hexToRgb(hex){
-    hex = hex.replace('#','');
-    if (hex.length === 3) hex = hex.split('').map(function(c){ return c+c; }).join('');
-    var n = parseInt(hex, 16);
-    return [(n>>16)&255, (n>>8)&255, n&255];
-  }
-  function lerpColor(c1, c2, t){
-    t = Math.max(0, Math.min(1, t));
-    var a = hexToRgb(c1), b = hexToRgb(c2);
-    return 'rgb(' + Math.round(a[0]+(b[0]-a[0])*t) + ',' + Math.round(a[1]+(b[1]-a[1])*t) + ',' + Math.round(a[2]+(b[2]-a[2])*t) + ')';
-  }
-
-  var MAX_SCALE = 40;
-  function computeScale(){
-    var vw = window.innerWidth, vh = window.innerHeight;
-    MAX_SCALE = Math.ceil(Math.sqrt(vw*vw + vh*vh) / 120) + 2;
-  }
-
-  function metrics(){
-    var rect = categories[0].els[0].getBoundingClientRect();
-    var gap = parseFloat(getComputedStyle(categories[0].rowEl).columnGap || getComputedStyle(categories[0].rowEl).gap || '0') || 0;
-    return { span: rect.width + gap, slideW: rect.width };
-  }
-
-  /* ---- position + fondu de "peek" à l'intérieur d'UNE catégorie, en continu ----
-     localP : 0 = titre centré, M = dernier projet centré (peut dépasser [0,M]
-     pendant la jonction avec la catégorie voisine, sans jamais être bloqué).
-     dir=-1 (classique) : l'élément suivant vient de la droite.
-     dir=+1 (inversé)   : l'élément suivant vient de la gauche. */
-  function applyCat(cat, localP){
-    var m = metrics();
-    var stageW = stage.getBoundingClientRect().width;
-    /* rangée normale : élément 0 casé contre le bord gauche du stage.
-       rangée --rev (row-reverse) : élément 0 casé contre le bord droit,
-       donc sa mise en écran est le symétrique (négatif) de la normale. */
-    var base = stageW/2 - localP*m.span - m.slideW/2;
-    var x = cat.dir === -1 ? base : -base;
-    cat.rowEl.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
-    cat.els.forEach(function(el, j){
-      var d = Math.min(1, Math.abs(j - localP));
-      el.style.opacity = String(1 - d*0.6);
-    });
-  }
-
-  /* ---- fonction unique : tout l'état visuel dérive de p, en continu ---- */
-  function applyProgress(p){
-    p = Math.max(-1, Math.min(N - 1, p));
-
-    if (p <= 0){
-      var g = 1 + p; /* 0 (petit carré) -> 1 (plein écran) */
-      var scale = 1 + g * (MAX_SCALE - 1);
-      square.style.transform = 'scale(' + scale.toFixed(3) + ')';
-      square.style.borderRadius = (20 * (1 - g)).toFixed(1) + 'px';
-      if (label) label.style.opacity = String(Math.max(0, 1 - g / 0.6));
-      square.style.opacity = String(1 - Math.max(0, Math.min(1, (p + 0.1) / 0.1)));
-      stage.style.backgroundColor = lerpColor(BASE_BG, slides[0].color, g);
-    } else {
-      square.style.opacity = '0';
-      square.style.transform = 'scale(' + MAX_SCALE.toFixed(3) + ')';
-      var k = Math.min(N - 2, Math.floor(p));
-      var kNext = Math.min(N - 1, k + 1);
-      var frac = kNext > k ? (p - k) : 0;
-      stage.style.backgroundColor = slides[k].color === slides[kNext].color
-        ? slides[k].color
-        : lerpColor(slides[k].color, slides[kNext].color, frac);
-    }
-
-    var lineOpacity = 0.45 * Math.max(0, Math.min(1, p + 1));
-    lineTop.style.opacity = lineOpacity.toFixed(3);
-    lineBottom.style.opacity = lineOpacity.toFixed(3);
-
-    /* chaque catégorie a sa propre rangée superposée ; seules celles proches de p
-       sont visibles, avec un fondu d'1 unité de scroll à la jonction — ce qui
-       crée le passage de relais gauche/droite sans jamais figer la position. */
-    categories.forEach(function(cat){
-      var localP = p - cat.startIdx;
-      var dOut = localP < 0 ? -localP : (localP > cat.M ? localP - cat.M : 0);
-      var catOpacity = Math.max(0, 1 - dOut);
-      if (catOpacity <= 0){
-        cat.rowEl.style.opacity = '0';
-        cat.rowEl.style.visibility = 'hidden';
-      } else {
-        cat.rowEl.style.visibility = 'visible';
-        cat.rowEl.style.opacity = String(catOpacity);
-        applyCat(cat, Math.max(0, Math.min(cat.M, localP)));
-      }
-    });
-  }
-
-  /* ---- géométrie de la piste : une étape = STEP_RATIO écran de scroll ---- */
-  function measureTrack(){
-    computeScale();
-    var vh = window.innerHeight;
-    var span = vh * STEP_RATIO * N;
-    track.style.height = (vh + span) + 'px';
-  }
-  measureTrack();
-  window.addEventListener('resize', measureTrack);
-
-  function tick(){
-    var vh = window.innerHeight;
-    var rect = track.getBoundingClientRect();
-    var span = rect.height - vh;
-    var t = span > 0 ? (-rect.top) / span : 0;
-    t = Math.max(0, Math.min(1, t));
-    applyProgress(-1 + t * N);
-  }
-
-  /* boucle continue plutôt que l'événement scroll : l'événement natif peut être
-     retardé/regroupé par le navigateur selon l'origine du geste (molette, trackpad,
-     glisser la scrollbar, touche Fin...), ce qui donnerait une impression de retard.
-     requestAnimationFrame relit la position réelle à chaque image, donc l'affichage
-     est toujours exactement synchronisé avec le scroll, quel que soit le geste. */
-  function loop(){
-    tick();
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-  tick();
 })();
 </script>
