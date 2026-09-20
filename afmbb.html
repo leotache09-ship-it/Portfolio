@@ -1,0 +1,462 @@
+<!doctype html>
+<title>AFMBB, LT Design</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    /* les trois couleurs de la charte AFMBB */
+    --accent: #5e0a0a;
+    --accent-soft: rgba(94,10,10,.14);
+    --paper: #efefef;
+    --card: #ffffff;
+    --ink: #1d1d1b;
+    --ink-soft: rgba(29,29,27,.62);
+    --ink-faint: rgba(29,29,27,.34);
+    --line: rgba(29,29,27,.16);
+    --on-accent: #efefef;
+    --unit: 16px;
+    --gutter: clamp(calc(var(--unit)*2), 5vw, calc(var(--unit)*4));
+    --tile: 64px;
+    --radius: 4px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Roboto", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color: inherit; }
+  ::selection{ background: var(--accent); color: var(--on-accent); }
+
+  .mono{ font-family:"Roboto Mono","SFMono-Regular",monospace; }
+  .balance{ text-wrap: balance; }
+  #top{ position:absolute; top:0; left:0; width:1px; height:1px; opacity:0; }
+
+  header.nav{
+    position: fixed; top: env(safe-area-inset-top, 0px); left:0; right:0; z-index: 500;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: var(--unit) var(--gutter);
+    background: rgba(239,239,239,.88); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.nav a.back{
+    display:flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-soft);
+  }
+  header.nav a.back svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+  header.nav a.back:hover{ color: var(--accent); }
+  header.nav a.back:hover svg{ transform:translateX(-4px); }
+  header.nav .mark img{ height:20px; width:auto; display:block; opacity:.85; }
+
+  section{ position:relative; }
+  .block{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2);
+    margin: 0 auto;
+    padding: calc(var(--unit)*4) var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+  .block.first{ border-top:none; }
+
+  .eyebrow{
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    display:flex; align-items:center; gap:var(--unit); color: var(--ink-soft); margin: 0 0 var(--unit);
+  }
+  .eyebrow .num{ font-weight:500; color: var(--accent); }
+  .eyebrow::after{ content:""; height:1px; flex:1; background: currentColor; opacity:.25; }
+
+  h1,h2,h3{ margin:0; font-weight:400; }
+  h2.section-title{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.3rem, 3vw, 1.9rem); line-height:1.1; margin: 0 0 calc(var(--unit)*1.5);
+  }
+  p.body-text{ max-width:62ch; color: var(--ink-soft); font-size:.97rem; line-height:1.72; margin:0 0 var(--unit); }
+  p.body-text:last-child{ margin-bottom:0; }
+  p.body-text strong{ color: var(--ink); font-weight:500; }
+
+  /* ---- 01 · ouverture ---- */
+  #hero{ padding-top: calc(var(--unit)*8); }
+  .case-hero{
+    display:grid; grid-template-columns: minmax(0,1fr) minmax(0,.92fr);
+    gap: calc(var(--tile)*1.1); align-items:start;
+  }
+  h1.proj-name{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(2.8rem, 9vw, 5.6rem); line-height:.92; letter-spacing:-.005em; margin: 0 0 calc(var(--unit)*1.25);
+  }
+  .hero-lede{ font-size: clamp(1rem,1.5vw,1.1rem); line-height:1.72; color: var(--ink-soft); max-width:52ch; margin: 0 0 calc(var(--unit)*1.75); }
+  .hero-lede strong{ color: var(--ink); font-weight:500; }
+  .hero-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: calc(var(--unit)*2); }
+  .tag{ font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; padding:6px 11px; border-radius:2px; border:1px solid var(--line); color: var(--ink-soft); background: var(--card); }
+  .tag.accent{ background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+
+  .hero-signature{
+    background: var(--card); border:1px solid var(--line); border-radius: var(--radius);
+    padding: calc(var(--unit)*2.25) calc(var(--unit)*2);
+  }
+  .hero-signature img{ width:100%; max-width:188px; margin:0 auto; }
+  .hero-chips{ display:flex; gap:12px; margin-top: calc(var(--unit)*1.5); }
+  .chip{ width:46px; height:46px; border-radius:3px; border:1px solid var(--line); }
+
+  .hero-shot{
+    border-radius: var(--radius); overflow:hidden; border:1px solid var(--line);
+    background: var(--card); aspect-ratio: var(--ar, 1057/1500);
+    box-shadow: 0 22px 60px rgba(29,29,27,.16);
+  }
+  .hero-shot img{ width:100%; height:100%; object-fit:cover; }
+
+  /* ---- fiche ---- */
+  .facts{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr));
+    gap:0; border-top:1px solid var(--line); margin-bottom: calc(var(--unit)*2);
+  }
+  .facts .fact{ padding: calc(var(--unit)*1.1) var(--unit) calc(var(--unit)*1.1) 0; border-bottom:1px solid var(--line); }
+  .facts .fact .k{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:6px; }
+  .facts .fact .v{ font-size:.95rem; font-weight:500; line-height:1.5; }
+
+  /* ---- énoncé ---- */
+  .statement{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.6rem, 4.4vw, 2.9rem); line-height:1.05; letter-spacing:-.01em;
+    max-width: 20ch; margin: 0 0 calc(var(--unit)*2);
+  }
+  .statement em{ font-style:normal; color: var(--accent); }
+  .two-col{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: calc(var(--tile)*.9); }
+
+  /* ---- planches ---- */
+  .plate{
+    border-radius: var(--radius); border:1px solid var(--line); overflow:hidden;
+    background: var(--card); padding: calc(var(--unit)*2);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .plate.paper{ background: var(--paper); }
+  .plate.red{ background: var(--accent); border-color: var(--accent); }
+  .plate.ink{ background: var(--ink); border-color: var(--ink); }
+  .plate.flush{ padding:0; }
+  .plate img{ width:100%; height:auto; }
+  .plate.sq{ aspect-ratio:1/1; }
+
+  .caption{
+    font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-faint); margin: 10px 0 0;
+  }
+  .split{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: calc(var(--tile)*.9); align-items:center; }
+  .split.top{ align-items:start; }
+  .split.wide-right{ grid-template-columns: minmax(0,1fr) minmax(0,1.3fr); }
+  .trio{ display:grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: var(--unit); }
+
+  /* ---- avant / après ---- */
+  .ba{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: calc(var(--unit)*1.5); align-items:start; }
+  .ba .side .k{
+    display:inline-block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase;
+    padding:5px 10px; border-radius:2px; margin-bottom:10px;
+    background: var(--ink); color: var(--paper);
+  }
+  .ba .side.after .k{ background: var(--accent); color: var(--on-accent); }
+  .ba .shot{ border-radius: var(--radius); overflow:hidden; border:1px solid var(--line); background: var(--card); }
+  .ba .shot img{ width:100%; height:auto; }
+
+  /* ---- palette ---- */
+  .palette{ display:grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: var(--unit); }
+  .sysgrid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: var(--unit); }
+  .sysgrid .col{ display:flex; flex-direction:column; gap: var(--unit); }
+  .sysgrid .col .swatch{ flex:1; }
+  .swatch{ border-radius: var(--radius); padding: calc(var(--unit)*1.75); border:1px solid var(--line); min-height: calc(var(--tile)*2.2); display:flex; flex-direction:column; justify-content:flex-end; }
+  .swatch .name{ font-weight:700; font-size:1rem; margin-bottom:4px; }
+  .swatch .hex{ font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.04em; }
+  .swatch .use{ font-size:.8rem; margin-top:8px; opacity:.72; line-height:1.45; }
+  .swatch.dropped{ opacity:.55; }
+  .swatch.dropped .use{ font-style:italic; }
+
+  /* ---- bilan ---- */
+  .outcome{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: var(--unit); margin-top: calc(var(--unit)*2); }
+  .outcome .card{
+    background: var(--card); border:1px solid var(--line); border-radius: var(--radius);
+    padding: calc(var(--unit)*1.75);
+  }
+  .outcome .card .k{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color: var(--accent); margin-bottom:10px; }
+  .outcome .card p{ margin:0; font-size:.92rem; line-height:1.65; color: var(--ink-soft); }
+
+  footer{ text-align:center; padding: calc(var(--unit)*3) var(--gutter) calc(var(--unit)*4); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); border-top:1px solid var(--line); max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto; }
+  footer a{ text-decoration:none; color: var(--accent); }
+  footer a:hover{ text-decoration:underline; }
+
+  @media (max-width: 860px){
+    .case-hero{ grid-template-columns: 1fr; gap: calc(var(--unit)*2); }
+    .split, .split.wide-right{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px){
+    #hero{ padding-top: calc(var(--unit)*7); }
+  }
+</style>
+
+<a id="top" href="#top" tabindex="-1" aria-hidden="true"></a>
+<header class="nav">
+  <a class="back" href="index.html#afmbb"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
+  <span class="mark"><img src="assets/logo-black.png" alt="LT Design"></span>
+</header>
+
+<main>
+
+  <!-- ══ 01 · ouverture ══ -->
+  <section id="hero" class="block first">
+    <div class="case-hero">
+      <div>
+        <p class="eyebrow"><span class="num">01</span> Identité visuelle</p>
+        <h1 class="proj-name balance">AFMBB</h1>
+        <p class="hero-lede">
+          L'<strong>Amicale Fribourgeoise des Maîtrises &amp; Brevets du Bois</strong> réunit depuis 1983
+          les professionnels fribourgeois du bois titulaires d'une formation supérieure : bûcherons,
+          charpentiers, menuisiers et bien d'autres corps de métier. Après quarante ans, leur
+          communication avait vieilli et ne leur ressemblait plus. Ils cherchaient un rebranding,
+          quelqu'un de chez eux me connaissait.
+        </p>
+        <div class="hero-tags">
+          <span class="tag accent">Logo</span>
+          <span class="tag">Charte</span>
+          <span class="tag">Flyer</span>
+        </div>
+        <div class="hero-signature">
+          <img src="assets/afmbb/logo-noir.png" alt="Logo AFMBB : un rondin dont la coupe devient une étagère">
+        </div>
+        <div class="hero-chips">
+          <span class="chip" style="background:#5e0a0a" title="#5E0A0A"></span>
+          <span class="chip" style="background:#efefef" title="#EFEFEF"></span>
+          <span class="chip" style="background:#1d1d1b" title="#1D1D1B"></span>
+        </div>
+      </div>
+
+      <div class="hero-shot" style="--ar:1057/1500">
+        <img src="assets/afmbb/flyer.jpg" alt="Flyer de recrutement AFMBB, bandeau bordeaux et photographies de bois">
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 02 · le point de départ ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">02</span> Le point de départ</p>
+    <h2 class="statement balance">Un logo, <em>tous</em> les métiers.</h2>
+
+    <div class="facts">
+      <div class="fact"><span class="k">Client</span><span class="v">AFMBB, association fribourgeoise</span></div>
+      <div class="fact"><span class="k">Depuis</span><span class="v">1983, plus de 40 ans</span></div>
+      <div class="fact"><span class="k">Réunit</span><span class="v">Tous les métiers du bois, du bûcheron au menuisier</span></div>
+      <div class="fact"><span class="k">Livrables</span><span class="v">Logo, charte, flyer de recrutement</span></div>
+      <div class="fact"><span class="k">Durée</span><span class="v">Février à avril 2026</span></div>
+    </div>
+
+    <div class="two-col">
+      <p class="body-text">
+        J'avais carte blanche, avec une seule demande : que le logo rappelle <strong>tous</strong> les
+        métiers du bois. C'est là que ça se complique. Un logo doit choisir une image, et chaque image
+        du bois appartient déjà à quelqu'un : la hache au bûcheron, la charpente au charpentier,
+        l'établi au menuisier. Choisir, c'était mettre les autres derrière.
+      </p>
+      <p class="body-text">
+        Leur communication d'alors racontait le même problème autrement : du texte blanc posé
+        directement sur une photographie d'atelier, illisible dès que le fond s'éclaircit, et un logo
+        au trait si fin qu'il s'efface en petit. Rien là-dedans ne disait une association de métiers
+        suisses installée depuis 1983.
+      </p>
+    </div>
+
+    <div class="ba" style="margin-top: calc(var(--unit)*2.5)">
+      <div class="side">
+        <span class="k">Avant</span>
+        <div class="shot"><img src="assets/afmbb/ancien-flyer-1.jpg" alt="Ancien flyer AFMBB : texte blanc sur photographie d'atelier" loading="lazy"></div>
+      </div>
+      <div class="side">
+        <span class="k">Ancien logo</span>
+        <div class="shot"><img src="assets/afmbb/ancien-logo.jpg" alt="Ancien logo AFMBB : un compas ouvert formant un A par-dessus un rabot, avec les lettres FMBB" loading="lazy"></div>
+        <p class="body-text" style="font-size:.88rem; margin-top:12px">
+          Un compas ouvert formant le « A », posé sur un rabot, avec FMBB au centre. La construction
+          est maligne, mais elle nomme deux métiers et laisse tous les autres dehors. Et le tracé en
+          filet fin disparaît dès qu'on réduit.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 03 · la recherche ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">03</span> La recherche</p>
+    <h2 class="section-title">Chaque piste choisissait un métier</h2>
+    <div class="split top">
+      <div>
+        <div class="plate paper"><img src="assets/afmbb/recherches.jpg" alt="Planche de recherches AFMBB : chalets, charpentes, sapins, scieur, et le rondin final" style="max-width:402px"></div>
+        <p class="caption">Pistes explorées, avant le rondin</p>
+      </div>
+      <div>
+        <p class="body-text">
+          Des toits et des charpentes, des sapins, des montagnes, un homme qui scie un tronc. Chaque
+          proposition tenait debout toute seule, et chaque proposition racontait <strong>un</strong>
+          métier en laissant les autres dehors. C'est exactement ce que l'amicale ne voulait pas.
+        </p>
+        <p class="body-text">
+          Le déclic est venu en arrêtant de chercher un symbole et en cherchant un trajet : la matière
+          part de l'arbre et finit en objet, et <strong>tous les métiers sont quelque part sur ce
+          trajet</strong>. Un rondin, si on le regarde dans le sens de la longueur, contient déjà le
+          début et la fin de cette histoire.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 04 · le logo ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">04</span> Le logo</p>
+    <h2 class="section-title">Un rondin qui se lit de gauche à droite</h2>
+    <div class="split wide-right top">
+      <div>
+        <div class="plate flush"><img src="assets/afmbb/logo-construction.jpg" alt="Construction du logo AFMBB : le rondin posé sur trois cercles et deux axes"></div>
+        <p class="caption">Construction, trois cercles et deux axes</p>
+      </div>
+      <div>
+        <p class="body-text">
+          À gauche, les cernes de croissance : l'arbre sur pied, la forêt, le geste du bûcheron. Au
+          milieu, les lignes du fil du bois : la grume qui se débite, la planche. À droite, la même
+          silhouette devient une étagère : l'objet fini, le charpentier et le menuisier. Une seule
+          forme continue, et personne devant les autres.
+        </p>
+        <p class="body-text">
+          Le détail qui ferme le récit : <strong>l'étagère est remplie de livres</strong>. L'amicale ne
+          réunit pas tous les professionnels du bois, seulement les titulaires d'une maîtrise ou d'un
+          brevet. Les livres disent ça, la qualification, le savoir qui se range et se transmet.
+        </p>
+        <p class="body-text">
+          La silhouette est posée sur trois cercles qui se recouvrent et deux axes. C'est ce qui lui
+          donne sa régularité et ce qui lui permet de rester lisible une fois réduite, là où l'ancien
+          logo se perdait.
+        </p>
+        <p class="body-text">
+          C'est la pièce qui a demandé <strong>le plus d'allers-retours</strong> de tout le projet. Le
+          flyer, ensuite, est passé presque du premier coup.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 05 · le système ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">05</span> Le système</p>
+    <h2 class="section-title">Trois couleurs, quatre verrouillages</h2>
+    <div class="split top" style="margin-bottom: calc(var(--unit)*2.5)">
+      <div>
+        <div class="plate paper"><img src="assets/afmbb/charte.jpg" alt="Charte AFMBB : le logo décliné sur fond noir, blanc cassé, bordeaux et vert" style="max-width:238px"></div>
+        <p class="caption">Planche de déclinaisons</p>
+      </div>
+      <div>
+        <p class="body-text">
+          Le logo existe en symbole seul, en verrouillage avec le wordmark sérif, en version manuscrite
+          et en pastille ronde portant le nom complet en circulaire, pour les formats où le rectangle
+          ne passe pas.
+        </p>
+        <p class="body-text">
+          Le sérif à fort contraste du wordmark n'est pas un hasard : il donne à une association de
+          1983 l'autorité qu'un sans-serif lui aurait retirée. Et trois couleurs suffisent : le
+          bordeaux qui signe, le noir qui lit, le blanc cassé qui fait respirer.
+        </p>
+      </div>
+    </div>
+    <div class="sysgrid">
+      <div class="col">
+        <div class="plate red sq"><img src="assets/afmbb/logo-blanc.png" alt="Logo AFMBB en blanc sur bordeaux" style="max-width:188px"></div>
+        <div class="swatch" style="background:#5e0a0a; color:#efefef; border-color:#5e0a0a">
+          <div class="name">Bordeaux</div>
+          <div class="hex mono">#5E0A0A</div>
+          <div class="use">Couleur principale, aplats et signature.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="plate paper sq"><img src="assets/afmbb/logo-noir.png" alt="Logo AFMBB en noir sur blanc cassé" style="max-width:188px"></div>
+        <div class="swatch" style="background:#efefef">
+          <div class="name">Blanc cassé</div>
+          <div class="hex mono">#EFEFEF</div>
+          <div class="use">Fonds et respiration.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="plate ink sq"><img src="assets/afmbb/logo-blanc.png" alt="Logo AFMBB en blanc sur noir" style="max-width:188px"></div>
+        <div class="swatch" style="background:#1d1d1b; color:#efefef; border-color:#1d1d1b">
+          <div class="name">Noir</div>
+          <div class="hex mono">#1D1D1B</div>
+          <div class="use">Textes et version monochrome.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 06 · le flyer ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">06</span> Le flyer</p>
+    <h2 class="section-title">Le même contenu, enfin lisible</h2>
+    <p class="body-text" style="margin-bottom: calc(var(--unit)*2)">
+      Les textes viennent d'eux, je les ai gardés. Ce que j'ai changé, c'est l'endroit où ils se posent :
+      un bandeau bordeaux plein à gauche, qui tient toute l'information, et la photographie à droite qui
+      montre le bois sans jamais passer sous le texte. <strong>L'appel à l'action, « Rejoins l'aventure ! »,
+      est de moi</strong>, posé sur une planche comme une enseigne d'atelier.
+    </p>
+    <div class="ba">
+      <div class="side">
+        <span class="k">Avant</span>
+        <div class="shot"><img src="assets/afmbb/ancien-flyer-1.jpg" alt="Ancien flyer AFMBB" loading="lazy"></div>
+      </div>
+      <div class="side after">
+        <span class="k">Après</span>
+        <div class="shot"><img src="assets/afmbb/flyer.jpg" alt="Nouveau flyer AFMBB" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 07 · le résultat ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">07</span> Le résultat</p>
+    <h2 class="section-title">Ce que le projet a donné</h2>
+    <div class="outcome">
+      <div class="card">
+        <span class="k">Retour client</span>
+        <p>L'amicale est très satisfaite du travail, et utilise le logo aujourd'hui.</p>
+      </div>
+      <div class="card">
+        <span class="k">Pour moi</span>
+        <p>Ma première expérience professionnelle avec une entreprise, du premier contact à la livraison. Elle s'est bien passée.</p>
+      </div>
+      <div class="card">
+        <span class="k">Ce que j'y ai appris</span>
+        <p>Qu'un logo qui doit représenter tout le monde ne se règle pas en cherchant un symbole de plus, mais en changeant la question qu'on se pose.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <a href="index.html#afmbb">← Retour au portfolio</a><br>
+  Léo Tâche
+</footer>
+
+<script>
+(function(){
+  if ('scrollRestoration' in history) { try { history.scrollRestoration = 'manual'; } catch(e){} }
+  function toTop(){
+    try { window.scrollTo(0,0); } catch(e){}
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e){}
+    var t = document.getElementById('top');
+    if (t) { try { t.focus({preventScroll:false}); } catch(e){ } }
+  }
+  toTop();
+  window.addEventListener('load', toTop);
+  window.addEventListener('pageshow', toTop);
+})();
+</script>

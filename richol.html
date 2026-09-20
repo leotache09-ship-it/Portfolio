@@ -1,0 +1,488 @@
+<!doctype html>
+<title>Richol, LT Design</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --accent: #db6661;
+    --accent-soft: rgba(219,102,97,.16);
+    --deep: #590300;
+    --paper: #fdeeec;
+    --card: #ffffff;
+    --ink: #262121;
+    --ink-soft: rgba(38,33,33,.64);
+    --ink-faint: rgba(38,33,33,.36);
+    --line: rgba(38,33,33,.15);
+    --on-accent: #ffffff;
+    --unit: 16px;
+    --gutter: clamp(calc(var(--unit)*2), 5vw, calc(var(--unit)*4));
+    --tile: 64px;
+    --radius: 5px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Roboto", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color: inherit; }
+  ::selection{ background: var(--accent); color: var(--on-accent); }
+
+  .mono{ font-family:"Roboto Mono","SFMono-Regular",monospace; }
+  .balance{ text-wrap: balance; }
+  #top{ position:absolute; top:0; left:0; width:1px; height:1px; opacity:0; }
+
+  header.nav{
+    position: fixed; top: env(safe-area-inset-top, 0px); left:0; right:0; z-index: 500;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: var(--unit) var(--gutter);
+    background: rgba(253,238,236,.88); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.nav a.back{
+    display:flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-soft);
+  }
+  header.nav a.back svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+  header.nav a.back:hover{ color: var(--accent); }
+  header.nav a.back:hover svg{ transform:translateX(-4px); }
+  header.nav .mark img{ height:20px; width:auto; display:block; opacity:.85; }
+
+  section{ position:relative; }
+  .block{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2);
+    margin: 0 auto;
+    padding: calc(var(--unit)*4) var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+  .block.first{ border-top:none; }
+
+  .eyebrow{
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    display:flex; align-items:center; gap:var(--unit); color: var(--ink-soft); margin: 0 0 var(--unit);
+  }
+  .eyebrow .num{ font-weight:500; color: var(--accent); }
+  .eyebrow::after{ content:""; height:1px; flex:1; background: currentColor; opacity:.25; }
+
+  h1,h2,h3{ margin:0; font-weight:400; }
+  h2.section-title{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.3rem, 3vw, 1.9rem); line-height:1.1; margin: 0 0 calc(var(--unit)*1.5);
+  }
+  p.body-text{ max-width:62ch; color: var(--ink-soft); font-size:.97rem; line-height:1.72; margin:0 0 var(--unit); }
+  p.body-text:last-child{ margin-bottom:0; }
+  p.body-text strong{ color: var(--ink); font-weight:500; }
+
+  /* ---- 01 · ouverture ---- */
+  #hero{ padding-top: calc(var(--unit)*8); }
+  .case-hero{
+    display:grid; grid-template-columns: minmax(0,1fr) minmax(0,.82fr);
+    gap: calc(var(--tile)*1.1); align-items:start;
+  }
+  h1.proj-name{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(2.8rem, 9vw, 5.4rem); line-height:.92; letter-spacing:-.01em; margin: 0 0 calc(var(--unit)*1.25);
+  }
+  h1.proj-name em{ font-style:normal; color: var(--accent); }
+  .hero-lede{ font-size: clamp(1rem,1.5vw,1.1rem); line-height:1.72; color: var(--ink-soft); max-width:52ch; margin: 0 0 calc(var(--unit)*1.75); }
+  .hero-lede strong{ color: var(--ink); font-weight:500; }
+  .hero-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: calc(var(--unit)*2); }
+  .tag{ font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; padding:6px 11px; border-radius:2px; border:1px solid var(--line); color: var(--ink-soft); background: var(--card); }
+  .tag.accent{ background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  .hero-chips{ display:flex; gap:12px; flex-wrap:wrap; }
+  .chip{ width:44px; height:44px; border-radius:50%; border:1px solid var(--line); }
+
+  .hero-shot{
+    border-radius: var(--radius); overflow:hidden; border:1px solid var(--line);
+    background: var(--card); aspect-ratio: var(--ar, 939/1200);
+    box-shadow: 0 22px 60px rgba(38,33,33,.16);
+  }
+  .hero-shot img{ width:100%; height:100%; object-fit:cover; }
+
+  /* ---- fiche ---- */
+  .facts{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+    gap:0; border-top:1px solid var(--line); margin-bottom: calc(var(--unit)*2);
+  }
+  .facts .fact{ padding: calc(var(--unit)*1.1) var(--unit) calc(var(--unit)*1.1) 0; border-bottom:1px solid var(--line); }
+  .facts .fact .k{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:6px; }
+  .facts .fact .v{ font-size:.95rem; font-weight:500; line-height:1.5; }
+
+  /* ---- énoncé ---- */
+  .statement{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.7rem, 5vw, 3.1rem); line-height:1.04; letter-spacing:-.01em;
+    max-width: 18ch; margin: 0 0 calc(var(--unit)*2);
+  }
+  .statement em{ font-style:normal; color: var(--accent); }
+  .two-col{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: calc(var(--tile)*.9); }
+
+  /* ---- cadres ---- */
+  .plate{
+    border-radius: var(--radius); border:1px solid var(--line); overflow:hidden;
+    background: var(--card); padding: calc(var(--unit)*2);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .plate.flush{ padding:0; }
+  .plate.paper{ background: var(--paper); }
+  .plate.coral{ background: var(--accent); border-color: var(--accent); }
+  .plate.deep{ background: var(--deep); border-color: var(--deep); }
+  .plate.ink{ background: var(--ink); border-color: var(--ink); }
+  .plate img{ width:100%; height:auto; }
+  .plate.sq{ aspect-ratio:1/1; }
+  .plate.sq img{ width:86%; }
+
+  .caption{
+    font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-faint); margin: 10px 0 0;
+  }
+  .split{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: calc(var(--tile)*.9); align-items:center; }
+  .split.top{ align-items:start; }
+  .split.wide-left{ grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); }
+  .duo{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: var(--unit); }
+  .quatuor{ display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: var(--unit); }
+
+  /* ---- gammes ---- */
+  .gammes{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: calc(var(--unit)*2); }
+  .gammes article{ min-width:0; }
+  .gamme-head{ display:flex; align-items:center; gap:10px; margin-bottom: 8px; flex-wrap:wrap; }
+  .gamme-head .dot{ width:14px; height:14px; border-radius:50%; flex:none; }
+  .gamme-head .lab{ font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); }
+  .gammes h3{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1rem,2vw,1.25rem); margin-bottom: 14px; }
+  .gammes .body-text{ margin-top: var(--unit); font-size:.92rem; }
+  .shot{ border-radius: var(--radius); overflow:hidden; border:1px solid var(--line); background: var(--card); }
+  .shot img{ width:100%; height:auto; display:block; }
+  .shot.ratio{ aspect-ratio: 3/4; }
+  .shot.ratio img{ width:100%; height:100%; object-fit:cover; }
+  .shot.fit{ aspect-ratio: 1/1; background: var(--paper); display:flex; align-items:center; justify-content:center; padding: 10px; }
+  .shot.fit img{ width:100%; height:100%; object-fit:contain; }
+  .gammes .work{ margin-top: var(--unit); }
+
+  /* ---- stationery ---- */
+  .midshot{ max-width: 520px; margin-inline: auto; }
+  .pieces{ display:grid; grid-template-columns: repeat(auto-fit, minmax(148px,1fr)); gap: var(--unit); }
+  .pieces .shot{ aspect-ratio: 4/3; background: var(--paper); display:flex; align-items:center; justify-content:center; padding: 9px; }
+  .pieces .shot img{ width:100%; height:100%; object-fit:contain; }
+
+  /* ---- palette ---- */
+  .palette{ display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: var(--unit); }
+  .swatch{ border-radius: var(--radius); padding: calc(var(--unit)*1.5); border:1px solid var(--line); min-height: calc(var(--tile)*2.1); display:flex; flex-direction:column; justify-content:flex-end; }
+  .swatch .name{ font-weight:700; font-size:.95rem; margin-bottom:3px; }
+  .swatch .hex{ font-family:"Roboto Mono"; font-size:.78rem; letter-spacing:.04em; }
+  .swatch .pant{ font-family:"Roboto Mono"; font-size:.7rem; margin-top:6px; opacity:.72; }
+
+  /* ---- bilan ---- */
+  .outcome{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: var(--unit); margin-top: calc(var(--unit)*2); }
+  .outcome .card{
+    background: var(--card); border:1px solid var(--line); border-radius: var(--radius);
+    padding: calc(var(--unit)*1.75);
+  }
+  .outcome .card .k{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color: var(--accent); margin-bottom:10px; }
+  .outcome .card p{ margin:0; font-size:.92rem; line-height:1.65; color: var(--ink-soft); }
+
+  footer{ text-align:center; padding: calc(var(--unit)*3) var(--gutter) calc(var(--unit)*4); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); border-top:1px solid var(--line); max-width: calc(var(--tile)*18 + var(--gutter)*2); margin:0 auto; }
+  footer a{ text-decoration:none; color: var(--accent); }
+  footer a:hover{ text-decoration:underline; }
+
+  @media (max-width: 860px){
+    .case-hero{ grid-template-columns: 1fr; gap: calc(var(--unit)*2); }
+    .split, .split.wide-left{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px){
+    #hero{ padding-top: calc(var(--unit)*7); }
+  }
+</style>
+
+<a id="top" href="#top" tabindex="-1" aria-hidden="true"></a>
+<header class="nav">
+  <a class="back" href="index.html#richol"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
+  <span class="mark"><img src="assets/logo-black.png" alt="LT Design"></span>
+</header>
+
+<main>
+
+  <!-- ══ 01 · ouverture ══ -->
+  <section id="hero" class="block first">
+    <div class="case-hero">
+      <div>
+        <p class="eyebrow"><span class="num">01</span> Identité de marque</p>
+        <h1 class="proj-name balance">Ri<em>ch</em>ol</h1>
+        <p class="hero-lede">
+          Richol est une marque d'alcools suisses que j'ai inventée. <strong>La charte a été faite en
+          cours</strong>, puis j'ai créé le limoncello et le vin de mon côté, jusqu'à trois gammes de
+          produits sous la même marque.
+        </p>
+        <div class="hero-tags">
+          <span class="tag accent">Charte graphique</span>
+          <span class="tag">Packaging</span>
+          <span class="tag">Stationery</span>
+        </div>
+        <div class="hero-chips">
+          <span class="chip" style="background:#590300" title="#590300"></span>
+          <span class="chip" style="background:#262121" title="#262121"></span>
+          <span class="chip" style="background:#db6661" title="#DB6661"></span>
+        </div>
+      </div>
+
+      <div class="hero-shot" style="--ar:939/1200">
+        <img src="assets/richol/cover.jpg" alt="Canette Richol Fraise, couverture de la charte graphique">
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 02 · le point de départ ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">02</span> Le point de départ</p>
+    <h2 class="statement balance">Pas comme <em>tout le monde</em>.</h2>
+
+    <div class="facts">
+      <div class="fact"><span class="k">Marque</span><span class="v">Richol, marque fictive d'alcools suisses</span></div>
+      <div class="fact"><span class="k">Le nom</span><span class="v">Le début du nom de mon père, Richard, et la fin d'alcool</span></div>
+      <div class="fact"><span class="k">Livrables</span><span class="v">1 logo, une charte graphique et 3 goodies</span></div>
+      <div class="fact"><span class="k">Rendu</span><span class="v">Imprimé et monté à la main</span></div>
+    </div>
+
+    <div class="two-col">
+      <p class="body-text">
+        L'exercice demandait trois choses : un logo, une charte graphique, et un goodies à créer autour
+        de la marque. Pour la boisson, la classe est partie sur du thé froid, du soda, du jus de fruits.
+        <strong>J'ai pris l'alcool</strong>, simplement pour sortir de ce que tout le monde faisait.
+      </p>
+      <p class="body-text">
+        Le goodies, c'était la canette. C'est en la dessinant que j'ai accroché, et une fois le cours
+        terminé j'ai continué de mon côté, pour le plaisir : un limoncello, puis un vin. Rien ne
+        m'obligeait à aller jusque-là, et <strong>c'est exactement pour ça que c'est le projet le plus
+        abouti du portfolio</strong>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ 03 · le système ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">03</span> Le système</p>
+    <h2 class="section-title">Le nom reste, le fruit change</h2>
+    <div class="split top">
+      <div>
+        <div class="plate paper"><img src="assets/richol/logo-grid-clean.png" alt="Construction du logo Richol sur sa grille"></div>
+        <p class="caption">Construction sur grille</p>
+      </div>
+      <div>
+        <p class="body-text">
+          Le logo n'est pas la fraise, <strong>c'est le mot Richol</strong>. La fraise n'est que le fruit
+          du premier produit : sur le limoncello elle devient un citron, sur le vin une grappe. Le fruit
+          annonce le produit, le wordmark annonce la marque, et la même signature manuscrite relie les
+          trois.
+        </p>
+        <p class="body-text">
+          Le monogramme est posé sur une grille. La charte assume qu'il n'est pas parfaitement
+          symétrique mais qu'il est <em>perçu</em> comme tel, et elle fixe les usages : le symbole seul
+          en dessous de 5 cm, le verrouillage complet au-dessus, et une version définie pour chaque
+          couleur de fond.
+        </p>
+      </div>
+    </div>
+
+    <div class="quatuor" style="margin-top: calc(var(--unit)*2)">
+      <div>
+        <div class="plate paper sq"><img src="assets/richol/logo-mono-coral.png" alt="Logo Richol en corail sur fond clair" loading="lazy"></div>
+        <p class="caption">Corail</p>
+      </div>
+      <div>
+        <div class="plate paper sq"><img src="assets/richol/logo-mono-deep.png" alt="Logo Richol en rouge profond sur fond clair" loading="lazy"></div>
+        <p class="caption">Rouge profond</p>
+      </div>
+      <div>
+        <div class="plate paper sq"><img src="assets/richol/logo-mono-ink.png" alt="Logo Richol en gris charbon sur fond clair" loading="lazy"></div>
+        <p class="caption">Gris charbon</p>
+      </div>
+      <div>
+        <div class="plate deep sq"><img src="assets/richol/logo-mono-white.png" alt="Logo Richol en blanc sur fond rouge profond" loading="lazy"></div>
+        <p class="caption">Blanc, en négatif</p>
+      </div>
+    </div>
+
+    <div style="margin-top: calc(var(--unit)*2)">
+      <div class="plate paper"><img src="assets/richol/logo-variations-clean.png" alt="Logo principal et logo secondaire Richol, dans les quatre déclinaisons de la charte" loading="lazy" style="max-width:851px"></div>
+      <p class="caption">Logo principal et logo secondaire, quatre déclinaisons</p>
+    </div>
+  </section>
+
+  <!-- ══ 04 · les trois gammes ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">04</span> Les trois gammes</p>
+    <h2 class="section-title">Une marque, trois fruits</h2>
+
+    <div class="gammes">
+      <article>
+        <div class="gamme-head"><span class="dot" style="background:#db6661"></span><span class="lab">Fraise</span></div>
+        <h3>Richol Fraise</h3>
+        <p class="body-text" style="margin-top:0; margin-bottom: var(--unit)">
+          Le point de départ : noir mat, aplats corail, fraise en contour et lettrage manuscrit. Un
+          dessin pensé pour rester lisible sur un format étroit et en mouvement.
+        </p>
+        <div class="shot ratio"><img src="assets/richol/can-mockup.jpg" alt="Canette Richol Fraise" loading="lazy"></div>
+        <div class="shot fit work"><img src="assets/richol/can-label.jpg" alt="Étiquette à plat de la canette Richol Fraise" loading="lazy"></div>
+        <p class="caption">L'étiquette à plat</p>
+      </article>
+
+      <article>
+        <div class="gamme-head"><span class="dot" style="background:#f0b90b"></span><span class="lab">Citron</span></div>
+        <h3>Limoncello</h3>
+        <p class="body-text" style="margin-top:0; margin-bottom: var(--unit)">
+          L'étiquette adopte un style plus artisanal, avec un citron dessiné à la main sur une photo
+          d'agrume, inspiré des produits italiens.
+        </p>
+        <div class="shot ratio"><img src="assets/richol/limoncello-photo.jpg" alt="Bouteille de limoncello Richol tenue contre le ciel" loading="lazy"></div>
+        <div class="shot fit work"><img src="assets/richol/limoncello-label.jpg" alt="Étiquette à plat du limoncello Richol" loading="lazy"></div>
+        <p class="caption">L'étiquette à plat</p>
+      </article>
+
+      <article>
+        <div class="gamme-head"><span class="dot" style="background:#84479e"></span><span class="lab">Grappe</span></div>
+        <h3>Grape Wine</h3>
+        <p class="body-text" style="margin-top:0; margin-bottom: var(--unit)">
+          Bouteille noire mate, capsule violette Richol et grappe en contour blanc sur un motif ton sur
+          ton. Une identité sobre et élégante.
+        </p>
+        <div class="shot ratio"><img src="assets/richol/wine-bottle.jpg" alt="Bouteille Richol Grape Wine" loading="lazy"></div>
+        <div class="shot fit work"><img src="assets/richol/wine-label.jpg" alt="Étiquette à plat du Richol Grape Wine" loading="lazy"></div>
+        <p class="caption">L'étiquette à plat</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══ 05 · stationery ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">05</span> Stationery</p>
+    <h2 class="section-title">Écrite comme si la marque existait</h2>
+    <p class="body-text" style="margin-bottom: calc(var(--unit)*2)">
+      Carte de visite, papier à en-tête, enveloppe. Le recto de la carte porte le logo sur un motif de
+      fraises en ton sur ton, le verso donne les coordonnées et un QR code.
+    </p>
+    <div class="midshot">
+      <div class="shot"><img src="assets/richol/stationery.jpg" alt="Stationery Richol mis en situation sur une planchette" loading="lazy"></div>
+      <p class="caption" style="text-align:center">Mise en situation</p>
+    </div>
+
+    <div class="pieces" style="margin-top: calc(var(--unit)*2.5)">
+      <div>
+        <div class="shot"><img src="assets/richol/card-back.jpg" alt="Carte de visite Richol, recto avec le motif de fraises" loading="lazy"></div>
+        <p class="caption">Carte, recto</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/card-front.jpg" alt="Carte de visite Richol, verso avec les coordonnées et le QR code" loading="lazy"></div>
+        <p class="caption">Carte, verso</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/envelope-front.jpg" alt="Enveloppe Richol, recto avec l'adresse de l'expéditeur" loading="lazy"></div>
+        <p class="caption">Enveloppe, recto</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/envelope.jpg" alt="Enveloppe Richol, verso avec le rabat" loading="lazy"></div>
+        <p class="caption">Enveloppe, verso</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/letterhead.jpg" alt="Papier à en-tête Richol" loading="lazy"></div>
+        <p class="caption">Papier à en-tête</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 06 · la charte ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">06</span> La charte</p>
+    <h2 class="section-title">Dix-neuf pages, montées à la main</h2>
+    <p class="body-text" style="margin-bottom: calc(var(--unit)*2)">
+      La charte a été imprimée et montée en livret, réunissant couleurs, logo, typographies, branding et
+      packaging.
+    </p>
+    <div class="palette" style="margin-bottom: calc(var(--unit)*2.5)">
+      <div class="swatch" style="background:#590300; color:#fdeeec; border-color:#590300">
+        <div class="name">Rouge profond</div>
+        <div class="hex mono">#590300</div>
+        <div class="pant mono">Pantone 7624 C</div>
+      </div>
+      <div class="swatch" style="background:#262121; color:#fdeeec; border-color:#262121">
+        <div class="name">Gris charbon</div>
+        <div class="hex mono">#262121</div>
+        <div class="pant mono">Pantone 419 C</div>
+      </div>
+      <div class="swatch" style="background:#db6661; color:#ffffff; border-color:#db6661">
+        <div class="name">Corail chaud</div>
+        <div class="hex mono">#DB6661</div>
+        <div class="pant mono">Pantone 179 C</div>
+      </div>
+    </div>
+    <div class="duo">
+      <div>
+        <div class="shot"><img src="assets/richol/charte-1.jpg" alt="Charte Richol : couverture, sommaire et page couleurs" loading="lazy"></div>
+        <p class="caption">Couverture, sommaire, couleurs</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/charte-2.jpg" alt="Charte Richol : pages logo et typographie" loading="lazy"></div>
+        <p class="caption">Logo, règles d'utilisation, typographie</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/charte-3.jpg" alt="Charte Richol : pages branding et packaging" loading="lazy"></div>
+        <p class="caption">Branding, packaging</p>
+      </div>
+      <div>
+        <div class="shot"><img src="assets/richol/charte-4.jpg" alt="Charte Richol : planche de recherche et dos du livret" loading="lazy"></div>
+        <p class="caption">Planche de recherche, dos</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 07 · le résultat ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">07</span> Le résultat</p>
+    <h2 class="section-title">Ce que j'en retiens</h2>
+    <p class="body-text">
+      C'est un projet que j'ai particulièrement aimé, autant pour sa liberté créative que pour les défis
+      rencontrés. Il m'a permis d'apprendre beaucoup et de faire évoluer ma pratique du design.
+    </p>
+    <div class="outcome">
+      <div class="card">
+        <span class="k">Ce qu'il m'a appris</span>
+        <p>Tenir un système sur dix-neuf pages et trois produits. Écrire les règles d'une marque, et pas seulement la dessiner.</p>
+      </div>
+      <div class="card">
+        <span class="k">La liberté</span>
+        <p>Le seul projet que personne ne m'a demandé de finir. Le limoncello et le vin sont venus après le cours, uniquement par envie.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <a href="index.html#richol">← Retour au portfolio</a><br>
+  Léo Tâche
+</footer>
+
+<script>
+(function(){
+  if ('scrollRestoration' in history) { try { history.scrollRestoration = 'manual'; } catch(e){} }
+  function toTop(){
+    try { window.scrollTo(0,0); } catch(e){}
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e){}
+    var t = document.getElementById('top');
+    if (t) { try { t.focus({preventScroll:false}); } catch(e){ } }
+  }
+  toTop();
+  window.addEventListener('load', toTop);
+  window.addEventListener('pageshow', toTop);
+})();
+</script>

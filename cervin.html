@@ -1,0 +1,262 @@
+<!doctype html>
+<title>Cervin, Flow State, LT Design</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --accent: #b7260e;
+    --accent-soft: rgba(183,38,14,.16);
+    --paper: #ececed;
+    --card: #ffffff;
+    --ink: #14181c;
+    --ink-soft: rgba(20,24,28,.62);
+    --ink-faint: rgba(20,24,28,.34);
+    --line: rgba(20,24,28,.16);
+    --on-accent: #ffffff;
+    --unit: 16px;
+    --gutter: clamp(calc(var(--unit)*2), 5vw, calc(var(--unit)*4));
+    --tile: 64px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Roboto", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color: inherit; }
+  ::selection{ background: var(--accent); color: var(--on-accent); }
+  .mono{ font-family:"Roboto Mono","SFMono-Regular",monospace; }
+  .balance{ text-wrap: balance; }
+  #top{ position:absolute; top:0; left:0; width:1px; height:1px; opacity:0; }
+
+  header.nav{
+    position: fixed; top: env(safe-area-inset-top, 0px); left:0; right:0; z-index: 500;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: var(--unit) var(--gutter);
+    background: rgba(236,236,237,.85); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.nav a.back{
+    display:flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-soft);
+  }
+  header.nav a.back svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+  header.nav a.back:hover{ color: var(--accent); }
+  header.nav a.back:hover svg{ transform:translateX(-4px); }
+  header.nav .mark{ font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); }
+
+  section{ position:relative; }
+  .grid-pattern{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 25 V39 M25 32 H39' stroke='%2314181C' stroke-opacity='0.1' stroke-width='1.3'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-origin: content-box; background-position: 0 0;
+  }
+  .block{ max-width: calc(var(--tile)*18 + var(--gutter)*2); margin: 0 auto; padding: calc(var(--unit)*4) var(--gutter); border-top: 1px solid var(--line); }
+  .block.first{ border-top:none; }
+
+  .eyebrow{
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    display:flex; align-items:center; gap:var(--unit); color: var(--ink-soft); margin: 0 0 var(--unit);
+  }
+  .eyebrow .num{ font-weight:500; color: var(--accent); }
+  .eyebrow::after{ content:""; height:1px; flex:1; background: currentColor; opacity:.25; }
+  h1,h2,h3{ margin:0; font-weight:400; }
+
+  #hero{ padding-top: calc(var(--unit)*8); }
+  h1.proj-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2.4rem, 9vw, 6rem); line-height:.92; letter-spacing:-.005em; margin: 0 0 calc(var(--unit)*1.4); }
+  h1.proj-name em{ font-style:normal; color: var(--accent); }
+  .hero-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: calc(var(--unit)*2); }
+  .tag{ font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; padding:6px 11px; border-radius:2px; border:1px solid var(--line); color: var(--ink-soft); background: var(--card); }
+  .tag.accent{ background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  .hero-lede{ font-size: clamp(1.05rem,2vw,1.3rem); line-height:1.6; color: var(--ink-soft); max-width:64ch; margin: 0; }
+
+  h2.section-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.3rem, 3vw, 1.9rem); line-height:1.1; margin: 0 0 calc(var(--unit)*1.5); }
+  .lead-line{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.45rem, 3.6vw, 2.4rem); line-height:1.08; letter-spacing:-.005em;
+    color: var(--ink); max-width:20ch; margin:0 0 calc(var(--unit)*1.2);
+  }
+  .lead-line em{ font-style:normal; color: var(--accent); }
+  p.body-text{ max-width:62ch; color: var(--ink-soft); font-size:.97rem; line-height:1.7; margin:0 0 var(--unit); }
+  p.body-text:last-child{ margin-bottom:0; }
+
+  .facts{ display:grid; grid-template-columns: repeat(4,1fr); gap:0; border-top:1px solid var(--line); margin-top: calc(var(--unit)*2.5); }
+  .facts .fact{ padding: var(--unit) var(--unit) var(--unit) 0; border-bottom:1px solid var(--line); }
+  .facts .fact .k{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:6px; }
+  .facts .fact .v{ font-weight:700; font-size:1.15rem; }
+
+  .rows{ display:flex; flex-direction:column; gap: calc(var(--unit)*2.5); }
+  .row{ display:grid; grid-template-columns: var(--tile) 1fr; gap: var(--tile); }
+  .row .idx{ font-family:"Roboto Mono"; font-size:.85rem; padding-top:6px; color: var(--ink-faint); }
+  .row .body{ min-width:0; }
+  .row h3{ font-weight:700; font-size: clamp(1.05rem,2vw,1.25rem); margin-bottom:10px; }
+  .split{ display:grid; grid-template-columns: minmax(220px,360px) 1fr; gap: calc(var(--tile)*.9); align-items:start; }
+
+  .frame{
+    position:relative; border-radius:2px; aspect-ratio: var(--ar, 4/5);
+    background: var(--card); border:1px solid var(--line); overflow:hidden;
+    transition: box-shadow .5s cubic-bezier(.2,.7,.2,1), border-color .5s;
+  }
+  .frame:hover{ box-shadow: 0 0 0 1px var(--accent), 0 0 46px 6px var(--accent-soft); border-color: var(--accent); }
+  .frame img{ width:100%; height:100%; object-fit:cover; object-position:center center; }
+
+  .defi-split{ display:grid; grid-template-columns: 1fr minmax(0, 410px); gap: calc(var(--tile)*1.1); align-items:start; }
+  .film-stage{ max-width: 410px; }
+  .link-in{ color: var(--accent); text-decoration:none; border-bottom:1px solid currentColor; }
+  .link-in:hover{ opacity:.75; }
+  .duo{ display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: calc(var(--unit)*1.5); align-items:start; max-width: 640px; margin-inline:auto; }
+  .duo figure{ margin:0; min-width:0; }
+  .cap{ font-family:"Roboto Mono"; font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); margin:10px 0 0; }
+  .film-frame{ position:relative; border-radius:3px; overflow:hidden; background:#000; border:1px solid var(--line); aspect-ratio: 4/5; box-shadow: 0 18px 50px rgba(0,0,0,.18); }
+  .film-frame video{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  .quote{ margin: var(--unit) 0 0; padding-left:14px; border-left:2px solid var(--accent); font-style:italic; color: var(--ink-soft); font-size:.94rem; line-height:1.7; max-width:60ch; }
+
+  .specs{ display:flex; gap: calc(var(--unit)*3); flex-wrap:wrap; }
+  .specs .spec{ min-width:150px; }
+  .specs .spec .k{ display:block; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:8px; }
+  .specs .spec .v{ font-weight:700; font-size:1rem; }
+  .swatches{ display:flex; gap:10px; margin-top:6px; }
+  .swatch{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); }
+
+  footer{ text-align:center; padding: calc(var(--unit)*3) var(--gutter) calc(var(--unit)*4); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
+  footer a{ text-decoration:none; color: var(--accent); }
+  footer a:hover{ text-decoration:underline; }
+
+  @media (max-width: 760px){
+    .row{ grid-template-columns: 1fr; }
+    .row .idx{ padding-top:0; }
+    #hero{ padding-top: calc(var(--unit)*7); }
+    .split{ grid-template-columns: 1fr; }
+    .defi-split{ grid-template-columns: 1fr; }
+    .film-stage{ max-width: 280px; margin-inline:auto; }
+    .facts{ grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<a id="top" href="#top" tabindex="-1" aria-hidden="true"></a>
+<header class="nav">
+  <a class="back" href="index.html#cervin"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
+  <span class="mark">LT Design</span>
+</header>
+
+<main>
+  <section id="hero" class="block first grid-pattern">
+    <p class="eyebrow"><span class="num">06</span> Affiche et vidéo, défi personnel, juin 2026</p>
+
+    <div class="defi-split">
+      <div>
+        <h1 class="proj-name balance">Flow <em>State</em></h1>
+        <div class="hero-tags">
+          <span class="tag accent">Vidéo</span>
+          <span class="tag">Affiche</span>
+          <span class="tag">Retouche</span>
+        </div>
+        <p class="hero-lede" style="margin-bottom: calc(var(--unit)*2.5)">Une affiche construite entièrement à l'écran, de la photo brute du Cervin au rendu final, et filmée du début à la fin.</p>
+
+        <p class="lead-line balance">Le but, <em>c'était la vidéo</em>.</p>
+        <p class="body-text">
+          Je voulais me lancer dans le montage. Plutôt que de m'entraîner à vide, je me suis donné une
+          contrainte : réaliser une affiche complète et enregistrer mon écran, avec OBS, du premier clic
+          au rendu final. Tout s'est fait en une seule session de quatre heures, c'était mes débuts,
+          j'étais lent.
+        </p>
+        <p class="body-text">
+          Filmer pendant qu'on travaille ajoute un stress, mais un stress positif : on s'applique plus.
+        </p>
+      </div>
+
+      <div class="film-stage">
+        <div class="film-frame">
+          <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" controls>
+            <source src="assets/cervin/cervin.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="cap" style="text-align:center">49 s <span style="color:var(--accent)">·</span> avec son</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block grid-pattern">
+    <p class="eyebrow"><span class="num">01</span> De la photo brute à l'affiche</p>
+    <div class="duo" style="margin-bottom: calc(var(--unit)*2.5)">
+      <figure>
+        <div class="frame" style="--ar:1200/1639"><img src="assets/cervin/photo-source.jpg" alt="Photo d'origine du Cervin, couleur, ciel bleu et forêt verte" loading="lazy"></div>
+        <figcaption class="cap" style="text-align:center">La photo de départ, libre de droits</figcaption>
+      </figure>
+      <figure>
+        <div class="frame" style="--ar:2480/3508"><img src="assets/cervin/poster.jpg" alt="Affiche Flow State : le Cervin en noir et blanc, lettrage rouge et tracé de la voie" loading="lazy"></div>
+        <figcaption class="cap" style="text-align:center">L'affiche finale</figcaption>
+      </figure>
+    </div>
+    <p class="body-text" style="text-align:center; margin-inline:auto">
+      La photo vient de <a class="link-in" href="https://pixabay.com/fr/photos/cervin-montagne-zermatt-suisse-1510431/" target="_blank" rel="noopener">Pixabay</a>,
+      libre de droits. Le détourage du massif a été fait entièrement à la main, et c'est de loin ce qui
+      a pris le plus de temps.
+    </p>
+    <p class="body-text" style="text-align:center; margin-inline:auto">
+      Le tracé rouge représente la montée vers le sommet. Le nuancier
+      posé en bas à gauche est un élément purement graphique, il affiche les quatre couleurs de
+      l'affiche à même l'affiche.
+    </p>
+  </section>
+
+  <section class="block grid-pattern">
+    <p class="eyebrow"><span class="num">02</span> Le résultat</p>
+    <p class="lead-line balance">J'ai gagné <em>des automatismes</em>.</p>
+    <p class="body-text">
+      Le dérush a été la vraie leçon : plusieurs heures de rush ramenées à quarante-neuf secondes, en ne
+      gardant que les moments où quelque chose change à l'écran. La musique vient d'Instagram, simple,
+      mais elle porte bien l'ambiance.
+    </p>
+    <p class="body-text">
+      L'affiche n'est pas la meilleure que j'aie faite. Ce n'était pas la question : le projet était un
+      exercice de vidéo, et de ce côté-là j'ai progressé et je me suis créé des réflexes qui me servent
+      depuis.
+    </p>
+    <div class="specs" style="margin-top: calc(var(--unit)*2.5)">
+      <div class="spec">
+        <span class="k">Couleurs</span>
+        <div class="swatches">
+          <span class="swatch" style="background:#b7260e" title="#b7260e"></span>
+          <span class="swatch" style="background:#0d1b2a" title="#0d1b2a"></span>
+          <span class="swatch" style="background:#a8cfe4" title="#a8cfe4"></span>
+          <span class="swatch" style="background:#ffffff" title="#ffffff"></span>
+        </div>
+      </div>
+      <div class="spec"><span class="k">Durée</span><span class="v">4 h d'affilée</span></div>
+      <div class="spec"><span class="k">Capture</span><span class="v">OBS Studio</span></div>
+      <div class="spec"><span class="k">Montage</span><span class="v">49 s, musique Instagram</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="index.html#cervin">← Retour au portfolio</a><br>
+    Léo Tâche
+  </footer>
+</main>
+<script>
+(function(){
+  if ('scrollRestoration' in history) { try { history.scrollRestoration = 'manual'; } catch(e){} }
+  function toTop(){
+    try { window.scrollTo(0,0); } catch(e){}
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e){}
+    var t = document.getElementById('top');
+    if (t) { try { t.focus({preventScroll:false}); } catch(e){ } }
+  }
+  toTop();
+  window.addEventListener('load', toTop);
+  window.addEventListener('pageshow', toTop);
+})();
+</script>

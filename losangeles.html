@@ -1,0 +1,292 @@
+<!doctype html>
+<title>Los Angeles, LT Design</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --accent: #189cd8;
+    --accent-soft: rgba(24,156,216,.16);
+    --paper: #eef6fa;
+    --card: #ffffff;
+    --ink: #101a22;
+    --ink-soft: rgba(16,26,34,.62);
+    --ink-faint: rgba(16,26,34,.36);
+    --line: rgba(16,26,34,.14);
+    --on-accent: #ffffff;
+    --unit: 16px;
+    --gutter: clamp(calc(var(--unit)*2), 5vw, calc(var(--unit)*4));
+    --tile: 64px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Roboto", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color: inherit; }
+  ::selection{ background: var(--accent); color: var(--on-accent); }
+  .mono{ font-family:"Roboto Mono","SFMono-Regular",monospace; }
+  .balance{ text-wrap: balance; }
+  #top{ position:absolute; top:0; left:0; width:1px; height:1px; opacity:0; }
+
+  header.nav{
+    position: fixed; top: env(safe-area-inset-top, 0px); left:0; right:0; z-index: 500;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: var(--unit) var(--gutter);
+    background: rgba(238,246,250,.85); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.nav a.back{
+    display:flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    color: var(--ink-soft);
+  }
+  header.nav a.back svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+  header.nav a.back:hover{ color: var(--accent); }
+  header.nav a.back:hover svg{ transform:translateX(-4px); }
+  header.nav .mark{ font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); }
+
+  section{ position:relative; }
+  .grid-pattern{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 25 V39 M25 32 H39' stroke='%23101A22' stroke-opacity='0.08' stroke-width='1.3'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-origin: content-box; background-position: 0 0;
+  }
+  .block{ max-width: calc(var(--tile)*18 + var(--gutter)*2); margin: 0 auto; padding: calc(var(--unit)*4) var(--gutter); border-top: 1px solid var(--line); }
+  .block.first{ border-top:none; }
+
+  .eyebrow{
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    display:flex; align-items:center; gap:var(--unit); color: var(--ink-soft); margin: 0 0 var(--unit);
+  }
+  .eyebrow .num{ font-weight:500; color: var(--accent); }
+  .eyebrow::after{ content:""; height:1px; flex:1; background: currentColor; opacity:.25; }
+  h1,h2,h3{ margin:0; font-weight:400; }
+
+  #hero{ padding-top: calc(var(--unit)*9); }
+  h1.proj-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2.4rem, 9vw, 6rem); line-height:.92; letter-spacing:-.005em; margin: 0 0 calc(var(--unit)*1.4); }
+  h1.proj-name em{ font-style:normal; color: var(--accent); }
+  .hero-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: calc(var(--unit)*2); }
+  .tag{ font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; padding:6px 11px; border-radius:2px; border:1px solid var(--line); color: var(--ink-soft); background: var(--card); }
+  .tag.accent{ background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  .hero-lede{ font-size: clamp(1.05rem,2vw,1.3rem); line-height:1.6; color: var(--ink-soft); max-width:64ch; margin: 0; }
+
+  h2.section-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.3rem, 3vw, 1.9rem); line-height:1.1; margin: 0 0 calc(var(--unit)*1.5); }
+  .lead-line{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.45rem, 3.6vw, 2.4rem); line-height:1.08; letter-spacing:-.005em;
+    color: var(--ink); max-width:20ch; margin:0 0 calc(var(--unit)*1.2);
+  }
+  .lead-line em{ font-style:normal; color: var(--accent); }
+  p.body-text{ max-width:62ch; color: var(--ink-soft); font-size:.97rem; line-height:1.7; margin:0 0 var(--unit); }
+  p.body-text:last-child{ margin-bottom:0; }
+
+  .facts{ display:grid; grid-template-columns: repeat(4,1fr); gap:0; border-top:1px solid var(--line); margin-top: calc(var(--unit)*2.5); }
+  .facts .fact{ padding: var(--unit) var(--unit) var(--unit) 0; border-bottom:1px solid var(--line); }
+  .facts .fact .k{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:6px; }
+  .facts .fact .v{ font-weight:700; font-size:1.1rem; }
+
+  .split{ display:grid; grid-template-columns: minmax(220px,1fr) minmax(220px,.7fr); gap: calc(var(--tile)*.9); align-items:center; }
+  .split.rev{ grid-template-columns: minmax(220px,.7fr) minmax(220px,1fr); }
+
+  .frame{
+    position:relative; border-radius:2px; aspect-ratio: var(--ar, 4/5);
+    background: var(--card); border:1px solid var(--line); overflow:hidden;
+    transition: box-shadow .5s cubic-bezier(.2,.7,.2,1), border-color .5s;
+  }
+  .frame:hover{ box-shadow: 0 0 0 1px var(--accent), 0 0 46px 6px var(--accent-soft); border-color: var(--accent); }
+  .frame img{
+    width:100%; height:100%; object-fit:cover; object-position:center center;
+    opacity:0; transform: translateY(22px);
+    transition: opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  .frame img.loaded{ opacity:1; transform:none; }
+
+  .two-up{ display:grid; grid-template-columns: 1fr 1fr; gap: var(--unit); }
+  .hero-split{ display:grid; grid-template-columns: 1fr minmax(0, 420px); gap: calc(var(--tile)*1.1); align-items:start; }
+  .cap-mono{ font-family:"Roboto Mono"; font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); margin:10px 0 0; }
+  .gal{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: var(--unit); }
+  .gal figure{ margin:0; min-width:0; }
+  .two-up figure{ margin:0; }
+  .two-up figcaption{ margin-top:10px; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; color: var(--ink-faint); }
+
+  .swatch-lg{ width:64px; height:64px; border-radius:50%; border:1px solid var(--line); flex:none; box-shadow: 0 10px 30px var(--accent-soft); }
+
+  .quote{ margin: var(--unit) 0 0; padding-left:14px; border-left:2px solid var(--accent); font-style:italic; color: var(--ink-soft); font-size:.94rem; line-height:1.7; max-width:60ch; }
+
+  .specs{ display:flex; gap: calc(var(--unit)*3); flex-wrap:wrap; }
+  .specs .spec{ min-width:150px; }
+  .specs .spec .k{ display:block; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:8px; }
+  .specs .spec .v{ font-weight:700; font-size:1rem; }
+  .swatches{ display:flex; gap:10px; margin-top:6px; }
+  .swatch{ width:34px; height:34px; border-radius:50%; border:1px solid var(--line); }
+
+  footer{ text-align:center; padding: calc(var(--unit)*3) var(--gutter) calc(var(--unit)*4); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
+  footer a{ text-decoration:none; color: var(--accent); }
+  footer a:hover{ text-decoration:underline; }
+
+  @media (max-width: 760px){
+    #hero{ padding-top: calc(var(--unit)*7); }
+    .split, .split.rev{ grid-template-columns: 1fr; }
+    .facts{ grid-template-columns: 1fr 1fr; }
+    .two-up{ grid-template-columns: 1fr; }
+    .hero-split{ grid-template-columns: 1fr; }
+    .gal{ grid-template-columns: 1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .frame img{ transition:none; opacity:1; transform:none; }
+  }
+</style>
+
+<a id="top" href="#top" tabindex="-1" aria-hidden="true"></a>
+<header class="nav">
+  <a class="back" href="index.html#losangeles"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
+  <span class="mark">LT Design</span>
+</header>
+
+<main>
+  <section id="hero" class="block first grid-pattern">
+    <p class="eyebrow"><span class="num">11</span> Édition, projet scolaire, module ICT 274, mars 2026</p>
+
+    <div class="hero-split">
+      <div>
+        <h1 class="proj-name balance">Los <em>Angeles</em></h1>
+        <div class="hero-tags">
+          <span class="tag accent">Mise en page</span>
+          <span class="tag">Édition</span>
+          <span class="tag">Print</span>
+        </div>
+
+        <p class="lead-line balance">Mon <em>premier livre</em>.</p>
+        <p class="body-text">
+          Un guide touristique de seize pages, imprimé, avec ses transports, ses hôtels, son histoire,
+          ses lieux d'intérêt et culturels, ses adresses pour manger et ses incontournables. Toute la
+          classe travaillait sur la collection « Ville du Monde », chacun avec sa ville. J'ai pris Los
+          Angeles, parce que c'est une ville où j'ai toujours voulu aller.
+        </p>
+        <p class="body-text">
+          Sept heures de travail, seul. C'était la première fois que je devais tenir une mise en page
+          cohérente sur autant de pages, avec une vraie hiérarchie de contenu et pas un visuel unique.
+        </p>
+      </div>
+
+      <div>
+        <div class="frame" style="--ar:1000/1419"><img src="assets/losangeles/cover.jpg" alt="Couverture du guide Los Angeles" loading="lazy"></div>
+        <p class="cap-mono">La couverture</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block grid-pattern">
+    <p class="eyebrow"><span class="num">01</span> Le bleu</p>
+    <div class="split">
+      <div>
+        <p class="lead-line balance">Trouvé ici, <em>gardé depuis</em>.</p>
+        <p class="body-text">Le bleu que vous voyez partout sur ce portfolio vient de ce projet. Je l'ai trouvé totalement par hasard, en cherchant simplement une couleur pour le magazine.</p>
+        <p class="body-text">Juste après, j'ai voulu me lancer sous mon propre nom, et il me fallait une direction artistique. J'ai repris ce bleu. C'est devenu la couleur de LT Design, et elle n'a pas bougé depuis.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div class="swatch-lg" style="background:#189cd8"></div>
+        <div>
+          <div class="cap-mono" style="margin:0 0 4px">Trouvée ici</div>
+          <div style="font-weight:700; font-size:1.25rem;">#189CD8</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block grid-pattern">
+    <p class="eyebrow"><span class="num">02</span> La grille</p>
+    <p class="lead-line balance">Un bandeau bleu, <em>une rubrique</em>.</p>
+    <p class="body-text" style="margin-bottom: calc(var(--unit)*2.5)">
+      La grille était posée dès le départ : chaque double-page porte en haut son bandeau bleu avec le
+      nom de la rubrique, et son numéro de page en bas dans un carré de la même couleur. Huit rubriques,
+      seize pages, et le repère ne change jamais. C'est ce qui tient le livre debout.
+    </p>
+
+    <div class="gal">
+      <figure><div class="frame" style="--ar:1500/1064"><img src="assets/losangeles/sommaire.jpg" alt="Sommaire et double-page Carte et Transport" loading="lazy"></div><figcaption class="cap-mono">Sommaire et transport</figcaption></figure>
+      <figure><div class="frame" style="--ar:1500/1064"><img src="assets/losangeles/hotels.jpg" alt="Double-page Hôtels" loading="lazy"></div><figcaption class="cap-mono">Hôtels</figcaption></figure>
+      <figure><div class="frame" style="--ar:1500/1064"><img src="assets/losangeles/histoire.jpg" alt="Double-page Histoire" loading="lazy"></div><figcaption class="cap-mono">Histoire</figcaption></figure>
+      <figure><div class="frame" style="--ar:1500/1064"><img src="assets/losangeles/interet.jpg" alt="Double-page Lieu d'intérêt" loading="lazy"></div><figcaption class="cap-mono">Lieu d'intérêt</figcaption></figure>
+      <figure><div class="frame" style="--ar:1500/1064"><img src="assets/losangeles/manger.jpg" alt="Double-page Manger et Boire" loading="lazy"></div><figcaption class="cap-mono">Manger et boire</figcaption></figure>
+      <figure><div class="frame" style="--ar:1500/1064"><img src="assets/losangeles/sources.jpg" alt="Dernière page, liens et sources" loading="lazy"></div><figcaption class="cap-mono">Liens et sources</figcaption></figure>
+    </div>
+
+    <div class="two-up" style="margin-top: calc(var(--unit)*2.5)">
+      <div>
+        <div class="frame" style="--ar:1500/995"><img src="assets/losangeles/mockup-sommaire.jpg" alt="Le guide ouvert sur le sommaire" loading="lazy"></div>
+        <p class="cap-mono">Le sommaire, et son HOLLYWOOD</p>
+      </div>
+      <div>
+        <div class="frame" style="--ar:1500/1050"><img src="assets/losangeles/mockup-histoire.jpg" alt="Le guide ouvert sur la double-page Histoire" loading="lazy"></div>
+        <p class="cap-mono">Le livre imprimé</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block grid-pattern">
+    <p class="eyebrow"><span class="num">03</span> Le résultat</p>
+    <div class="hero-split">
+      <div>
+        <p class="lead-line balance">Le point <em>de départ</em>.</p>
+        <p class="body-text">Le guide a été imprimé et relié. Ce que j'en garde, c'est la couleur, et le fait que c'est le projet qui a lancé tout le reste.</p>
+        <p class="body-text">Ce qui me gêne quand je le revois : certaines photos, et le positionnement des textes, qui n'est pas toujours propre. Sur seize pages, tenir chaque bloc au millimètre était au-dessus de mon niveau à l'époque. C'est exactement ce que j'ai travaillé ensuite.</p>
+        <p class="body-text">Le contenu rédactionnel a été rassemblé à partir de sources en ligne, listées en dernière page du guide.</p>
+      </div>
+      <div>
+        <div class="frame" style="--ar:1600/1120"><img src="assets/losangeles/grid.jpg" alt="Les seize pages du guide vues d'ensemble" loading="lazy"></div>
+        <p class="cap-mono">Les seize pages</p>
+      </div>
+    </div>
+
+    <div class="specs" style="margin-top: calc(var(--unit)*3)">
+      <div class="spec"><span class="k">Durée</span><span class="v">7 h</span></div>
+      <div class="spec"><span class="k">Objet</span><span class="v">Livret paysage, 16 pages, imprimé</span></div>
+      <div class="spec"><span class="k">Structure</span><span class="v">Sommaire et 8 rubriques</span></div>
+      <div class="spec">
+        <span class="k">Couleurs</span>
+        <div class="swatches">
+          <span class="swatch" style="background:#189cd8" title="#189cd8"></span>
+          <span class="swatch" style="background:#0e2230" title="#0e2230"></span>
+          <span class="swatch" style="background:#ffffff" title="#ffffff"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="index.html#losangeles">← Retour au portfolio</a><br>
+    Léo Tâche
+  </footer>
+</main>
+<script>
+(function(){
+  if ('scrollRestoration' in history) { try { history.scrollRestoration = 'manual'; } catch(e){} }
+  function toTop(){
+    try { window.scrollTo(0,0); } catch(e){}
+    try { document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e){}
+    var t = document.getElementById('top');
+    if (t) { try { t.focus({preventScroll:false}); } catch(e){ } }
+  }
+  toTop();
+  window.addEventListener('load', toTop);
+  window.addEventListener('pageshow', toTop);
+
+  document.querySelectorAll('.frame img').forEach(function(img){
+    function reveal(){ img.classList.add('loaded'); }
+    if (img.complete && img.naturalWidth) requestAnimationFrame(reveal);
+    else { img.addEventListener('load', reveal, {once:true}); img.addEventListener('error', reveal, {once:true}); }
+  });
+})();
+</script>

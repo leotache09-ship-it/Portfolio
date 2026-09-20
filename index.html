@@ -1,0 +1,902 @@
+<!doctype html>
+<title>LT Design, Portfolio</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@700&family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --blue: #189CD8;
+    --paper: #F3F3F3;
+    --card: #FFFFFF;
+    --ink: #1D1D1B;
+    --ink-soft: rgba(29,29,27,.62);
+    --ink-faint: rgba(29,29,27,.34);
+    --line: rgba(29,29,27,.16);
+    --on-blue: #F3F3F3;
+    --unit: 16px;
+    --gutter: clamp(calc(var(--unit)*2), 5vw, calc(var(--unit)*4));
+    --tile: 64px;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Roboto", -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  img{ max-width:100%; display:block; }
+  [hidden]{ display:none !important; }
+
+  .mono{ font-family:"Roboto Mono","SFMono-Regular",monospace; }
+  .display{ font-family:"Archivo Black","Roboto",sans-serif; text-transform:uppercase; }
+  .balance{ text-wrap: balance; }
+  a{ color: inherit; }
+  ::selection{ background: var(--blue); color: var(--on-blue); }
+
+  header.nav{
+    position: fixed; top: env(safe-area-inset-top, 0px); left:0; right:0; z-index: 500;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: var(--unit) var(--gutter);
+    background: rgba(243,243,243,.82); backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.nav .mark{ display:flex; align-items:center; }
+  header.nav .mark img{ height:22px; width:auto; display:block; }
+  header.nav nav{ display:flex; gap: clamp(14px,3vw,32px); }
+  header.nav nav a{ text-decoration:none; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; font-weight:500; color: var(--ink-soft); }
+  header.nav nav a:hover{ color: var(--blue); }
+
+  section{ position:relative; }
+  .grid-pattern{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cpath d='M32 25 V39 M25 32 H39' stroke='%231D1D1B' stroke-opacity='0.12' stroke-width='1.3'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-origin: content-box;
+    background-position: 0 0;
+  }
+  .block{
+    max-width: calc(var(--tile)*18 + var(--gutter)*2);
+    margin: 0 auto;
+    padding: calc(var(--unit)*6) var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+  .block.first{ border-top:none; padding-top: calc(var(--unit)*6); }
+  .block.card{ background: var(--card); border:1px solid var(--line); border-radius:4px; margin-top: calc(var(--unit)*3); margin-bottom: calc(var(--unit)*3); }
+
+  /* ---- cover ---- */
+  #cover{
+    max-width:none; border-top:none; padding: 0 var(--gutter);
+    min-height: 100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; position:relative;
+  }
+  #cover .logo{ height: clamp(48px,9vw,84px); width:auto; margin-bottom: calc(var(--unit)*1.5); }
+  #cover .eyebrow{ justify-content:center; }
+  #cover .eyebrow::after{ display:none; }
+  h1.cover-name{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(2.6rem, 10vw, 7rem); line-height:.94; letter-spacing:-.01em; margin:0;
+  }
+  h1.cover-name em{ font-style:normal; color: var(--blue); }
+  .cover-hint{
+    position:absolute; left:0; right:0; bottom: clamp(20px,5vh,48px);
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+    font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color: var(--ink-faint);
+  }
+  @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none; } }
+  #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-hint{
+    animation: rise .8s cubic-bezier(.2,.7,.2,1) both;
+  }
+  #cover .logo{ animation-delay: 0s; }
+  #cover .eyebrow{ animation-delay: .12s; }
+  #cover .cover-name{ animation-delay: .22s; }
+  #cover .cover-hint{ animation-delay: .6s; }
+  @media (prefers-reduced-motion: reduce){
+    #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-hint{ animation:none; }
+  }
+  .cover-hint .chev{ width:12px; height:12px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:rotate(45deg); animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform: rotate(45deg) translate(0,0);} 50%{ transform: rotate(45deg) translate(4px,4px);} }
+  @media (prefers-reduced-motion: reduce){ .cover-hint .chev{ animation:none; } }
+
+  .eyebrow{
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    display:flex; align-items:center; gap:var(--unit); color: var(--ink-soft); margin: 0 0 var(--unit);
+  }
+  .eyebrow .num{ font-weight:500; color: var(--blue); }
+  .eyebrow::after{
+    content:""; height:1px; flex:1; background: currentColor; opacity:.25;
+    transform-origin:left; transform:scaleX(0); transition: transform .9s cubic-bezier(.2,.7,.2,1) .1s;
+  }
+  html.js .pre-reveal.in .eyebrow::after, #cover .eyebrow::after{ transform:scaleX(1); }
+
+  h1, h2, h3{ margin:0; font-weight:400; }
+
+  /* ---- profil (opening) ---- */
+  .profil-top{ display:flex; justify-content:space-between; align-items:flex-end; gap:var(--unit); flex-wrap:wrap; margin-bottom: calc(var(--unit)*3); }
+  h1.name{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(2.4rem, 8vw, 6rem); line-height:.94; letter-spacing:-.01em;
+  }
+  h1.name em{ font-style:normal; color: var(--blue); }
+  .profil-wrap{ display:grid; grid-template-columns: 1fr calc(var(--tile)*4); gap: calc(var(--tile)*.5); align-items:start; }
+  .headshot-wrap{ position:relative; }
+  .headshot{
+    aspect-ratio: 4/5; border:1.5px dashed var(--ink-faint); border-radius:4px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    background: var(--card); color: var(--ink-faint);
+    overflow:hidden;
+  }
+  .headshot img{ width:100%; height:100%; object-fit:cover; }
+  .headshot span{ font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; padding: 0 var(--unit); }
+  .htag{
+    position:absolute; left:-14px; z-index:2;
+    font-family:"Caveat"; font-weight:700; font-size:1.5rem; line-height:1;
+    color:#fff; background: var(--ink); border-radius:999px;
+    padding:9px 20px 11px; white-space:nowrap;
+    box-shadow: 0 6px 18px rgba(17,17,17,.22);
+  }
+  .htag.h1{ bottom: 76px; transform: rotate(-7deg); }
+  .htag.h2{ bottom: 30px; left:6px; transform: rotate(4deg); background: var(--blue); }
+  .profil-bio p{ font-size: clamp(1rem,1.5vw,1.15rem); line-height:1.7; color: var(--ink-soft); max-width:58ch; margin:0 0 var(--unit); }
+  .profil-bio p:last-of-type{ margin-bottom: calc(var(--unit)*1.5); }
+  .profil-chips{ display:flex; gap:8px; flex-wrap:wrap; margin: calc(var(--unit)*1.5) 0; }
+  .chip{ font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; border:1px solid var(--line); border-radius:2px; padding:7px 12px; color: var(--ink-soft); background: var(--card); white-space:nowrap; }
+  .profil-facts{ display:grid; grid-template-columns: 1fr 1fr; gap:0; border-top:1px solid var(--line); margin-top: calc(var(--unit)*1.5); }
+  .profil-facts .fact{ padding: var(--unit) 0; border-bottom:1px solid var(--line); }
+  .profil-facts .fact:nth-child(odd){ padding-right: var(--unit); }
+  .profil-facts .fact .k{ display:block; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:4px; }
+  .profil-facts .fact .v{ font-weight:500; }
+  .profil-note{ margin-top: calc(var(--unit)*1.5); font-family:"Roboto Mono"; font-size:.72rem; color: var(--ink-faint); border-left:2px solid var(--blue); padding-left:12px; line-height:1.6; }
+
+  h2.section-title{
+    font-family:"Archivo Black"; text-transform:uppercase;
+    font-size: clamp(1.6rem, 4vw, 2.7rem); line-height:1.05; letter-spacing:-.005em; max-width: 20ch; margin: 0 0 var(--unit);
+  }
+  .section-sub{ max-width: 52ch; color: var(--ink-soft); font-size:1rem; margin:0 0 calc(var(--unit)*3); }
+
+  .rows{
+    display:grid; grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: calc(var(--unit)*3) calc(var(--unit)*1.6); align-items:start;
+  }
+  .row{ display:block; min-width:0; padding:0; border-top:none; }
+  .row .head{ display:flex; align-items:baseline; gap:10px; margin: 14px 0 8px; }
+  .row .idx{ font-family:"Roboto Mono"; font-size:.74rem; color: var(--blue); flex:none; }
+  .row h3{ font-weight:700; font-size: clamp(1.02rem,1.5vw,1.22rem); line-height:1.2; }
+  .row .meta{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .row .tag{ font-family:"Roboto Mono"; font-size:.6rem; letter-spacing:.06em; text-transform:uppercase; padding:4px 8px; border-radius:2px; border:1px solid var(--ink-faint); color: var(--ink-soft); }
+  .row .tag.client{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); }
+  .row .year{ font-family:"Roboto Mono"; font-size:.7rem; color: var(--ink-faint); }
+
+  .shots{ display:flex; gap: var(--unit); flex-wrap:wrap; }
+  .shots .frame{
+    position:relative; display:block; border-radius:2px; flex:1; min-width:0; aspect-ratio: var(--ar, 4/5);
+    background: var(--card); border:1px solid var(--line); text-decoration:none; overflow:hidden;
+    box-shadow: 0 0 0 0 rgba(24,156,216,0);
+    transition: box-shadow .5s cubic-bezier(.2,.7,.2,1), border-color .5s;
+  }
+  .shots .frame:hover{
+    box-shadow: 0 0 0 1px var(--glow, var(--blue)), 0 0 46px 6px color-mix(in srgb, var(--glow, var(--blue)) 38%, transparent);
+    border-color: var(--glow, var(--blue));
+  }
+  .shots .frame img{
+    width:100%; height:100%; object-fit:cover; object-position:center center; border-radius:1px;
+    opacity:0; transform: translateY(22px);
+    transition: opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1);
+  }
+  .shots .frame img.loaded{ opacity:1; transform:none; }
+
+  a.frame{ cursor:pointer; }
+
+  /* frame qui joue une vidéo au survol */
+  .video-frame{ overflow:hidden; }
+  .video-frame video{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    border-radius:1px; opacity:0; pointer-events:none; background:#000;
+    transition: opacity .45s cubic-bezier(.2,.7,.2,1);
+  }
+  .video-frame.playing video{ opacity:1; }
+  .video-frame .play-hint{
+    position:absolute; left:10px; bottom:10px; z-index:2;
+    display:flex; align-items:center; gap:6px;
+    font-family:"Roboto Mono"; font-size:.6rem; letter-spacing:.08em; text-transform:uppercase;
+    color:#fff; background: rgba(17,17,17,.62); backdrop-filter: blur(4px);
+    padding:5px 9px; border-radius:2px;
+    transition: opacity .35s;
+  }
+  .video-frame.playing .play-hint{ opacity:0; }
+
+  /* ---- aperçu au survol : 2e image, teintée + floutée, avec appel à cliquer ---- */
+  .shots .frame img.peek{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;
+    opacity:0; transform: scale(1.04) translateX(3%);
+    filter: blur(5px) saturate(1.1);
+    transition: opacity .22s cubic-bezier(.2,.7,.2,1), transform .38s cubic-bezier(.2,.7,.2,1);
+    pointer-events:none;
+  }
+  .peek-veil{
+    position:absolute; inset:0; z-index:2; pointer-events:none;
+    background: color-mix(in srgb, var(--glow, var(--blue)) 50%, transparent);
+    opacity:0; transition: opacity .22s cubic-bezier(.2,.7,.2,1);
+  }
+  .peek-cta{
+    position:absolute; inset:0; z-index:3; pointer-events:none;
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:#fff; text-align:center; padding: 0 var(--unit);
+    opacity:0; transform: translateY(6px);
+    transition: opacity .2s cubic-bezier(.2,.7,.2,1) .04s, transform .3s cubic-bezier(.2,.7,.2,1) .04s;
+  }
+  .peek-cta span{ display:inline-block; border-bottom:1px solid rgba(255,255,255,.55); padding-bottom:3px; }
+  .peek-frame.peeking img.peek{ opacity:1; transform:none; }
+  .peek-frame.peeking .peek-veil{ opacity:1; }
+  .peek-frame.peeking .peek-cta{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
+  }
+
+  h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
+  h2.contact-title em{ font-style:normal; color: var(--blue); }
+  .contact-lede{ font-size: clamp(1rem,1.7vw,1.2rem); line-height:1.65; color: var(--ink-soft); max-width:52ch; margin:0 0 calc(var(--unit)*2.5); }
+
+  .mail{
+    display:flex; align-items:center; justify-content:space-between; gap: var(--unit);
+    text-decoration:none; background: var(--card); border:1px solid var(--line); border-radius:3px;
+    padding: calc(var(--unit)*1.5) calc(var(--unit)*1.75);
+    transition: border-color .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s cubic-bezier(.2,.7,.2,1), transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .mail:hover{ border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue), 0 14px 40px rgba(24,156,216,.16); transform: translateY(-2px); }
+  .mail .k{ display:block; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:8px; }
+  .mail .addr{ font-size: clamp(1.05rem,3.2vw,1.9rem); font-weight:700; letter-spacing:-.01em; word-break:break-all; }
+  .mail .arrow{ flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color: var(--blue); transition: background .4s, color .4s, transform .4s cubic-bezier(.2,.7,.2,1); }
+  .mail:hover .arrow{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); transform: translateX(4px); }
+  .mail .arrow svg{ width:15px; height:15px; }
+
+  .contact-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--unit) var(--gutter); margin-top: calc(var(--unit)*2.5); padding-top: calc(var(--unit)*1.75); border-top:1px solid var(--line); max-width:440px; }
+  .contact-col .label{ font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:8px; }
+  .contact-col a{ text-decoration:none; font-weight:500; }
+  .contact-col a:hover{ color: var(--blue); }
+  .contact-col div{ font-size:.96rem; color: var(--ink-soft); line-height:1.6; }
+  .contact-col .v{ font-size:1rem; color: var(--ink); font-weight:500; }
+  footer{ text-align:center; padding: var(--unit) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
+
+  /* ---- parcours (séquence bloquée au scroll) ---- */
+  #parcours{ position:relative; border-top:1px solid var(--line); }
+  .parcours-track{ position:relative; height: 360vh; }
+  .parcours-stage{ position:sticky; top:0; height:100vh; display:flex; align-items:center; overflow:hidden; }
+  .parcours-inner{ width:100%; border-top:none; padding-top: calc(var(--unit)*1.5); padding-bottom: calc(var(--unit)*1.5); }
+  .parcours-inner .section-sub{ margin-bottom: calc(var(--unit)*2); }
+  .parcours-wrap{ display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: calc(var(--tile)*.9); align-items:center; }
+  .vaud-map svg{ width:auto; max-width:100%; height:min(54vh, 470px); display:block; margin:0 auto; overflow:visible; }
+  .vaud-outline{ fill: rgba(255,255,255,.62); stroke: rgba(29,29,27,.45); stroke-width:3; stroke-linejoin:round; }
+  .vaud-lake{ fill: rgba(24,156,216,.26); }
+  .map-label{ font-family:"Roboto Mono"; font-size:15px; letter-spacing:.1em; fill: var(--ink-faint); text-transform:uppercase; }
+  .map-dot circle{ fill: var(--ink); }
+  .map-dot .halo{ fill: var(--blue); opacity:.18; }
+  .map-dot .name{ font-family:"Roboto"; font-weight:700; font-size:21px; fill: var(--ink); }
+  .map-dot .sub{ font-family:"Roboto"; font-size:15px; fill: var(--ink-soft); }
+  .map-dot .date{ font-family:"Roboto Mono"; font-size:14px; fill: var(--ink-faint); }
+  .route-line{ fill:none; stroke: var(--ink-soft); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
+  .route-marker{ fill: var(--blue); stroke: var(--paper); stroke-width:3; filter: drop-shadow(0 0 6px rgba(24,156,216,.55)); }
+
+  html.js .map-dot{ opacity:0; transition: opacity .45s cubic-bezier(.2,.7,.2,1); }
+  html.js .map-dot.reached{ opacity:1; }
+  html.js .map-dot .halo{ transform: scale(.2); transform-box: fill-box; transform-origin:center; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+  html.js .map-dot.reached .halo{ transform: scale(1); }
+
+  .timeline{ display:flex; flex-direction:column; gap: calc(var(--unit)*1.4); border-left:1.5px solid var(--line); padding-left: calc(var(--unit)*1.75); max-width: 440px; }
+  .tl-item{ position:relative; }
+  .tl-item::before{ content:""; position:absolute; left: calc(var(--unit)*-1.75 - 4.5px); top:6px; width:9px; height:9px; border-radius:50%; background: var(--paper); border:2px solid var(--line); transition: border-color .4s, background .4s; }
+  .tl-item.reached::before{ border-color: var(--blue); }
+  .tl-item.current.reached::before{ background: var(--blue); }
+  .tl-head{ display:flex; justify-content:space-between; align-items:baseline; gap: var(--unit); flex-wrap:wrap; }
+  .tl-item h3{ font-weight:700; font-size:1.05rem; }
+  .tl-date{ font-family:"Roboto Mono"; font-size:.72rem; color: var(--ink-faint); white-space:nowrap; }
+  .tl-loc{ margin: 3px 0 0; font-size:.9rem; color: var(--ink-soft); }
+  .tl-item ul{ margin: 8px 0 0; padding-left:18px; color: var(--ink-soft); font-size:.85rem; line-height:1.6; }
+  html.js .tl-item ul{ max-height:0; opacity:0; overflow:hidden; margin-top:0;
+    transition: max-height .55s cubic-bezier(.2,.7,.2,1), opacity .4s, margin-top .4s; }
+  html.js .tl-item.active ul{ max-height:140px; opacity:1; margin-top:8px; }
+
+  html.js .tl-item{ opacity:.14; transform: translateX(-10px); transition: opacity .5s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1); }
+  html.js .tl-item.reached{ opacity:1; transform:none; }
+
+  .parcours-hint{
+    display:flex; align-items:center; gap:10px; margin-top: calc(var(--unit)*2);
+    font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint);
+  }
+  .parcours-hint .bar{ position:relative; flex:1; max-width:180px; height:2px; background: var(--line); border-radius:2px; overflow:hidden; }
+  .parcours-hint .bar i{ position:absolute; inset:0 auto 0 0; width:0%; background: var(--blue); transition: width .12s linear; }
+
+  #progress{ position:fixed; right:22px; top:50%; transform:translateY(-50%); z-index:400; width:1px; height:120px; background: var(--line); }
+  #progress i{ position:absolute; left:-3px; width:7px; height:7px; border-radius:50%; background: var(--blue); top:0; }
+
+  html.js .pre-reveal{ opacity:0; transform: translateY(24px); }
+  html.js .pre-reveal.in{ opacity:1; transform:none; transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+
+  @media (prefers-reduced-motion: reduce){
+    html.js .pre-reveal{ opacity:1; transform:none; }
+    .shots .frame img{ transition:none; opacity:1; transform:none; }
+  }
+
+  @media (max-width: 1020px){
+    .rows{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 620px){
+    .rows{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px){
+    .profil-wrap{ grid-template-columns:1fr; }
+    .headshot{ max-width:220px; }
+    .profil-facts{ grid-template-columns:1fr; }
+    .profil-facts .fact:nth-child(odd){ padding-right:0; }
+    .shots{ flex-direction:column; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .mail{ flex-direction:column; align-items:flex-start; gap: var(--unit); }
+    .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }
+    .vaud-map{ max-width:none; margin:0; position:static; }
+    .vaud-map svg{ height:33vh; }
+    .parcours-inner .section-sub{ display:none; }
+    .map-dot .sub{ display:none; }
+    html.js .timeline{ position:relative; min-height:168px; border-left:none; padding-left:0; gap:0; }
+    html.js .timeline .tl-item{ position:absolute; left:0; right:0; top:0; opacity:0; transform:none; pointer-events:none; }
+    html.js .timeline .tl-item.active{ opacity:1; pointer-events:auto; }
+    html.js .timeline .tl-item::before{ display:none; }
+    html.js .timeline .tl-item.active ul{ max-height:160px; }
+    #progress{ display:none; }
+    header.nav nav{ gap:16px; }
+    header.nav nav a{ font-size:.64rem; }
+  }
+</style>
+
+<div id="progress"><i></i></div>
+
+<header class="nav">
+  <span class="mark"><img src="assets/logo-black.png" alt="LT Design"></span>
+  <nav>
+    <a href="#profil">Profil</a>
+    <a href="#travaux">Travaux</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section id="cover" class="grid-pattern">
+    <img class="logo" src="assets/logo-black.png" alt="">
+    <p class="eyebrow">Portfolio</p>
+    <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
+    <div class="cover-hint"><span>Faire défiler</span><span class="chev" aria-hidden="true"></span></div>
+  </section>
+
+  <section id="profil" class="block grid-pattern first">
+    <div class="profil-top">
+      <div>
+        <p class="eyebrow">Profil</p>
+        <h2 class="section-title balance">Qui je suis.</h2>
+      </div>
+    </div>
+    <div class="profil-wrap">
+      <div class="profil-bio">
+        <p>[À compléter] Je m'appelle Léo, étudiant en communication visuelle au CPNV. Ce que j'aime dans le design, c'est passer d'un registre à l'autre, construire une identité de marque un jour, retoucher une affiche sportive le lendemain, mettre en page un carnet technique la semaine suivante.</p>
+        <p>[À compléter] Ce portfolio réunit des mandats réels et des projets d'école poussés comme de vrais dossiers clients.</p>
+        <div class="profil-chips">
+          <span class="chip">Branding</span>
+          <span class="chip">Print</span>
+          <span class="chip">Packaging</span>
+          <span class="chip">Affiche</span>
+          <span class="chip">UI/UX</span>
+        </div>
+        <div class="profil-facts">
+          <div class="fact"><span class="k">Formation</span><span class="v">CPNV Sainte-Croix, médiamatique</span></div>
+          <div class="fact"><span class="k">Basé à</span><span class="v">Suisse romande</span></div>
+          <div class="fact"><span class="k">Depuis</span><span class="v">[Année à compléter]</span></div>
+          <div class="fact"><span class="k">Passion</span><span class="v">[À compléter]</span></div>
+        </div>
+        <p class="profil-note">Section à personnaliser, remplace ce texte et ces champs par tes propres informations.</p>
+      </div>
+      <div class="headshot-wrap">
+        <div class="headshot"><span>[Ta photo]</span></div>
+        <span class="htag h1">Identité de marque</span>
+        <span class="htag h2">Sport design</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block grid-pattern pre-reveal">
+    <p class="eyebrow"><span class="num">01 à 03</span></p>
+    <h2 class="section-title balance">Des vrais clients.</h2>
+    <p class="section-sub">Comprendre, échanger, conseiller et transformer les besoins du client en idées graphiques.</p>
+
+    <div class="rows">
+      <article class="row pre-reveal" id="chearn" style="--glow:#e7010e">
+        <div class="shots">
+            <a class="frame peek-frame" href="chearn.html" style="--ar:1080/1380">
+            <img src="assets/chearn/cover.jpg" alt="Chearn, identité visuelle complète" loading="lazy">
+            <img class="peek" src="assets/chearn/flatlay.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">01</span><h3>Chearn</h3></div>
+        <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Affiche</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
+      </article>
+
+      <article class="row pre-reveal" id="afmbb" style="--glow:#c71517">
+        <div class="shots">
+            <a class="frame peek-frame" href="afmbb.html" style="--ar:900/1150">
+            <img src="assets/afmbb/logo.jpg" alt="Logo AFMBB" loading="lazy">
+            <img class="peek" src="assets/afmbb/flyer.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">02</span><h3>AFMBB</h3></div>
+        <div class="meta"><span class="tag client">Client réel</span><span class="tag">Identité</span><span class="tag">Flyer</span><span class="year">Avril 2026</span></div>
+      </article>
+
+      <article class="row pre-reveal" id="partie-ailleurs" style="--glow:#41bcda">
+        <div class="shots">
+            <a class="frame peek-frame" href="partie-ailleurs.html" style="--ar:878/1122">
+            <img src="assets/partie-ailleurs/thumb.jpg" alt="Affiche La Partie d'Ailleurs sur un panneau urbain" loading="lazy">
+            <img class="peek" src="assets/partie-ailleurs/rollup-bar.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">03</span><h3>La Partie d'Ailleurs</h3></div>
+        <div class="meta"><span class="tag client">Client réel</span><span class="tag">Affiche</span><span class="tag">Roll-up</span><span class="tag">Template</span><span class="year">Mars 2026</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="block grid-pattern pre-reveal">
+    <p class="eyebrow"><span class="num">04 à 05</span></p>
+    <h2 class="section-title balance">Marques fictives.</h2>
+    <p class="section-sub">Pas de client, pas de brief, mais des projets menés avec le même sérieux.</p>
+
+    <div class="rows">
+      <article class="row pre-reveal" id="richol" style="--glow:#db6661">
+        <div class="shots">
+            <a class="frame peek-frame" href="richol.html" style="--ar:1080/1380">
+            <img src="assets/richol/fraise-can.jpg" alt="Charte graphique Richol, canette Richol Fraise" loading="lazy">
+            <img class="peek" src="assets/richol/limoncello-photo.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">04</span><h3>Richol</h3></div>
+        <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Charte graphique</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="year">Avril 2026</span></div>
+      </article>
+
+      <article class="row pre-reveal" id="meublon" style="--glow:#e0231a">
+        <div class="shots">
+            <a class="frame video-frame" href="meublon.html" style="--ar:1080/1380">
+            <img src="assets/meublon/logo.jpg" alt="Meublon, logotype et baseline « Le mobilier en carton qui a du caractère »" loading="lazy">
+            <video data-start="6.6" poster="assets/meublon/poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/meublon/meublon.mp4" type="video/mp4"></video>
+            <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">05</span><h3>Meublon</h3></div>
+        <div class="meta"><span class="tag">Marque fictive</span><span class="tag">Branding</span><span class="tag">Stationery</span><span class="tag">Vidéo</span><span class="year">Sept. 2026</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="block grid-pattern pre-reveal">
+    <p class="eyebrow"><span class="num">06 à 07</span></p>
+    <h2 class="section-title balance">Affiches.</h2>
+    <p class="section-sub">Des envies soudaines, des idées qui prennent forme.</p>
+
+    <div class="rows">
+      <article class="row pre-reveal" id="cervin" style="--glow:#b7260e">
+        <div class="shots">
+            <a class="frame video-frame" href="cervin.html" style="--ar:2480/3508">
+            <img src="assets/cervin/poster.jpg" alt="Affiche Flow State, le Cervin" loading="lazy">
+            <video poster="assets/cervin/video-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/cervin/cervin.mp4" type="video/mp4"></video>
+            <span class="play-hint"><svg width="8" height="9" viewBox="0 0 8 9" aria-hidden="true"><path d="M0 0l8 4.5L0 9z" fill="currentColor"/></svg> Vidéo</span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">06</span><h3>Cervin, Flow State</h3></div>
+        <div class="meta"><span class="tag">Affiche</span><span class="tag">Vidéo</span><span class="year">Juin 2026</span></div>
+      </article>
+
+      <article class="row pre-reveal" id="fragments" style="--glow:#ca0a54">
+        <div class="shots">
+            <a class="frame peek-frame" href="fragments.html" style="--ar:2480/3508">
+            <img src="assets/fragments/mockup.jpg" alt="Affiche Fragments of Silence affichée sur un panneau urbain" loading="lazy">
+            <img class="peek" src="assets/fragments/affiche-fr.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">07</span><h3>Fragments of Silence</h3></div>
+        <div class="meta"><span class="tag">Affiche</span><span class="year">Mars 2026</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="travaux" class="block grid-pattern pre-reveal">
+    <p class="eyebrow"><span class="num">08 à 09</span> Retouche</p>
+    <h2 class="section-title balance">Sport design.</h2>
+    <p class="section-sub">Précision, maîtrise et souci du détail, jusque dans les finitions.</p>
+
+    <div class="rows">
+      <article class="row pre-reveal" id="riat" style="--glow:#e02222">
+        <div class="shots">
+            <a class="frame peek-frame" href="riat.html" style="--ar:1417/1811">
+            <img src="assets/riat/poster.jpg" alt="Affiche sport design Damien Riat, capitaine du Lausanne HC" loading="lazy">
+            <img class="peek" src="assets/riat/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">08</span><h3>Damien Riat</h3></div>
+        <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
+      </article>
+
+      <article class="row pre-reveal" id="rogers" style="--glow:#2f6fd0">
+        <div class="shots">
+            <a class="frame peek-frame" href="rogers.html" style="--ar:1134/1417">
+            <img src="assets/rogers/poster.jpg" alt="Affiche sport design Morgan Rogers, football" loading="lazy">
+            <img class="peek" src="assets/rogers/poster-brut.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">09</span><h3>Morgan Rogers</h3></div>
+        <div class="meta"><span class="tag">Sport design</span><span class="tag">Retouche</span><span class="year">Sept. 2026</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="block grid-pattern pre-reveal">
+    <p class="eyebrow"><span class="num">10 à 11</span></p>
+    <h2 class="section-title balance">Édition &amp; print.</h2>
+    <p class="section-sub">Grilles, hiérarchie typographique et pagination, pour penser la page comme un système.</p>
+
+    <div class="rows">
+      <article class="row pre-reveal" id="serigraphie" style="--glow:#e2963e">
+        <div class="shots">
+            <a class="frame peek-frame" href="serigraphie.html" style="--ar:1500/1125">
+            <img src="assets/serigraphie/cover-mockup.jpg" alt="Le cahier Sérigraphie et Tampographie" loading="lazy">
+            <img class="peek" src="assets/serigraphie/spread-bleu.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">10</span><h3>Sérigraphie &amp; Tampographie</h3></div>
+        <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Juin 2026</span></div>
+      </article>
+
+      <article class="row pre-reveal" id="losangeles" style="--glow:#189cd8">
+        <div class="shots">
+            <a class="frame peek-frame" href="losangeles.html" style="--ar:1500/1125">
+            <img src="assets/losangeles/mockup-histoire.jpg" alt="Guide touristique Los Angeles, livre ouvert" loading="lazy">
+            <img class="peek" src="assets/losangeles/grid.jpg" alt="" loading="lazy" aria-hidden="true">
+            <span class="peek-veil" aria-hidden="true"></span>
+            <span class="peek-cta" aria-hidden="true"><span>Cliquez pour voir plus</span></span>
+            </a>
+        </div>
+        <div class="head"><span class="idx">11</span><h3>Magazine Los Angeles</h3></div>
+        <div class="meta"><span class="tag">Mise en page</span><span class="tag">Édition</span><span class="year">Mars 2026</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section id="parcours">
+    <div class="parcours-track">
+      <div class="parcours-stage">
+        <div class="parcours-inner block grid-pattern">
+          <p class="eyebrow"></p>
+          <h2 class="section-title balance">Mon parcours.</h2>
+          <p class="section-sub">De l'école obligatoire à Mézières au CFC de médiamaticien au CPNV de Sainte-Croix, avec trois semaines de stage en chemin, dans le canton de Vaud.</p>
+
+          <div class="parcours-wrap">
+            <div class="vaud-map">
+              <svg viewBox="0 0 753 720" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+                <path class="vaud-outline" d="M221,49 L221,117 L217,118 L216,134 L211,136 L210,150 L206,151 L156,291 L160,318 L145,344 L118,365 L80,420 L28,512 L8,602 L26,629 L34,631 L101,550 L102,530 L128,524 L289,443 L292,419 L349,420 L351,441 L361,457 L439,482 L491,520 L491,556 L516,611 L527,679 L570,711 L579,712 L606,681 L615,660 L615,648 L622,644 L661,556 L723,537 L745,489 L745,481 L710,447 L650,413 L627,362 L617,361 L614,348 L541,285 L541,267 L562,236 L610,200 L593,162 L547,146 L502,118 L386,87 L309,91 L293,80 L293,71 Z"/>
+                <path class="vaud-lake" d="M489,517 L438,481 L406,468 L363,457 L353,442 L353,426 L363,418 L363,407 L356,400 L342,402 L336,419 L272,420 L237,431 L205,449 L165,465 L118,522 L101,522 L96,526 L95,556 L33,631 L33,642 L49,697 L105,705 L173,688 L279,639 L338,607 L454,558 L486,539 Z"/>
+                <path class="vaud-lake" d="M522,46 L515,24 L448,8 L435,8 L350,37 L297,72 L297,84 L309,91 L371,87 L459,88 L460,82 L472,82 L522,57 Z"/>
+                <path class="vaud-lake" d="M163,303 L151,303 L142,312 L124,345 L124,355 L134,355 L144,346 L163,313 Z"/>
+
+                <text class="map-label" x="196" y="612">Lac Léman</text>
+                <text class="map-label" x="352" y="58">Lac de Neuchâtel</text>
+                <text class="map-label" x="172" y="340">Lac de Joux</text>
+
+                <path class="route-line" id="routeLine" d="M445,348 C420,370 385,398 356,417 C344,414 330,404 318,395 C328,398 340,404 349,409 C330,360 295,240 270,143"/>
+
+                <g class="map-dot" data-reach="0">
+                  <circle class="halo" cx="445" cy="348" r="20"/>
+                  <circle cx="445" cy="348" r="8"/>
+                  <text class="name" x="466" y="342">Mézières</text>
+                  <text class="sub" x="466" y="363">École obligatoire</text>
+                </g>
+                <g class="map-dot" data-reach="1">
+                  <circle class="halo" cx="356" cy="417" r="20"/>
+                  <circle cx="356" cy="417" r="8"/>
+                  <text class="name" x="377" y="411">Lausanne</text>
+                  <text class="sub" x="377" y="432">23bis · DGNSI · DGEP</text>
+                </g>
+                <g class="map-dot" data-reach="4">
+                  <circle class="halo" cx="270" cy="143" r="20"/>
+                  <circle cx="270" cy="143" r="8"/>
+                  <text class="name" x="291" y="137">Sainte-Croix</text>
+                  <text class="sub" x="291" y="158">CPNV · médiamatique</text>
+                </g>
+
+                <circle class="route-marker" id="routeMarker" r="10" cx="445" cy="348"/>
+              </svg>
+            </div>
+
+            <div class="timeline">
+              <article class="tl-item" data-reach="0">
+                <div class="tl-head"><h3>École obligatoire</h3><span class="tl-date mono">Mézières</span></div>
+                <p class="tl-loc">Collège du Raffort</p>
+              </article>
+
+              <article class="tl-item" data-reach="1">
+                <div class="tl-head"><h3>Stage 23bis</h3><span class="tl-date mono">Juin 2023</span></div>
+                <p class="tl-loc">Lausanne · 1 semaine</p>
+                <ul>
+                  <li>Réalisation d'un mini-projet vidéo en équipe</li>
+                  <li>Collaboration créative et respect d'un brief client</li>
+                </ul>
+              </article>
+
+              <article class="tl-item" data-reach="2">
+                <div class="tl-head"><h3>Stage DGNSI</h3><span class="tl-date mono">Juil. 2023</span></div>
+                <p class="tl-loc">État de Vaud · 1 semaine</p>
+                <ul>
+                  <li>Participation à des projets de transformation numérique</li>
+                  <li>Découverte de la gestion de services digitaux</li>
+                </ul>
+              </article>
+
+              <article class="tl-item" data-reach="3">
+                <div class="tl-head"><h3>Stage DGEP</h3><span class="tl-date mono">Févr. 2024</span></div>
+                <p class="tl-loc">État de Vaud · 1 semaine</p>
+                <ul>
+                  <li>Gestion des écoles professionnelles et des gymnases</li>
+                  <li>Orientation professionnelle et qualité des formations</li>
+                </ul>
+              </article>
+
+              <article class="tl-item current" data-reach="4">
+                <div class="tl-head"><h3>CPNV, médiamatique</h3><span class="tl-date mono">En cours</span></div>
+                <p class="tl-loc">Sainte-Croix · CFC de médiamaticien</p>
+              </article>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="block grid-pattern pre-reveal">
+    <p class="eyebrow">Contact</p>
+    <h2 class="contact-title balance">Convaincu ?<br><em>Écrivez-moi.</em></h2>
+    <p class="contact-lede">Si ces projets vous ont plu ou que vous avez une question, la boîte mail est ouverte, je réponds sous 24&nbsp;h.</p>
+
+    <a class="mail" href="mailto:leo.tache@lt-design.ch">
+      <span>
+        <span class="k">Écrire</span>
+        <span class="addr">leo.tache@lt-design.ch</span>
+      </span>
+      <span class="arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+    </a>
+
+    <div class="contact-grid">
+      <div class="contact-col">
+        <div class="label">Suivre</div>
+        <div class="v"><a href="https://instagram.com/lt_design_09" target="_blank" rel="noopener">@lt_design_09</a></div>
+      </div>
+      <div class="contact-col">
+        <div class="label">Basé à</div>
+        <div class="v">Suisse romande</div>
+        <div>CPNV, Sainte-Croix</div>
+      </div>
+    </div>
+  </section>
+
+  <footer><img src="assets/logo-black.png" alt="" style="height:16px;width:auto;margin:0 auto 8px;opacity:.7"> Léo Tâche</footer>
+</main>
+
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- les images montent depuis le bas une fois chargées, le temps de charger ne se voit plus ---- */
+  document.querySelectorAll('.shots .frame img:not(.peek)').forEach(function(img){
+    function reveal(){ img.classList.add('loaded'); }
+    if (img.complete && img.naturalWidth) requestAnimationFrame(reveal);
+    else { img.addEventListener('load', reveal, {once:true}); img.addEventListener('error', reveal, {once:true}); }
+  });
+
+  if (!reduced) {
+    var vaudPath = document.querySelector('.vaud-outline');
+    if (vaudPath) {
+      var len = vaudPath.getTotalLength();
+      vaudPath.style.strokeDasharray = len;
+      vaudPath.style.strokeDashoffset = len;
+    }
+    document.querySelectorAll('.map-dot').forEach(function(d, i){
+      d.style.transitionDelay = (400 + i * 180) + 'ms';
+    });
+  }
+
+  /* ---- aperçu au survol : 2e image après un court délai ---- */
+  document.querySelectorAll('.peek-frame').forEach(function(frame){
+    var timer = null;
+    function show(){ clearTimeout(timer); timer = setTimeout(function(){ frame.classList.add('peeking'); }, 70); }
+    function hide(){ clearTimeout(timer); frame.classList.remove('peeking'); }
+    if (window.matchMedia('(hover: hover)').matches){
+      frame.addEventListener('mouseenter', show);
+      frame.addEventListener('mouseleave', hide);
+      frame.addEventListener('focusin', show);
+      frame.addEventListener('focusout', hide);
+    }
+  });
+
+  /* ---- vidéo au survol (Meublon) ---- */
+  document.querySelectorAll('.video-frame').forEach(function(frame){
+    var v = frame.querySelector('video');
+    if (!v) return;
+    var startAt = parseFloat(v.getAttribute('data-start') || '0') || 0;
+    function play(){
+      frame.classList.add('playing');
+      try { if (v.currentTime < startAt) v.currentTime = startAt; } catch(e){}
+      var p = v.play();
+      if (p && p.catch) p.catch(function(){});
+    }
+    function stop(){
+      frame.classList.remove('playing');
+      try { v.pause(); v.currentTime = startAt; } catch(e){}
+    }
+    if (window.matchMedia('(hover: hover)').matches) {
+      frame.addEventListener('mouseenter', play);
+      frame.addEventListener('mouseleave', stop);
+      frame.addEventListener('focusin', play);
+      frame.addEventListener('focusout', stop);
+    } else if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ en.isIntersecting ? play() : stop(); });
+      }, {threshold:.55});
+      io.observe(frame);
+    }
+  });
+
+  /* ---- parcours : trajet séquentiel, bloqué pendant l'animation ---- */
+  var parcoursUpdate = null;
+  (function(){
+    var section = document.getElementById('parcours');
+    var track   = section && section.querySelector('.parcours-track');
+    var stage   = section && section.querySelector('.parcours-stage');
+    var routeLine = document.getElementById('routeLine');
+    var marker  = document.getElementById('routeMarker');
+    var bar     = document.getElementById('parcoursBar');
+    var items   = Array.prototype.slice.call(document.querySelectorAll('.tl-item[data-reach]'));
+    var dots    = Array.prototype.slice.call(document.querySelectorAll('.map-dot[data-reach]'));
+    if (!section || !track || !routeLine || !marker || !items.length) return;
+
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var segs = routeLine.getAttribute('d').split(/(?=C)/).map(function(s){ return s.trim(); });
+    var measurer = document.createElementNS(svgNS, 'path');
+    measurer.style.display = 'none';
+    routeLine.ownerSVGElement.appendChild(measurer);
+    var cumLengths = [0], running = segs[0];
+    for (var i = 1; i < segs.length; i++){
+      running += ' ' + segs[i];
+      measurer.setAttribute('d', running);
+      cumLengths.push(measurer.getTotalLength());
+    }
+    measurer.remove();
+    var segCount = cumLengths.length - 1;      // 4 étapes de trajet
+    var total = cumLengths[segCount];
+    routeLine.style.strokeDasharray = total;
+    routeLine.style.strokeDashoffset = total;
+
+    function apply(progress){
+      // progress : 0 → segCount
+      progress = Math.max(0, Math.min(segCount, progress));
+      var k = Math.min(segCount - 1, Math.floor(progress));
+      var local = progress - k;
+      var dist = cumLengths[k] + local * (cumLengths[k + 1] - cumLengths[k]);
+      var pt = routeLine.getPointAtLength(dist);
+      marker.setAttribute('cx', pt.x);
+      marker.setAttribute('cy', pt.y);
+      routeLine.style.strokeDashoffset = Math.max(0, total - dist);
+
+      var reached = Math.min(segCount, Math.floor(progress + 1e-6));
+      items.forEach(function(it){
+        var idx = +it.getAttribute('data-reach');
+        it.classList.toggle('reached', idx <= reached);
+        it.classList.toggle('active', idx === reached);
+      });
+      dots.forEach(function(d){
+        d.classList.toggle('reached', +d.getAttribute('data-reach') <= reached);
+      });
+    }
+
+    if (reduced) {
+      apply(segCount);
+      if (bar) bar.style.width = '100%';
+      return;
+    }
+
+    var HOLD_IN = 0.06, HOLD_OUT = 0.14;       // temps mort avant / après le trajet
+
+    parcoursUpdate = function(){
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var rect = track.getBoundingClientRect();
+      var pinned = stage && getComputedStyle(stage).position === 'sticky';
+      var t;
+      if (pinned) {
+        var span = rect.height - vh;           // course réelle du blocage
+        t = span > 0 ? (-rect.top) / span : 1;
+      } else {
+        var sRect = section.getBoundingClientRect();
+        t = (vh - sRect.top) / (sRect.height + vh * 0.6);
+      }
+      t = Math.max(0, Math.min(1, t));
+      var eased = (t - HOLD_IN) / (1 - HOLD_IN - HOLD_OUT);
+      eased = Math.max(0, Math.min(1, eased));
+      apply(eased * segCount);
+      if (bar) bar.style.width = (t * 100).toFixed(1) + '%';
+    };
+    parcoursUpdate();
+  })();
+
+  if (!reduced && 'IntersectionObserver' in window) {
+    var targets = document.querySelectorAll('.pre-reveal');
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){
+          var row = en.target.closest('.row');
+          if (row){
+            var siblings = Array.prototype.slice.call(row.parentElement.children);
+            var i = siblings.indexOf(row);
+            en.target.style.transitionDelay = Math.min(i,3) * 90 + 'ms';
+          }
+          en.target.classList.add('in');
+          obs.unobserve(en.target);
+        }
+      });
+    }, {threshold:.08, rootMargin:'0px 0px -6% 0px'});
+    targets.forEach(function(t){ obs.observe(t); });
+  } else {
+    document.querySelectorAll('.pre-reveal').forEach(function(t){ t.classList.add('in'); });
+  }
+
+  var prog = document.querySelector('#progress i');
+  var track = document.getElementById('progress');
+  function onScroll(){
+    var h = document.documentElement;
+    var pct = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+    var trackH = track.clientHeight - 7;
+    prog.style.top = Math.max(0, Math.min(1, pct)) * trackH + 'px';
+    if (parcoursUpdate) parcoursUpdate();
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  onScroll();
+
+  document.querySelectorAll('header.nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var target = document.querySelector(a.getAttribute('href'));
+      if (target){
+        e.preventDefault();
+        target.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+      }
+    });
+  });
+})();
+</script>
