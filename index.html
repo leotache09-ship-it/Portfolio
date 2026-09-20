@@ -224,17 +224,20 @@
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
     margin:0 auto; padding: 0 var(--gutter);
   }
+  /* .tv-strip = fenêtre fixe qui rogne le contenu ; .tv-strip-row = la rangée
+     réelle (titre + projets), traduite horizontalement en JS. Le scroll
+     vertical de la page est la SEULE source de mouvement : pas de swipe
+     horizontal séparé, tout se déroule dans le même geste continu. */
   .tv-strip{
-    display:flex; align-items:stretch; gap: calc(var(--gutter)*.8);
-    overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:none;
-    scroll-snap-type:x proximity; scroll-padding-left: var(--gutter);
-    margin: 0 calc(var(--gutter)*-1); padding: 0 var(--gutter) var(--unit);
+    overflow:hidden;
+    margin: 0 calc(var(--gutter)*-1); padding: 0 var(--gutter);
   }
-  .tv-strip::-webkit-scrollbar{ display:none; }
-  /* le titre est la première "carte" de la bande : swiper le fait sortir à
-     gauche pendant que les projets suivent, en un seul geste continu. */
+  .tv-strip-row{
+    display:flex; align-items:stretch; gap: calc(var(--gutter)*.8);
+    width:max-content; will-change:transform;
+  }
   .tv-title-card{
-    flex:0 0 auto; width:min(78vw,560px); scroll-snap-align:start;
+    flex:0 0 auto; width:min(78vw,560px);
     display:flex; align-items:center; justify-content:space-between; gap: var(--gutter);
   }
   .tv-cat-title{
@@ -244,10 +247,7 @@
   .tv-cat-arrow{ flex:none; width:clamp(36px,5vw,56px); height:auto; opacity:.85; }
   .tv-cat-arrow--rev{ transform:scaleX(-1); }
 
-  .tv-card{
-    flex:0 0 auto; width:min(52vw,300px); scroll-snap-align:start; text-decoration:none; color:inherit;
-    opacity:0; transform:translateX(220px); will-change:opacity, transform;
-  }
+  .tv-card{ flex:0 0 auto; width:min(52vw,300px); text-decoration:none; color:inherit; }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
   .tv-card-media{ display:block; width:100%; aspect-ratio: var(--ar,4/5); overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12); }
   .tv-card-media img{ width:100%; height:100%; object-fit:cover; }
@@ -266,7 +266,8 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .tv-card{ opacity:1 !important; transform:none !important; }
+    .tv-strip{ overflow:visible; margin:0; padding:0; }
+    .tv-strip-row{ display:flex; flex-direction:column; width:auto; gap: calc(var(--unit)*2); transform:none !important; }
   }
 
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
@@ -824,7 +825,7 @@ var TRAVAUX_FAMILIES = [
 
   var ARROW = '<svg class="tv-cat-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12H40M28 2L40 12L28 22"/></svg>';
 
-  var bands = []; /* { el, cards } — pour la révélation continue au scroll ci-dessous */
+  var bands = []; /* { el, strip, row } — pour le pilotage continu au scroll ci-dessous */
 
   TRAVAUX_FAMILIES.forEach(function(fam, ci){
     var dir = (ci % 2 === 0) ? 1 : -1; /* +1 = flèche à droite, -1 = flèche à gauche (alterne à chaque famille) */
@@ -848,24 +849,23 @@ var TRAVAUX_FAMILIES = [
     cat.style.background = fam.color;
     cat.innerHTML =
       '<div class="tv-cat-inner">' +
-        '<div class="tv-strip">' + titleCard + cards + '</div>' +
+        '<div class="tv-strip"><div class="tv-strip-row">' + titleCard + cards + '</div></div>' +
       '</div>';
     root.appendChild(cat);
-    bands.push({ el: cat, cards: Array.prototype.slice.call(cat.querySelectorAll('.tv-card')) });
+    bands.push({ el: cat, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
   });
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reducedMotion) return; /* la media query CSS affiche les projets directement, sans animation */
+  if (reducedMotion) return; /* la media query CSS empile tout verticalement, sans mouvement */
 
-  /* ---- révélation continue : les projets sortent en scrollant dans la bande,
-     invisibles tant qu'elle arrive par le bas, dehors une fois qu'on est bien
-     dedans. Piloté par une boucle requestAnimationFrame (pas par l'événement
-     scroll, peu fiable pour les gros sauts) donc toujours synchronisé avec le
-     scroll, quelle que soit sa vitesse — jamais bloquant, et réversible si on
-     remonte avant la sortie complète. ---- */
+  /* ---- le scroll vertical de la page pilote directement la position horizontale
+     de chaque bande : le titre part à gauche et les projets arrivent tout seuls,
+     dans le même geste continu — jamais besoin de swiper la bande soi-même.
+     Piloté par une boucle requestAnimationFrame (pas par l'événement scroll, peu
+     fiable pour les gros sauts) donc toujours synchronisé, quelle que soit la
+     vitesse ou le sens du scroll — jamais bloquant, et réversible. ---- */
   var REVEAL_START = 0.25; /* fraction du trajet total (entrée en bas -> sortie en haut) */
-  var REVEAL_END = 0.55;
-  var TRAVEL_PX = 220; /* distance parcourue depuis la droite — doit rester lisible comme une vraie arrivée */
+  var REVEAL_END = 0.6;
 
   function tick(){
     var vh = window.innerHeight;
@@ -873,11 +873,9 @@ var TRAVAUX_FAMILIES = [
       var rect = band.el.getBoundingClientRect();
       var total = vh + rect.height;
       var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
-      var p = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
-      band.cards.forEach(function(card){
-        card.style.opacity = String(p);
-        card.style.transform = 'translateX(' + ((1 - p) * TRAVEL_PX).toFixed(1) + 'px)';
-      });
+      var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
+      var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth);
+      band.row.style.transform = 'translateX(' + (-hp * maxTravel).toFixed(1) + 'px)';
     });
     requestAnimationFrame(tick);
   }
