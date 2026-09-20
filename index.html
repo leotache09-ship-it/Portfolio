@@ -217,9 +217,15 @@
     .shots .frame img.peek, .peek-veil, .peek-cta{ transition-duration:.01ms; }
   }
 
-  /* ================= TRAVAUX — une bande par famille, empilées ================= */
+  /* ================= TRAVAUX — une bande par famille, empilées =================
+     Le fond n'est pas peint par bande : c'est le fond de la PAGE (body) qui
+     dégrade en continu d'une couleur de famille à l'autre selon le scroll
+     (voir le script plus bas), comme sur adrienlaurent.fr. Chaque bande reste
+     transparente ; seule une fine ligne blanche marque la jonction entre deux
+     catégories. En mouvement réduit, chaque bande garde sa couleur unie. */
   #travaux{ position:relative; }
   .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
+  .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
   .tv-cat-inner{
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
     margin:0 auto; padding: 0 var(--gutter);
@@ -861,15 +867,35 @@ var TRAVAUX_FAMILIES = [
         '<div class="tv-strip"><div class="tv-strip-row">' + titleCard + arrow + cards + '</div></div>' +
       '</div>';
     root.appendChild(cat);
-    bands.push({ el: cat, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
+    bands.push({ el: cat, color: fam.color, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
   });
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reducedMotion) return; /* la media query CSS empile tout verticalement, sans mouvement */
+  if (reducedMotion) return; /* la media query CSS empile tout verticalement, sans mouvement — chaque bande garde la couleur unie posée ci-dessus */
+
+  /* en mouvement normal, c'est le fond de la page qui dégrade en continu
+     (ci-dessous) : les bandes elles-mêmes redeviennent transparentes. */
+  bands.forEach(function(band){ band.el.style.background = 'transparent'; });
+
+  function hexToRgb(hex){
+    hex = hex.replace('#','');
+    if (hex.length === 3) hex = hex.split('').map(function(c){ return c+c; }).join('');
+    var n = parseInt(hex, 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+  function lerpColor(c1, c2, t){
+    t = Math.max(0, Math.min(1, t));
+    var a = hexToRgb(c1), b = hexToRgb(c2);
+    return 'rgb(' + Math.round(a[0]+(b[0]-a[0])*t) + ',' + Math.round(a[1]+(b[1]-a[1])*t) + ',' + Math.round(a[2]+(b[2]-a[2])*t) + ')';
+  }
+  var BASE_BG = '#0D0D0F';
 
   /* ---- le scroll vertical de la page pilote directement la position horizontale
      de chaque bande : le titre part à gauche et les projets arrivent tout seuls,
      dans le même geste continu — jamais besoin de swiper la bande soi-même.
+     Le même scroll pilote aussi, en continu, le fond de la page entière : il
+     dégrade d'une couleur de famille à l'autre, chaque couleur étant atteinte
+     pile quand sa bande est centrée à l'écran (comme sur adrienlaurent.fr).
      Piloté par une boucle requestAnimationFrame (pas par l'événement scroll, peu
      fiable pour les gros sauts) donc toujours synchronisé, quelle que soit la
      vitesse ou le sens du scroll — jamais bloquant, et réversible. ---- */
@@ -878,19 +904,44 @@ var TRAVAUX_FAMILIES = [
 
   function tick(){
     var vh = window.innerHeight;
+    var scrollY = window.scrollY;
+    var stops = [];
+
     bands.forEach(function(band){
       var rect = band.el.getBoundingClientRect();
       var total = vh + rect.height;
       var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
       var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
-      /* clientWidth inclut le padding gauche/droit du strip, alors que la
-         rangée s'y cale déjà (padding réservé par le flux normal) : il faut
-         le rajouter, sinon la dernière carte reste tronquée d'un padding. */
       var stripCs = getComputedStyle(band.strip);
       var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
       var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
       band.row.style.transform = 'translateX(' + (-hp * maxTravel).toFixed(1) + 'px)';
+
+      stops.push({ y: scrollY + rect.top + rect.height / 2, color: band.color });
     });
+
+    var first = bands[0].el.getBoundingClientRect();
+    var last = bands[bands.length - 1].el.getBoundingClientRect();
+    stops.unshift({ y: scrollY + first.top, color: BASE_BG });
+    stops.push({ y: scrollY + last.top + last.height, color: BASE_BG });
+
+    var refY = scrollY + vh / 2;
+    var bg = stops[0].color;
+    if (refY <= stops[0].y){
+      bg = stops[0].color;
+    } else if (refY >= stops[stops.length - 1].y){
+      bg = stops[stops.length - 1].color;
+    } else {
+      for (var i = 0; i < stops.length - 1; i++){
+        if (refY >= stops[i].y && refY <= stops[i + 1].y){
+          var frac = (refY - stops[i].y) / (stops[i + 1].y - stops[i].y);
+          bg = lerpColor(stops[i].color, stops[i + 1].color, frac);
+          break;
+        }
+      }
+    }
+    document.body.style.backgroundColor = bg;
+
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
