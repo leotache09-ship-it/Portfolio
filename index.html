@@ -87,15 +87,17 @@
   .cover-role{
     margin: calc(var(--unit)*1.2) 0 0; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-soft);
   }
-  /* carré décoratif (pas un bouton, pointer-events:none) : à moitié coupé par
-     le bas de l'écran au repos, il grandit et prend tout le fond au scroll
-     (voir le script dédié) — jamais de transition CSS ici, tout est piloté
-     image par image pour rester exactement synchronisé avec le scroll.
+  /* carré décoratif (pas un bouton, pointer-events:none) : fixe DANS LA PAGE
+     (scrolle avec le hero, pas avec l'écran), légèrement rogné par le bas au
+     repos mais le texte reste dans la partie visible pour rester lisible.
+     Il grandit et prend tout le fond au scroll (voir le script dédié) —
+     jamais de transition CSS ici, tout est piloté image par image pour
+     rester exactement synchronisé avec le scroll.
      z-index négatif : il reste toujours DERRIÈRE le contenu normal de la
      page (travaux, textes), jamais devant. Seul .cover-hint-bg est mis à
      l'échelle ; le texte reste à taille fixe, superposé par-dessus. */
   .cover-hint{
-    position:fixed; left:50%; bottom: calc(clamp(88px,11vw,116px) / -2);
+    position:absolute; left:50%; bottom: calc(clamp(88px,11vw,116px) * -0.15);
     width: clamp(88px,11vw,116px); height: clamp(88px,11vw,116px);
     pointer-events:none; z-index:-1;
     display:flex; align-items:center; justify-content:center; text-align:center; padding:0 8px;
@@ -313,9 +315,6 @@
   .tv-card:hover .tv-card-peek{ opacity:1; transform:none; }
   .tv-card:hover .tv-card-veil{ opacity:1; }
   .tv-card:hover .tv-card-cta{ opacity:1; transform:none; }
-  /* cartes vidéo (Meublon, Flow State) : la vidéo joue en boucle par défaut ;
-     au survol, l'image de remplacement est nette, sans flou ni texte. */
-  .tv-card--video .tv-card-peek{ filter:none; transform:none; transition: opacity .3s cubic-bezier(.2,.7,.2,1); }
   @media (prefers-reduced-motion: reduce){
     .tv-card-media, .tv-card-img, .tv-card-peek, .tv-card-veil, .tv-card-cta{ transition-duration:.01ms; }
   }
@@ -865,10 +864,11 @@
   computeScale();
   window.addEventListener('resize', computeScale);
 
-  /* tout est fini (agrandi puis disparu) bien avant que les projets de
-     "Des vrais clients" ne deviennent perceptibles au scroll. */
-  var GROW_END = 0.32;
-  var FADE_END = 0.46;
+  /* laisse assez de course pour que la croissance reste progressive, tout
+     en restant termine avant que les projets de "Des vrais clients" ne
+     deviennent bien visibles au scroll. */
+  var GROW_END = 0.45;
+  var FADE_END = 0.62;
 
   function tick(){
     var vh = window.innerHeight;
@@ -958,18 +958,15 @@ var TRAVAUX_FAMILIES = [
       var mediaStyle = '--ar:' + p.ar + ';' + (p.mw ? ' --mw:' + p.mw + ';' : '');
       var isVideo = !!p.video;
       /* vidéo (Meublon, Flow State) : elle joue en boucle par défaut ; au
-         survol, une image fixe la remplace (nette, pas de flou ni de CTA).
-         image classique : au survol, une seconde image apparaît, floutée,
-         avec un "Voir plus" par-dessus. */
+         survol, la même image d'aperçu floutée + "Voir plus" que les
+         autres projets s'affiche par-dessus. */
       var mainMedia = isVideo
         ? '<video class="tv-card-vid" src="' + p.video + '" poster="' + p.peek + '"' + (reducedMotion ? '' : ' autoplay loop') + ' muted playsinline></video>'
         : '<img class="tv-card-img" src="' + p.img + '" alt="' + altText + '" loading="lazy" draggable="false">';
       var peek = p.peek
         ? '<img class="tv-card-peek" src="' + p.peek + '" alt="" aria-hidden="true" loading="lazy" draggable="false">'
         : '';
-      var veilCta = isVideo
-        ? ''
-        : '<span class="tv-card-veil"></span><span class="tv-card-cta"><span>Voir plus</span></span>';
+      var veilCta = '<span class="tv-card-veil"></span><span class="tv-card-cta"><span>Voir plus</span></span>';
       return '<a class="tv-card' + (reversed ? ' tv-card--rev' : '') + (isVideo ? ' tv-card--video' : '') + '" href="' + p.href + '" style="--glow:' + fam.color + '">' +
           '<span class="tv-card-info">' +
             '<span class="tv-card-name">' + p.name + '</span>' +
