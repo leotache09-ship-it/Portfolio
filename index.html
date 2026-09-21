@@ -250,10 +250,14 @@
     display:flex; align-items:center; gap: calc(var(--gutter)*1.3);
     width:max-content; will-change:transform;
   }
+  /* catégories inversées (Marques fictives, Sport design) : tout en miroir —
+     le titre est à droite, les cartes affichent le visuel à gauche. */
+  .tv-strip-row--rev{ flex-direction:row-reverse; }
   .tv-title-card{
     flex:0 0 auto; width:min(78vw,560px);
     display:flex; align-items:center;
   }
+  .tv-strip-row--rev .tv-title-card{ justify-content:flex-end; text-align:right; }
   .tv-cat-title{
     font-family:"Archivo Black"; text-transform:uppercase; margin:0;
     font-size: clamp(2.3rem,6.6vw,4.2rem); line-height:1;
@@ -266,6 +270,7 @@
     flex:0 0 auto; text-decoration:none; color:inherit;
     display:flex; align-items:center; gap: calc(var(--unit)*.7);
   }
+  .tv-card--rev{ flex-direction:row-reverse; }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
   /* flex:0 0 auto (pas de grow) : le bloc texte se cale sur son propre
      contenu, donc l'écart avec le visuel reste le même "gap" fixe pour
@@ -820,22 +825,33 @@
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   /* seul le fond (bg) est mis à l'échelle : le conteneur (hint), qui centre
-     le texte, ne bouge jamais — le texte garde donc toujours la même taille. */
+     le texte, ne bouge jamais — le texte garde donc toujours la même taille.
+     Le point fixe est au bord bas de l'écran (pas au centre) : seule la
+     moitié haute du carré mis à l'échelle est visible, il faut donc viser
+     le coin le plus loin (en haut, à vw/2 du centre) plutôt que la diagonale
+     complète, sinon il grandit deux fois trop lentement. */
   var MAX_SCALE = 20;
   function computeScale(){
     var vw = window.innerWidth, vh = window.innerHeight;
     var size = hint.getBoundingClientRect().width || 116;
-    MAX_SCALE = Math.sqrt(vw * vw + vh * vh) / size + 2;
+    var reach = Math.sqrt((vw / 2) * (vw / 2) + vh * vh);
+    MAX_SCALE = (2 * reach) / size + 2;
   }
   computeScale();
   window.addEventListener('resize', computeScale);
 
+  /* tout est fini (agrandi puis disparu) bien avant que les projets de
+     "Des vrais clients" ne deviennent perceptibles au scroll. */
+  var GROW_END = 0.32;
+  var FADE_END = 0.46;
+
   function tick(){
     var vh = window.innerHeight;
     var t = Math.max(0, Math.min(1, window.scrollY / vh));
-    var scale = 1 + t * (MAX_SCALE - 1);
+    var growT = Math.max(0, Math.min(1, t / GROW_END));
+    var scale = 1 + growT * (MAX_SCALE - 1);
     bg.style.transform = 'scale(' + scale.toFixed(3) + ')';
-    var fadeT = Math.max(0, Math.min(1, (t - 0.7) / 0.3));
+    var fadeT = Math.max(0, Math.min(1, (t - GROW_END) / (FADE_END - GROW_END)));
     hint.style.opacity = String(1 - fadeT);
     hint.style.visibility = fadeT >= 1 ? 'hidden' : 'visible';
     requestAnimationFrame(tick);
@@ -909,10 +925,12 @@ var TRAVAUX_FAMILIES = [
   TRAVAUX_FAMILIES.forEach(function(fam, ci){
     var dir = (ci % 2 === 0) ? 1 : -1; /* +1 = flèche à droite, -1 = flèche à gauche (alterne à chaque famille) */
 
+    var reversed = dir === -1; /* Marques fictives + Sport design : tout est mis en miroir */
+
     var cards = fam.projects.map(function(p){
       var altText = p.name.replace(/<[^>]+>/gi, ' ').replace(/\s+/g, ' ').trim();
       var mediaStyle = '--ar:' + p.ar + ';' + (p.mw ? ' --mw:' + p.mw + ';' : '');
-      return '<a class="tv-card" href="' + p.href + '" style="--glow:' + fam.color + '">' +
+      return '<a class="tv-card' + (reversed ? ' tv-card--rev' : '') + '" href="' + p.href + '" style="--glow:' + fam.color + '">' +
           '<span class="tv-card-info">' +
             '<span class="tv-card-name">' + p.name + '</span>' +
             '<span class="tv-card-date">' + p.date + '</span>' +
@@ -929,10 +947,10 @@ var TRAVAUX_FAMILIES = [
     cat.style.background = fam.color;
     cat.innerHTML =
       '<div class="tv-cat-inner">' +
-        '<div class="tv-strip"><div class="tv-strip-row">' + titleCard + arrow + cards + '</div></div>' +
+        '<div class="tv-strip"><div class="tv-strip-row' + (reversed ? ' tv-strip-row--rev' : '') + '">' + titleCard + arrow + cards + '</div></div>' +
       '</div>';
     root.appendChild(cat);
-    bands.push({ el: cat, color: fam.color, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
+    bands.push({ el: cat, color: fam.color, reversed: reversed, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
   });
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -980,7 +998,10 @@ var TRAVAUX_FAMILIES = [
       var stripCs = getComputedStyle(band.strip);
       var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
       var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
-      band.row.style.transform = 'translateX(' + (-hp * maxTravel).toFixed(1) + 'px)';
+      /* bande inversée (row-reverse en CSS) : le titre est physiquement à
+         droite au repos, donc le trajet est le miroir du trajet normal. */
+      var x = band.reversed ? (hp * maxTravel - maxTravel) : (-hp * maxTravel);
+      band.row.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
 
       stops.push({ y: scrollY + rect.top + rect.height / 2, color: band.color });
     });
