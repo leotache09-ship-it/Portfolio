@@ -110,7 +110,7 @@
   .cover-hint span{
     position:relative; z-index:1;
     font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
-    font-size: clamp(.68rem,1.5vw,.86rem); line-height:1.15;
+    font-size: clamp(.95rem,2vw,1.2rem); line-height:1.15;
   }
 
   /* ---- photo en fond du hero : emplacement prêt, invisible tant qu'aucune photo n'est fournie ---- */
@@ -868,7 +868,7 @@
      en restant termine avant que les projets de "Des vrais clients" ne
      deviennent bien visibles au scroll. */
   var GROW_END = 0.45;
-  var FADE_END = 0.62;
+  var FADE_END = 0.85;
 
   function tick(){
     var vh = window.innerHeight;
@@ -876,9 +876,10 @@
     var growT = Math.max(0, Math.min(1, t / GROW_END));
     var scale = 1 + growT * (MAX_SCALE - 1);
     bg.style.transform = 'scale(' + scale.toFixed(3) + ')';
+    /* seul le fond disparaît ; le texte "Mes travaux." reste toujours visible. */
     var fadeT = Math.max(0, Math.min(1, (t - GROW_END) / (FADE_END - GROW_END)));
-    hint.style.opacity = String(1 - fadeT);
-    hint.style.visibility = fadeT >= 1 ? 'hidden' : 'visible';
+    bg.style.opacity = String(1 - fadeT);
+    bg.style.visibility = fadeT >= 1 ? 'hidden' : 'visible';
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
@@ -1060,7 +1061,9 @@ var TRAVAUX_FAMILIES = [
       for (var i = 0; i < stops.length - 1; i++){
         if (refY >= stops[i].y && refY <= stops[i + 1].y){
           var frac = (refY - stops[i].y) / (stops[i + 1].y - stops[i].y);
-          bg = lerpColor(stops[i].color, stops[i + 1].color, frac);
+          /* accélération progressive (ease-in) : chaque couleur met plus de
+             temps à arriver, sans changer le point exact où elle est atteinte. */
+          bg = lerpColor(stops[i].color, stops[i + 1].color, frac * frac);
           break;
         }
       }
