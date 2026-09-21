@@ -104,7 +104,7 @@
     transform: translateX(-50%);
   }
   .cover-hint-bg{
-    position:absolute; inset:0; border-radius:8px;
+    position:absolute; inset:0; border-radius:8px; transform-origin:50% 0%;
     background: var(--blue); box-shadow: 0 14px 32px rgba(0,0,0,.4);
   }
   .cover-hint span{
@@ -1044,7 +1044,10 @@ var TRAVAUX_FAMILIES = [
 
     var first = bands[0].el.getBoundingClientRect();
     var last = bands[bands.length - 1].el.getBoundingClientRect();
-    stops.unshift({ y: scrollY + first.top, color: BASE_BG });
+    /* le bleu de "Des vrais clients" commence à apparaître une demi-écran
+       avant l'entrée réelle de la bande, pour accompagner le carré du hero
+       plutôt que d'attendre qu'il ait déjà grandi et disparu. */
+    stops.unshift({ y: scrollY + first.top - vh * 0.5, color: BASE_BG });
     stops.push({ y: scrollY + last.top + last.height, color: BASE_BG });
 
     var refY = scrollY + vh / 2;
