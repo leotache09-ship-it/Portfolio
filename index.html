@@ -243,8 +243,8 @@
   }
   .tv-more a{
     display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-    font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
-    color: var(--ink-soft); transition: color .3s;
+    font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase;
+    color:#fff; transition: color .3s;
   }
   .tv-more a:hover{ color: var(--blue); }
   .tv-more a svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
@@ -292,7 +292,7 @@
      tous les projets, plutôt qu'un blanc variable selon la longueur du nom. */
   .tv-card-info{ flex:0 0 auto; max-width:38vw; }
   .tv-card-media{
-    position:relative; display:block; flex:none; width:var(--mw, min(36vw,190px)); aspect-ratio: var(--ar,4/5);
+    position:relative; display:block; flex:none; width:var(--mw, min(40vw,225px)); aspect-ratio: var(--ar,4/5);
     overflow:hidden; border-radius:2px; background:rgba(255,255,255,.12);
     box-shadow: 0 0 0 0 rgba(0,0,0,0);
     transition: box-shadow .4s cubic-bezier(.2,.7,.2,1);
@@ -384,8 +384,8 @@
   .parcours-inner .section-sub{ margin-bottom: calc(var(--unit)*2); }
   .parcours-wrap{ display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: calc(var(--tile)*.9); align-items:center; }
   .vaud-map svg{ width:auto; max-width:100%; height:min(54vh, 470px); display:block; margin:0 auto; overflow:visible; }
-  .vaud-outline{ fill: rgba(255,255,255,.74); stroke: rgba(13,13,15,.8); stroke-width:2.5; stroke-linejoin:round; }
-  .vaud-lake{ fill: var(--blue); stroke: rgba(13,13,15,.3); stroke-width:1; }
+  .vaud-outline{ fill: rgba(255,255,255,.62); stroke: rgba(29,29,27,.45); stroke-width:3; stroke-linejoin:round; }
+  .vaud-lake{ fill: rgba(24,156,216,.26); }
   .map-dot circle{ fill: var(--ink); }
   .map-dot .halo{ fill: var(--blue); opacity:.18; }
   .map-dot .name{ font-family:"Roboto"; font-weight:700; font-size:21px; fill: var(--ink); }
@@ -949,8 +949,8 @@ var TRAVAUX_FAMILIES = [
   {
     title: 'Édition &amp; print.', color: '#16A085',
     projects: [
-      { name:'Sérigraphie &amp;<br>Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', peek:'assets/serigraphie/dos-mockup.jpg', ar:'1500/1125', date:'Juin 2026', mw:'min(46vw,250px)' },
-      { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', peek:'assets/losangeles/mockup-sommaire.jpg', ar:'1500/1125', date:'Mars 2026', mw:'min(46vw,250px)' }
+      { name:'Sérigraphie &amp;<br>Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', peek:'assets/serigraphie/dos-mockup.jpg', ar:'1500/1125', date:'Juin 2026', mw:'min(50vw,290px)' },
+      { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', peek:'assets/losangeles/mockup-sommaire.jpg', ar:'1500/1125', date:'Mars 2026', mw:'min(50vw,290px)' }
     ]
   }
 ];
