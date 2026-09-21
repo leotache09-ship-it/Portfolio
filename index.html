@@ -234,7 +234,7 @@
      transparente ; seule une fine ligne blanche marque la jonction entre deux
      catégories. En mouvement réduit, chaque bande garde sa couleur unie. */
   #travaux{ position:relative; }
-  .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
+  .tv-cat{ padding: 50vh 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
   .tv-more{
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
@@ -1040,7 +1040,7 @@ var TRAVAUX_FAMILIES = [
      bande visible -> glissement de sortie qui va au-delà du plein écran pour
      que les projets quittent vraiment le cadre avant de laisser place à la
      bande suivante. */
-  var R1 = 0.15, R2 = 0.35, R3 = 0.55, R4 = 0.9;
+  var R1 = 0.18, R2 = 0.38, R3 = 0.62, R4 = 0.9;
 
   function tick(){
     var vh = window.innerHeight;
