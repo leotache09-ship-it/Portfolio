@@ -234,7 +234,7 @@
      transparente ; seule une fine ligne blanche marque la jonction entre deux
      catégories. En mouvement réduit, chaque bande garde sa couleur unie. */
   #travaux{ position:relative; }
-  .tv-cat{ padding: 50vh 0; color:#fff; }
+  .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
   .tv-more{
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
@@ -1034,13 +1034,8 @@ var TRAVAUX_FAMILIES = [
      Piloté par une boucle requestAnimationFrame (pas par l'événement scroll, peu
      fiable pour les gros sauts) donc toujours synchronisé, quelle que soit la
      vitesse ou le sens du scroll — jamais bloquant, et réversible. ---- */
-  /* pas de scroll bloqué/épinglé : la page défile normalement du début à la
-     fin, seule la répartition du trajet (raw, 0->1) change. 4 repères sur ce
-     même trajet : titre immobile et lisible -> glissement d'entrée -> pause
-     bande visible -> glissement de sortie qui va au-delà du plein écran pour
-     que les projets quittent vraiment le cadre avant de laisser place à la
-     bande suivante. */
-  var R1 = 0.18, R2 = 0.38, R3 = 0.62, R4 = 0.9;
+  var REVEAL_START = 0.1; /* fraction du trajet total (entrée en bas -> sortie en haut) */
+  var REVEAL_END = 0.55; /* le glissement dure plus longtemps : on voit vraiment les projets entrer/sortir sur les côtés */
 
   function tick(){
     var vh = window.innerHeight;
@@ -1051,18 +1046,13 @@ var TRAVAUX_FAMILIES = [
       var rect = band.el.getBoundingClientRect();
       var total = vh + rect.height;
       var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
-      var hpIn = Math.max(0, Math.min(1, (raw - R1) / (R2 - R1)));
-      var hpOut = Math.max(0, Math.min(1, (raw - R3) / (R4 - R3)));
+      var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
       var stripCs = getComputedStyle(band.strip);
       var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
       var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
-      var exitDist = band.strip.clientWidth; /* de quoi pousser les cartes entièrement hors du cadre visible */
       /* bande inversée (row-reverse en CSS) : le titre est physiquement à
-         droite au repos, donc le trajet est le miroir du trajet normal.
-         hpOut continue dans le même sens pour faire sortir les cartes. */
-      var x = band.reversed
-        ? (hpIn * maxTravel - maxTravel) + hpOut * exitDist
-        : (-hpIn * maxTravel) - hpOut * exitDist;
+         droite au repos, donc le trajet est le miroir du trajet normal. */
+      var x = band.reversed ? (hp * maxTravel - maxTravel) : (-hp * maxTravel);
       band.row.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
 
       stops.push({ y: scrollY + rect.top + rect.height / 2, color: band.color });
