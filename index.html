@@ -371,12 +371,19 @@
   .mail:hover .arrow{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); transform: translateX(4px); }
   .mail .arrow svg{ width:15px; height:15px; }
 
-  .contact-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--unit) var(--gutter); margin-top: calc(var(--unit)*2.5); padding-top: calc(var(--unit)*1.75); border-top:1px solid var(--line); max-width:440px; }
-  .contact-col .label{ font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:8px; }
-  .contact-col a{ text-decoration:none; font-weight:500; }
-  .contact-col a:hover{ color: var(--blue); }
-  .contact-col div{ font-size:.96rem; color: var(--ink-soft); line-height:1.6; }
-  .contact-col .v{ font-size:1rem; color: var(--ink); font-weight:500; }
+  .contact-foot{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap: var(--unit);
+    margin-top: calc(var(--unit)*2.5); padding-top: calc(var(--unit)*1.75); border-top:1px solid var(--line);
+  }
+  .contact-foot-loc{ font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color: var(--ink-faint); }
+  .contact-foot-social{ display:flex; gap: calc(var(--unit)*.9); }
+  .contact-foot-social a{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color: var(--ink-soft);
+    transition: border-color .3s, color .3s;
+  }
+  .contact-foot-social a:hover{ border-color: var(--blue); color: var(--blue); }
+  .contact-foot-social svg{ width:17px; height:17px; }
   footer{ text-align:center; padding: var(--unit) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
 
   /* ---- parcours (séquence bloquée au scroll) ---- */
@@ -439,7 +446,6 @@
 
   @media (max-width: 760px){
     .shots{ flex-direction:column; }
-    .contact-grid{ grid-template-columns:1fr; }
     .mail{ flex-direction:column; align-items:flex-start; gap: var(--unit); }
     .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }
     .vaud-map{ max-width:none; margin:0; position:static; }
@@ -632,27 +638,27 @@
   <section id="contact" class="block grid-pattern pre-reveal">
     <p class="eyebrow">Contact</p>
     <h2 class="contact-title balance">Convaincu ?<br><em>Écrivez-moi.</em></h2>
-    <p class="contact-lede">Si ces projets vous ont plu ou que vous avez une question, la boîte mail est ouverte, je réponds sous 24&nbsp;h.</p>
+    <p class="contact-lede">Si ces projets vous ont plu ou que vous avez une question, la boîte mail est ouverte, je réponds sous 48&nbsp;h.</p>
 
-    <a class="mail" href="mailto:leo.tache@lt-design.ch">
+    <a class="mail" href="mailto:leo.tache.09@gmail.com">
       <span>
         <span class="k">Écrire</span>
-        <span class="addr">leo.tache@lt-design.ch</span>
+        <span class="addr">leo.tache.09@gmail.com</span>
       </span>
       <span class="arrow" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
     </a>
 
-    <div class="contact-grid">
-      <div class="contact-col">
-        <div class="label">Suivre</div>
-        <div class="v"><a href="https://instagram.com/lt_design_09" target="_blank" rel="noopener">@lt_design_09</a></div>
-      </div>
-      <div class="contact-col">
-        <div class="label">Basé à</div>
-        <div class="v">Suisse romande</div>
-        <div>CPNV, Sainte-Croix</div>
+    <div class="contact-foot">
+      <div class="contact-foot-loc">Suisse romande · CPNV, Sainte-Croix</div>
+      <div class="contact-foot-social">
+        <a href="https://instagram.com/lt_design_09" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
       </div>
     </div>
   </section>
