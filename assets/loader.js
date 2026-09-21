@@ -98,6 +98,13 @@
 
   function finish() {
     if (finished) return;
+    if (lastIdx !== N - 1) {
+      // le logo n'a pas fini de se dessiner : on attend qu'il boucle jusqu'à
+      // la forme complète avant de le faire disparaître, sinon il se coupe
+      // en pleine formation.
+      requestAnimationFrame(finish);
+      return;
+    }
     finished = true;
     if (drawRafId) cancelAnimationFrame(drawRafId);
     document.documentElement.style.overflow = '';
