@@ -234,8 +234,14 @@
      transparente ; seule une fine ligne blanche marque la jonction entre deux
      catégories. En mouvement réduit, chaque bande garde sa couleur unie. */
   #travaux{ position:relative; }
-  .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
+  /* chaque catégorie est un grand bloc (220vh) dont le contenu reste épinglé
+     à l'écran pendant le défilement (comme .parcours-stage) : le temps que
+     dure l'épinglage sert à la fois à laisser lire le titre avant que ça
+     bouge, et à laisser les projets glisser complètement hors de l'écran
+     avant de rendre la main au défilement normal. */
+  .tv-cat{ position:relative; height:220vh; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
+  .tv-cat-pin{ position:sticky; top:0; height:100vh; display:grid; align-items:center; }
   .tv-more{
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
     margin:0 auto; padding: calc(var(--unit)*1.5) var(--gutter) calc(var(--unit)*3);
@@ -347,6 +353,8 @@
   }
 
   @media (prefers-reduced-motion: reduce){
+    .tv-cat{ height:auto; padding: calc(var(--unit)*4.5) 0; }
+    .tv-cat-pin{ position:static; height:auto; display:block; }
     .tv-strip{ overflow:visible; margin:0; padding:0; }
     .tv-strip-row{ display:flex; flex-direction:column; width:auto; gap: calc(var(--unit)*2); transform:none !important; }
   }
@@ -999,9 +1007,9 @@ var TRAVAUX_FAMILIES = [
     cat.className = 'tv-cat';
     cat.style.background = fam.color;
     cat.innerHTML =
-      '<div class="tv-cat-inner">' +
+      '<div class="tv-cat-pin"><div class="tv-cat-inner">' +
         '<div class="tv-strip"><div class="tv-strip-row' + (reversed ? ' tv-strip-row--rev' : '') + '">' + titleCard + arrow + cards + '</div></div>' +
-      '</div>';
+      '</div></div>';
     root.appendChild(cat);
     bands.push({ el: cat, color: fam.color, reversed: reversed, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
   });
@@ -1034,8 +1042,11 @@ var TRAVAUX_FAMILIES = [
      Piloté par une boucle requestAnimationFrame (pas par l'événement scroll, peu
      fiable pour les gros sauts) donc toujours synchronisé, quelle que soit la
      vitesse ou le sens du scroll — jamais bloquant, et réversible. ---- */
-  var REVEAL_START = 0.1; /* fraction du trajet total (entrée en bas -> sortie en haut) */
-  var REVEAL_END = 0.55; /* le glissement dure plus longtemps : on voit vraiment les projets entrer/sortir sur les côtés */
+  /* la bande reste épinglée à l'écran pendant (hauteur - 100vh) de scroll ;
+     p va de 0 à 1 sur toute cette durée, en 5 phases : lecture du titre
+     (immobile) -> glissement d'entrée -> lecture, cartes visibles (immobile)
+     -> glissement de sortie -> vide (immobile) juste avant de décrocher. */
+  var P1 = 0.1, P2 = 0.4, P3 = 0.6, P4 = 0.9;
 
   function tick(){
     var vh = window.innerHeight;
@@ -1044,18 +1055,24 @@ var TRAVAUX_FAMILIES = [
 
     bands.forEach(function(band){
       var rect = band.el.getBoundingClientRect();
-      var total = vh + rect.height;
-      var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
-      var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
+      var pinRange = Math.max(1, rect.height - vh);
+      var p = Math.max(0, Math.min(1, -rect.top / pinRange)); /* 0 tant que la bande n'est pas encore épinglée */
+      var hpIn = Math.max(0, Math.min(1, (p - P1) / (P2 - P1)));
+      var hpOut = Math.max(0, Math.min(1, (p - P3) / (P4 - P3)));
+
       var stripCs = getComputedStyle(band.strip);
       var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
       var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
+      var exitDist = band.strip.clientWidth; /* de quoi pousser les cartes entièrement hors du cadre visible */
       /* bande inversée (row-reverse en CSS) : le titre est physiquement à
-         droite au repos, donc le trajet est le miroir du trajet normal. */
-      var x = band.reversed ? (hp * maxTravel - maxTravel) : (-hp * maxTravel);
+         droite au repos, donc le trajet est le miroir du trajet normal.
+         hpOut continue dans le même sens pour faire sortir les cartes. */
+      var x = band.reversed
+        ? (hpIn * maxTravel - maxTravel) + hpOut * exitDist
+        : (-hpIn * maxTravel) - hpOut * exitDist;
       band.row.style.transform = 'translateX(' + x.toFixed(1) + 'px)';
 
-      stops.push({ y: scrollY + rect.top + rect.height / 2, color: band.color });
+      stops.push({ y: scrollY + rect.top + (rect.height - vh) / 2, color: band.color });
     });
 
     var first = bands[0].el.getBoundingClientRect();
