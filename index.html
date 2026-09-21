@@ -259,7 +259,8 @@
      horizontal séparé, tout se déroule dans le même geste continu. */
   .tv-strip{
     overflow:hidden;
-    margin: 0 calc(var(--gutter)*-1); padding: 0 var(--gutter);
+    width:100vw; margin-left:calc(50% - 50vw);
+    padding: 0 calc(max(0px, (100vw - (var(--tile)*18 + var(--gutter)*2)) / 2) + var(--gutter));
   }
   .tv-strip-row{
     display:flex; align-items:center; gap: calc(var(--gutter)*1.3);
@@ -349,7 +350,7 @@
   }
 
   @media (prefers-reduced-motion: reduce){
-    .tv-strip{ overflow:visible; margin:0; padding:0; }
+    .tv-strip{ overflow:visible; width:auto; margin:0; padding:0; }
     .tv-strip-row{ display:flex; flex-direction:column; width:auto; gap: calc(var(--unit)*2); transform:none !important; }
   }
 
