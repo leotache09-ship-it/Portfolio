@@ -281,7 +281,7 @@
   /* la flèche vit entre la carte-titre et les projets, pas collée au titre —
      mais le titre doit rester proche : on resserre l'écart de chaque côté
      de la flèche par rapport à l'espacement normal entre les projets. */
-  .tv-cat-arrow{ flex:0 0 auto; width:clamp(36px,5vw,56px); height:auto; opacity:.85; margin: 0 calc(var(--gutter) * -0.5); }
+  .tv-cat-arrow{ flex:0 0 auto; width:clamp(36px,5vw,56px); height:auto; opacity:.85; margin: 0 calc(var(--gutter) * -0.8); }
   .tv-cat-arrow--rev{ transform:scaleX(-1); }
 
   .tv-card{
@@ -852,7 +852,51 @@
 })();
 </script>
 
+<script>
+(function(){
+  /* plafonne la vitesse de scroll (molette/trackpad) pour laisser le temps
+     de voir les animations liées au défilement : le scroll ne s'arrête
+     JAMAIS (on reste toujours en mouvement fluide), il est juste lissé et
+     plafonné au lieu de sauter instantanément d'un gros delta de molette. */
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  var target = window.scrollY;
+  var ticking = false;
+  var MAX_WHEEL_STEP = 100; /* px max qu'un seul évènement de molette peut ajouter à la cible */
+  var MAX_FRAME_STEP = 24;  /* px max de déplacement réel par frame (~60fps) : plafond de vitesse */
+  var EASE = 0.16;          /* vitesse de rattrapage vers la cible : plus petit = plus doux */
+
+  function clampY(y){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return Math.max(0, Math.min(max, y));
+  }
+
+  function onWheel(e){
+    e.preventDefault();
+    if (!ticking) target = window.scrollY; /* resynchro si on repart d'un scroll inactif (clavier, ancre...) */
+    var d = e.deltaY;
+    if (e.deltaMode === 1) d *= 18; /* deltaMode "ligne" (Firefox) -> pixels approximatifs */
+    d = Math.max(-MAX_WHEEL_STEP, Math.min(MAX_WHEEL_STEP, d));
+    target = clampY(target + d);
+    if (!ticking){ ticking = true; requestAnimationFrame(tick); }
+  }
+
+  function tick(){
+    var cur = window.scrollY;
+    var diff = target - cur;
+    if (Math.abs(diff) < 0.5){
+      window.scrollTo(0, target);
+      ticking = false;
+      return;
+    }
+    var step = Math.max(-MAX_FRAME_STEP, Math.min(MAX_FRAME_STEP, diff * EASE));
+    window.scrollTo(0, cur + step);
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('wheel', onWheel, {passive:false});
+})();
+</script>
 
 <script>
 /* Carré "Mes travaux." du hero : décoratif, coupé par le bas au repos, il
