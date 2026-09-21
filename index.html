@@ -269,7 +269,7 @@
      le titre est à droite, les cartes affichent le visuel à gauche. */
   .tv-strip-row--rev{ flex-direction:row-reverse; }
   .tv-title-card{
-    flex:0 0 auto; width:min(78vw,560px);
+    flex:0 0 auto; max-width:min(78vw,560px);
     display:flex; align-items:center;
   }
   .tv-strip-row--rev .tv-title-card{ justify-content:flex-end; text-align:right; }
@@ -277,8 +277,10 @@
     font-family:"Archivo Black"; text-transform:uppercase; margin:0;
     font-size: clamp(2.3rem,6.6vw,4.2rem); line-height:1;
   }
-  /* la flèche vit entre la carte-titre et les projets, pas collée au titre */
-  .tv-cat-arrow{ flex:0 0 auto; width:clamp(36px,5vw,56px); height:auto; opacity:.85; }
+  /* la flèche vit entre la carte-titre et les projets, pas collée au titre —
+     mais le titre doit rester proche : on resserre l'écart de chaque côté
+     de la flèche par rapport à l'espacement normal entre les projets. */
+  .tv-cat-arrow{ flex:0 0 auto; width:clamp(36px,5vw,56px); height:auto; opacity:.85; margin: 0 calc(var(--gutter) * -0.5); }
   .tv-cat-arrow--rev{ transform:scaleX(-1); }
 
   .tv-card{
