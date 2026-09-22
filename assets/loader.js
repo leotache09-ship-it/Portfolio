@@ -96,14 +96,20 @@
   }
   requestAnimationFrame(tickPct);
 
+  var finishWaitStart = null;
+  var FINISH_MAX_WAIT_MS = 2000; /* garde-fou : si l'onglet est en arrière-plan et que rAF
+     tourne au ralenti, on ne reste jamais bloqué indéfiniment sur l'écran de chargement. */
   function finish() {
     if (finished) return;
     if (lastIdx !== N - 1) {
+      if (finishWaitStart === null) finishWaitStart = Date.now();
       // le logo n'a pas fini de se dessiner : on attend qu'il boucle jusqu'à
       // la forme complète avant de le faire disparaître, sinon il se coupe
-      // en pleine formation.
-      requestAnimationFrame(finish);
-      return;
+      // en pleine formation — mais pas plus de FINISH_MAX_WAIT_MS.
+      if (Date.now() - finishWaitStart < FINISH_MAX_WAIT_MS) {
+        requestAnimationFrame(finish);
+        return;
+      }
     }
     finished = true;
     if (drawRafId) cancelAnimationFrame(drawRafId);
