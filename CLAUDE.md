@@ -160,6 +160,9 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — Portrait décalé du bord droit (`right:0` -> `right:clamp(16px,9vw,160px)`)
+  pour respirer davantage ; le nom était déjà centré sur la page (vérifié :
+  écart de quelques px seulement, négligeable).
 - 2026-09-23 — Nom du hero encore agrandi (jusqu'à ~11.5rem) ; "LT Design"
   aligné sur le bord gauche du nom via un wrapper `.cover-title` en
   `inline-block` (centré comme bloc, `text-align:left` dedans) plutôt que

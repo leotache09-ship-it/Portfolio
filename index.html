@@ -121,7 +121,7 @@
      Une lueur bleue grandit autour de lui à mesure que la souris s'approche
      (pilotée en JS via la custom property --glow sur .cover-portrait-glow). ---- */
   .cover-portrait-link{
-    position:absolute; right:0; bottom:0; z-index:2;
+    position:absolute; right: clamp(16px, 9vw, 160px); bottom:0; z-index:2;
     display:block; height: clamp(310px, 68vh, 700px); text-decoration:none;
   }
   .cover-portrait-glow{
