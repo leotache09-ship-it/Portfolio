@@ -160,6 +160,14 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — Nom du hero encore agrandi (jusqu'à ~11.5rem) ; "LT Design"
+  aligné sur le bord gauche du nom via un wrapper `.cover-title` en
+  `inline-block` (centré comme bloc, `text-align:left` dedans) plutôt que
+  centré indépendamment. `.cover-hint` passe en `z-index:3` (au-dessus du
+  portrait) : en grandissant il passe maintenant devant lui. Le portrait
+  s'efface en fondu au même rythme que la croissance du carré (`growT`
+  dans le script de `#coverHint`), invisible pile quand le carré a fini
+  de grandir / que le fond est devenu bleu.
 - 2026-09-23 — Nom et "Mes travaux" recentrés (`text-align:center` sur
   `#cover`, `.cover-hint` de nouveau centré) ; lueur et portrait agrandis.
   Ajuste le décalage mobile de `.cover-hint` pour qu'il ne chevauche plus

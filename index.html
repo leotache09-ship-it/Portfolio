@@ -76,14 +76,17 @@
     max-width:none; border-top:none; padding: calc(var(--unit)*7) var(--gutter) 0;
     min-height: 100svh; position:relative; text-align:center;
   }
+  /* enveloppe en inline-block : sa largeur épouse le plus large des deux
+     enfants (le nom), donc "LT Design" (aligné à gauche dedans) démarre
+     exactement sous le L de "Léo", même si le bloc entier est centré par
+     le text-align:center du parent. */
+  .cover-title{ display:inline-block; text-align:left; position:relative; z-index:1; }
   h1.cover-name{
     font-family:"Archivo Black"; text-transform:uppercase;
-    font-size: clamp(3.2rem, 13vw, 9.5rem); line-height:.88; letter-spacing:-.01em; margin:0;
-    position:relative; z-index:1;
+    font-size: clamp(3.8rem, 16vw, 11.5rem); line-height:.86; letter-spacing:-.01em; margin:0;
   }
   h1.cover-name em{ font-style:normal; color: var(--blue); }
   .cover-mark{
-    position:relative; z-index:1;
     margin: calc(var(--unit)*.9) 0 0; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint);
   }
   /* carré décoratif (pas un bouton, pointer-events:none) : fixe DANS LA PAGE
@@ -92,13 +95,15 @@
      Il grandit et prend tout le fond au scroll (voir le script dédié) —
      jamais de transition CSS ici, tout est piloté image par image pour
      rester exactement synchronisé avec le scroll.
-     z-index négatif : il reste toujours DERRIÈRE le contenu normal de la
-     page (travaux, textes), jamais devant. Seul .cover-hint-bg est mis à
-     l'échelle ; le texte reste à taille fixe, superposé par-dessus. */
+     z-index au-dessus du nom/portrait du hero (il grandit et doit passer
+     devant), mais le carré a fini de grandir et de s'effacer bien avant
+     d'atteindre les travaux plus bas (voir CLAUDE.md), donc jamais devant
+     eux en pratique. Seul .cover-hint-bg est mis à l'échelle ; le texte
+     reste à taille fixe, superposé par-dessus. */
   .cover-hint{
     position:absolute; left:50%; bottom: calc(clamp(88px,11vw,116px) * -0.15);
     width: clamp(190px,36vw,240px); height: clamp(88px,11vw,116px);
-    pointer-events:none; z-index:-1;
+    pointer-events:none; z-index:3;
     display:flex; align-items:center; justify-content:center; text-align:center; padding:0 8px;
     transform: translateX(-50%);
   }
@@ -537,8 +542,10 @@
 
 <main>
   <section id="cover">
-    <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
-    <p class="cover-mark mono">LT Design</p>
+    <div class="cover-title">
+      <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
+      <p class="cover-mark mono">LT Design</p>
+    </div>
     <a class="cover-portrait-link" href="apropos.html" aria-label="À propos de Léo Tâche">
       <span class="cover-portrait-glow" aria-hidden="true"></span>
       <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
@@ -956,6 +963,7 @@
 (function(){
   var hint = document.getElementById('coverHint');
   var bg = document.getElementById('coverHintBg');
+  var portrait = document.querySelector('.cover-portrait-link');
   if (!hint || !bg) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
@@ -987,6 +995,12 @@
     var growT = Math.max(0, Math.min(1, t / GROW_END));
     var scale = 1 + growT * (MAX_SCALE - 1);
     bg.style.transform = 'scale(' + scale.toFixed(3) + ')';
+    /* le portrait s'efface au même rythme que la croissance du carré : il a
+       disparu pile quand le carré a fini de grandir (couvre tout l'écran). */
+    if (portrait){
+      portrait.style.opacity = String(1 - growT);
+      portrait.style.visibility = growT >= 1 ? 'hidden' : 'visible';
+    }
     /* seul le fond disparaît ; le texte "Mes travaux." reste toujours visible. */
     var fadeT = Math.max(0, Math.min(1, (t - GROW_END) / (FADE_END - GROW_END)));
     bg.style.opacity = String(1 - fadeT);
