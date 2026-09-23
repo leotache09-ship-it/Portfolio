@@ -114,19 +114,27 @@
     font-size: clamp(.95rem,2vw,1.2rem); line-height:1.15;
   }
 
-  /* ---- photo en fond du hero : emplacement prêt, invisible tant qu'aucune photo n'est fournie ---- */
-  .cover-portrait-slot{
-    position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none;
-    display:flex; align-items:flex-end; justify-content:center;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 80%, transparent 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 80%, transparent 100%);
+  /* ---- photo du hero : portrait détouré, cliquable vers la page à propos.
+     Une lueur bleue grandit autour de lui à mesure que la souris s'approche
+     (pilotée en JS via la custom property --glow sur .cover-portrait-glow). ---- */
+  .cover-portrait-link{
+    position:relative; display:block; margin-top: calc(var(--unit)*1.5);
+    height: clamp(150px, 24vh, 250px); text-decoration:none;
+  }
+  .cover-portrait-glow{
+    position:absolute; left:50%; bottom:-6%; width:150%; height:150%;
+    transform: translate(-50%, 8%) scale(calc(.7 + var(--glow, 0) * .5));
+    background: radial-gradient(circle, rgba(24,156,216,.85) 0%, rgba(24,156,216,.32) 42%, transparent 72%);
+    filter: blur(32px);
+    opacity: var(--glow, 0);
+    transition: opacity .2s ease;
+    pointer-events:none;
   }
   .cover-portrait{
-    height:88%; width:auto; max-width:80vw; object-fit:cover; object-position:top center;
-    filter: grayscale(1) contrast(1.08) brightness(1.03);
-    opacity:.92;
+    position:relative; z-index:1; display:block; margin:0 auto;
+    height:100%; width:auto; object-fit:contain;
+    filter: drop-shadow(0 20px 46px rgba(0,0,0,.55));
   }
-  .cover-portrait-tint{ position:absolute; inset:0; background: var(--blue); mix-blend-mode:color; opacity:.4; }
 
   @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none; } }
   #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-role{
@@ -522,14 +530,14 @@
 
 <main>
   <section id="cover">
-    <div class="cover-portrait-slot" aria-hidden="true">
-      <img class="cover-portrait" src="assets/leo-portrait.jpg" alt="" onerror="this.closest('.cover-portrait-slot').style.display='none'">
-      <div class="cover-portrait-tint"></div>
-    </div>
     <img class="logo" src="assets/logo-black.png" alt="">
     <p class="eyebrow">Portfolio</p>
     <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
     <p class="cover-role mono">Étudiant en communication visuelle · CPNV Sainte-Croix</p>
+    <a class="cover-portrait-link" href="apropos.html" aria-label="À propos de Léo Tâche">
+      <span class="cover-portrait-glow" aria-hidden="true"></span>
+      <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
+    </a>
     <div class="cover-hint" id="coverHint"><div class="cover-hint-bg" id="coverHintBg"></div><span>Mes travaux.</span></div>
   </section>
 
@@ -985,7 +993,42 @@
 })();
 </script>
 
+<script>
+/* Lueur bleue autour du portrait du hero : son intensité suit la distance
+   entre la souris et le portrait (plus proche = plus intense), pas un
+   simple survol on/off. */
+(function(){
+  var link = document.querySelector('.cover-portrait-link');
+  var glow = document.querySelector('.cover-portrait-glow');
+  if (!link || !glow) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  var mouseX = -9999, mouseY = -9999;
+  var hasMouse = false;
+  document.addEventListener('mousemove', function(e){
+    mouseX = e.clientX; mouseY = e.clientY; hasMouse = true;
+  }, {passive:true});
+  document.addEventListener('mouseleave', function(){ hasMouse = false; });
+
+  var MAX_DIST = 460; /* au-delà de cette distance (px), plus aucune lueur */
+
+  function tick(){
+    if (hasMouse){
+      var rect = link.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height * .35; /* vise le torse/visage plutôt que le centre géométrique */
+      var dx = mouseX - cx, dy = mouseY - cy;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var t = Math.max(0, Math.min(1, 1 - dist / MAX_DIST));
+      glow.style.setProperty('--glow', t.toFixed(3));
+    } else {
+      glow.style.setProperty('--glow', 0);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
 
 <script>
 /*

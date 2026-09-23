@@ -96,21 +96,8 @@
   }
   requestAnimationFrame(tickPct);
 
-  var finishWaitStart = null;
-  var FINISH_MAX_WAIT_MS = 2000; /* garde-fou : si l'onglet est en arrière-plan et que rAF
-     tourne au ralenti, on ne reste jamais bloqué indéfiniment sur l'écran de chargement. */
-  function finish() {
+  function reallyFinish() {
     if (finished) return;
-    if (lastIdx !== N - 1) {
-      if (finishWaitStart === null) finishWaitStart = Date.now();
-      // le logo n'a pas fini de se dessiner : on attend qu'il boucle jusqu'à
-      // la forme complète avant de le faire disparaître, sinon il se coupe
-      // en pleine formation — mais pas plus de FINISH_MAX_WAIT_MS.
-      if (Date.now() - finishWaitStart < FINISH_MAX_WAIT_MS) {
-        requestAnimationFrame(finish);
-        return;
-      }
-    }
     finished = true;
     if (drawRafId) cancelAnimationFrame(drawRafId);
     document.documentElement.style.overflow = '';
@@ -119,6 +106,24 @@
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
     }, 550);
   }
+  function finish() {
+    if (finished) return;
+    if (lastIdx !== N - 1) {
+      // le logo n'a pas fini de se dessiner : on attend qu'il boucle jusqu'à
+      // la forme complète avant de le faire disparaître, sinon il se coupe
+      // en pleine formation.
+      requestAnimationFrame(finish);
+      return;
+    }
+    reallyFinish();
+  }
+  // garde-fou INDÉPENDANT de requestAnimationFrame : si l'onglet perd le focus
+  // pendant le chargement, rAF peut s'arrêter complètement (pas juste
+  // ralentir), et la boucle d'attente de `finish()` ci-dessus ne se
+  // relance alors plus jamais toute seule. setTimeout, lui, continue de
+  // se déclencher même en arrière-plan (éventuellement retardé, mais pas
+  // indéfiniment) — on ne reste donc jamais bloqué sur l'écran de chargement.
+  window.setTimeout(reallyFinish, 2600);
 
   window.addEventListener('load', function () { pageLoaded = true; });
   window.setTimeout(function () { pageLoaded = true; }, 4000);

@@ -32,6 +32,10 @@ Site portfolio statique (HTML/CSS/JS vanilla, sans build) pour Léo Tâche,
   incluse seulement sur les 11 pages projet (pas sur `index.html`).
 - `assets/<projet>/` — images/vidéos de chaque étude de cas.
 - `assets/logo-black.png` — logo, utilisé aussi comme favicon.
+- `assets/leo-portrait.webp` — portrait détouré (fond transparent) de Léo,
+  utilisé dans le hero de `index.html` et sur `apropos.html`.
+- `apropos.html` — page "à propos" (parcours, ce qu'il fait, contact),
+  accessible en cliquant sur le portrait dans le hero.
 
 ## Design system
 
@@ -96,6 +100,15 @@ le logo ait fini un cycle complet de dessin avant de disparaître**
 mais avec un garde-fou de 2s max pour ne jamais rester bloqué si l'onglet
 perd le focus pendant le chargement.
 
+### Portrait du hero (`.cover-portrait-link`)
+Photo détourée (fond transparent, vérifié) en flux normal entre le rôle
+et le carré "Mes travaux" — **pas en position absolue plein-hero** : un
+essai précédent la centrait en fond derrière le nom, ça le chevauchait
+directement (voir capture ratée). Une lueur bleue (`.cover-portrait-glow`)
+suit la distance souris↔portrait en continu (pas un simple survol),
+pilotée par rAF avec sa propre custom property `--glow`. Cliquable, mène
+à `apropos.html`.
+
 ### Formulaire de contact
 Envoi via [FormSubmit](https://formsubmit.co) vers `leo.tache.09@gmail.com`
 (pas de backend à héberger). **La toute première soumission déclenche un
@@ -114,8 +127,26 @@ Solution : recharger, cliquer réellement sur la page pour forcer le
 focus, revérifier. Ne jamais conclure à un bug sur la seule foi d'un test
 automatisé sans avoir revérifié après un clic réel.
 
+**Les fichiers `.js` référencés par `<script src="assets/xxx.js">` restent
+en cache même quand la page HTML est rechargée avec `?cb=`.** Un `?cb=`
+sur l'URL de la page ne rafraîchit QUE le document HTML, pas les scripts
+externes qu'il référence — un `assets/loader.js` modifié peut donc
+continuer à s'exécuter avec l'ancien code pendant toute la session de
+test, même après plusieurs "rechargements". Repéré via
+`performance.getEntriesByType('resource')` : `transferSize:0` = servi
+depuis le cache. Pour tester un changement dans un fichier `assets/*.js`
+avec certitude, soit ajouter un paramètre anti-cache directement sur le
+`src` du script (temporairement, pour le test), soit injecter le script
+dynamiquement avec un `?fresh=<timestamp>`.
+
 ## Changelog
 
+- 2026-09-23 — Portrait de Léo dans le hero (photo détourée fournie par le
+  client), avec lueur bleue au survol proportionnelle à la distance de la
+  souris, cliquable vers la nouvelle page `apropos.html`. Renforce aussi
+  le garde-fou de l'écran de chargement (le `requestAnimationFrame` de
+  secours pouvait lui-même rester bloqué si l'onglet perdait le focus —
+  remplacé par un `setTimeout` indépendant).
 - 2026-09-23 — Ajoute ce fichier `CLAUDE.md` (mis à jour à chaque commit).
 - 2026-09-23 — Icône Instagram sur "Plus de travaux" ; remplace le bouton
   mailto par un formulaire de contact (Nom/Email/Message) via FormSubmit.
