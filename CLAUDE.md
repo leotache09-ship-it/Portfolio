@@ -160,6 +160,12 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — `#travaux` passe en `z-index:4` (au-dessus du carré "Mes
+  travaux", `z-index:3`) : les projets restent visibles par-dessus dès le
+  début de la section. Nom du hero en blanc entier (plus de bleu sur
+  "Tâche") et encore agrandi (jusqu'à ~13rem). Ajoute un texte "À propos"
+  qui apparaît (voile + légende, même principe que "Voir plus" sur les
+  cartes projet) au survol direct du portrait.
 - 2026-09-23 — Descend le nom du hero (padding-top de #cover :
   `calc(var(--unit)*7)` fixe -> `clamp(112px,24vh,320px)`, il était trop
   haut).

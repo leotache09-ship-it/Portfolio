@@ -82,10 +82,10 @@
      le text-align:center du parent. */
   .cover-title{ display:inline-block; text-align:left; position:relative; z-index:1; }
   h1.cover-name{
-    font-family:"Archivo Black"; text-transform:uppercase;
-    font-size: clamp(3.8rem, 16vw, 11.5rem); line-height:.86; letter-spacing:-.01em; margin:0;
+    font-family:"Archivo Black"; text-transform:uppercase; color:#fff;
+    font-size: clamp(4.2rem, 18vw, 13rem); line-height:.86; letter-spacing:-.01em; margin:0;
   }
-  h1.cover-name em{ font-style:normal; color: var(--blue); }
+  h1.cover-name em{ font-style:normal; color:#fff; }
   .cover-mark{
     margin: calc(var(--unit)*.9) 0 0; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint);
   }
@@ -145,6 +145,28 @@
   .cover-portrait-link:hover .cover-portrait,
   .cover-portrait-link:focus-visible .cover-portrait{
     filter: drop-shadow(0 20px 46px rgba(0,0,0,.55)) drop-shadow(0 0 3px var(--blue)) drop-shadow(0 0 16px rgba(24,156,216,.85));
+  }
+  /* voile + "À propos" qui apparaissent au survol direct, même principe que
+     "Voir plus" sur les cartes de projets. */
+  .cover-portrait-veil{
+    position:absolute; inset:0; z-index:2; pointer-events:none;
+    background: rgba(13,13,15,.4);
+    opacity:0; transition: opacity .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .cover-portrait-cta{
+    position:absolute; inset:0; z-index:2; pointer-events:none;
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
+    color:#fff; opacity:0; transform:translateY(6px);
+    transition: opacity .25s cubic-bezier(.2,.7,.2,1) .04s, transform .3s cubic-bezier(.2,.7,.2,1) .04s;
+  }
+  .cover-portrait-cta span{ border-bottom:1px solid rgba(255,255,255,.6); padding-bottom:3px; }
+  .cover-portrait-link:hover .cover-portrait-veil,
+  .cover-portrait-link:focus-visible .cover-portrait-veil{ opacity:1; }
+  .cover-portrait-link:hover .cover-portrait-cta,
+  .cover-portrait-link:focus-visible .cover-portrait-cta{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .cover-portrait-veil, .cover-portrait-cta{ transition-duration:.01ms; }
   }
 
   @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none; } }
@@ -250,7 +272,10 @@
      (voir le script plus bas), comme sur adrienlaurent.fr. Chaque bande reste
      transparente ; seule une fine ligne blanche marque la jonction entre deux
      catégories. En mouvement réduit, chaque bande garde sa couleur unie. */
-  #travaux{ position:relative; }
+  /* z-index au-dessus du carré "Mes travaux" du hero (z-index:3) : les
+     projets restent visibles au-dessus dès le début de la section, même
+     si le carré grandissant n'a pas encore fini de s'effacer. */
+  #travaux{ position:relative; z-index:4; }
   .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
   .tv-more{
@@ -549,6 +574,8 @@
     <a class="cover-portrait-link" href="apropos.html" aria-label="À propos de Léo Tâche">
       <span class="cover-portrait-glow" aria-hidden="true"></span>
       <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
+      <span class="cover-portrait-veil" aria-hidden="true"></span>
+      <span class="cover-portrait-cta" aria-hidden="true"><span>À propos</span></span>
     </a>
     <div class="cover-hint" id="coverHint"><div class="cover-hint-bg" id="coverHintBg"></div><span>Mes travaux.</span></div>
   </section>
