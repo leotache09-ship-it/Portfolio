@@ -160,6 +160,9 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — Descend le nom du hero (padding-top de #cover :
+  `calc(var(--unit)*7)` fixe -> `clamp(112px,24vh,320px)`, il était trop
+  haut).
 - 2026-09-23 — Portrait décalé du bord droit (`right:0` -> `right:clamp(16px,9vw,160px)`)
   pour respirer davantage ; le nom était déjà centré sur la page (vérifié :
   écart de quelques px seulement, négligeable).
