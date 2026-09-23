@@ -160,6 +160,9 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — Retire le voile sombre derrière "À propos" au survol du
+  portrait (ne reste que le texte, avec un `text-shadow` pour la
+  lisibilité à la place).
 - 2026-09-23 — `#travaux` passe en `z-index:4` (au-dessus du carré "Mes
   travaux", `z-index:3`) : les projets restent visibles par-dessus dès le
   début de la section. Nom du hero en blanc entier (plus de bleu sur

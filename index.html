@@ -146,27 +146,21 @@
   .cover-portrait-link:focus-visible .cover-portrait{
     filter: drop-shadow(0 20px 46px rgba(0,0,0,.55)) drop-shadow(0 0 3px var(--blue)) drop-shadow(0 0 16px rgba(24,156,216,.85));
   }
-  /* voile + "À propos" qui apparaissent au survol direct, même principe que
-     "Voir plus" sur les cartes de projets. */
-  .cover-portrait-veil{
-    position:absolute; inset:0; z-index:2; pointer-events:none;
-    background: rgba(13,13,15,.4);
-    opacity:0; transition: opacity .3s cubic-bezier(.2,.7,.2,1);
-  }
+  /* "À propos" apparaît au survol direct, même principe que "Voir plus"
+     sur les cartes de projets (sans le voile sombre, juste le texte). */
   .cover-portrait-cta{
     position:absolute; inset:0; z-index:2; pointer-events:none;
     display:flex; align-items:center; justify-content:center;
     font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.14em; text-transform:uppercase;
     color:#fff; opacity:0; transform:translateY(6px);
+    text-shadow: 0 2px 10px rgba(0,0,0,.6);
     transition: opacity .25s cubic-bezier(.2,.7,.2,1) .04s, transform .3s cubic-bezier(.2,.7,.2,1) .04s;
   }
   .cover-portrait-cta span{ border-bottom:1px solid rgba(255,255,255,.6); padding-bottom:3px; }
-  .cover-portrait-link:hover .cover-portrait-veil,
-  .cover-portrait-link:focus-visible .cover-portrait-veil{ opacity:1; }
   .cover-portrait-link:hover .cover-portrait-cta,
   .cover-portrait-link:focus-visible .cover-portrait-cta{ opacity:1; transform:none; }
   @media (prefers-reduced-motion: reduce){
-    .cover-portrait-veil, .cover-portrait-cta{ transition-duration:.01ms; }
+    .cover-portrait-cta{ transition-duration:.01ms; }
   }
 
   @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none; } }
@@ -574,7 +568,6 @@
     <a class="cover-portrait-link" href="apropos.html" aria-label="À propos de Léo Tâche">
       <span class="cover-portrait-glow" aria-hidden="true"></span>
       <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
-      <span class="cover-portrait-veil" aria-hidden="true"></span>
       <span class="cover-portrait-cta" aria-hidden="true"><span>À propos</span></span>
     </a>
     <div class="cover-hint" id="coverHint"><div class="cover-hint-bg" id="coverHintBg"></div><span>Mes travaux.</span></div>
