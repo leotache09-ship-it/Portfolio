@@ -160,6 +160,10 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — Nom et "Mes travaux" recentrés (`text-align:center` sur
+  `#cover`, `.cover-hint` de nouveau centré) ; lueur et portrait agrandis.
+  Ajuste le décalage mobile de `.cover-hint` pour qu'il ne chevauche plus
+  le portrait maintenant plus gros.
 - 2026-09-23 — Refonte du hero sur maquette client : nom énorme, portrait
   bas-droite qui chevauche le texte, plus de logo/eyebrow/rôle. Portrait
   et lueur grossissent ensemble à l'approche de la souris, contour bleu

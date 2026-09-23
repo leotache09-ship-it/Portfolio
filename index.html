@@ -74,7 +74,7 @@
   /* ---- cover ---- */
   #cover{
     max-width:none; border-top:none; padding: calc(var(--unit)*7) var(--gutter) 0;
-    min-height: 100svh; position:relative; text-align:left;
+    min-height: 100svh; position:relative; text-align:center;
   }
   h1.cover-name{
     font-family:"Archivo Black"; text-transform:uppercase;
@@ -96,10 +96,11 @@
      page (travaux, textes), jamais devant. Seul .cover-hint-bg est mis à
      l'échelle ; le texte reste à taille fixe, superposé par-dessus. */
   .cover-hint{
-    position:absolute; left:var(--gutter); bottom: calc(clamp(88px,11vw,116px) * -0.15);
+    position:absolute; left:50%; bottom: calc(clamp(88px,11vw,116px) * -0.15);
     width: clamp(190px,36vw,240px); height: clamp(88px,11vw,116px);
     pointer-events:none; z-index:-1;
     display:flex; align-items:center; justify-content:center; text-align:center; padding:0 8px;
+    transform: translateX(-50%);
   }
   .cover-hint-bg{
     position:absolute; inset:0; border-radius:8px; transform-origin:50% 0%;
@@ -116,13 +117,13 @@
      (pilotée en JS via la custom property --glow sur .cover-portrait-glow). ---- */
   .cover-portrait-link{
     position:absolute; right:0; bottom:0; z-index:2;
-    display:block; height: clamp(280px, 62vh, 640px); text-decoration:none;
+    display:block; height: clamp(310px, 68vh, 700px); text-decoration:none;
   }
   .cover-portrait-glow{
-    position:absolute; left:50%; top:50%; width:150%; height:150%;
+    position:absolute; left:50%; top:50%; width:220%; height:220%;
     transform: translate(-50%, -50%) scale(calc(.78 + var(--glow, 0) * .38));
     background: radial-gradient(circle, rgba(24,156,216,.9) 0%, rgba(24,156,216,.35) 42%, transparent 72%);
-    filter: blur(36px);
+    filter: blur(46px);
     opacity: calc(.32 + var(--glow, 0) * .68);
     transition: opacity .2s ease;
     pointer-events:none;
@@ -362,7 +363,7 @@
     /* écran étroit : le portrait plein-hauteur mange toute la largeur et
        chevauche le carré "Mes travaux" — on le réduit et on le remonte. */
     .cover-portrait-link{ height: clamp(190px, 34vh, 300px); }
-    .cover-hint{ bottom: calc(clamp(88px,11vw,116px) * -0.15 + 14vh); }
+    .cover-hint{ bottom: calc(clamp(88px,11vw,116px) * -0.15 + 32vh); }
   }
 
   @media (prefers-reduced-motion: reduce){
