@@ -100,14 +100,33 @@ le logo ait fini un cycle complet de dessin avant de disparaître**
 mais avec un garde-fou de 2s max pour ne jamais rester bloqué si l'onglet
 perd le focus pendant le chargement.
 
-### Portrait du hero (`.cover-portrait-link`)
-Photo détourée (fond transparent, vérifié) en flux normal entre le rôle
-et le carré "Mes travaux" — **pas en position absolue plein-hero** : un
-essai précédent la centrait en fond derrière le nom, ça le chevauchait
-directement (voir capture ratée). Une lueur bleue (`.cover-portrait-glow`)
-suit la distance souris↔portrait en continu (pas un simple survol),
-pilotée par rAF avec sa propre custom property `--glow`. Cliquable, mène
-à `apropos.html`.
+### Hero (`#cover`) — refonte "énorme nom + portrait"
+Plus de logo, plus d'eyebrow "Portfolio", plus de rôle "Étudiant en
+communication visuelle..." — juste `h1.cover-name` énorme (clamp jusqu'à
+~9.5rem) en haut à gauche, `.cover-mark` ("LT Design") en petit dessous,
+et le portrait ancré en position absolue en bas à droite (`.cover-portrait-link`,
+`z-index:2`, au-dessus du texte : il le chevauche volontairement, comme
+demandé). `.cover-hint` ("Mes travaux") est ancré à gauche (`left:var(--gutter)`)
+au lieu d'être centré, pour ne pas se retrouver sous le portrait.
+
+Sur petit écran, le portrait (hauteur ~62vh) devient presque aussi large
+que le viewport et chevauche le carré "Mes travaux" — réduit et remonté
+via `@media (max-width:640px)`.
+
+**La custom property `--glow` doit être posée sur le conteneur commun
+(`.cover-portrait-link`), pas sur `.cover-portrait-glow` seul** : les
+custom properties n'héritent que vers les descendants, pas entre frères
+(`.cover-portrait-glow` et `.cover-portrait` sont deux enfants séparés du
+lien) — posée sur le mauvais élément, la photo ne grossissait jamais
+malgré une lueur qui fonctionnait très bien (bug réel, corrigé).
+`filter: drop-shadow(...)` n'accepte PAS de 4e valeur "spread" comme
+`box-shadow` — `drop-shadow(0 0 0 3px var(--blue))` est invalide et fait
+tomber tout le filtre à `none` sans erreur console.
+
+La lueur suit la distance souris↔portrait en continu (pas un simple
+survol), pilotée par rAF. Au survol direct, un contour bleu net
+(`drop-shadow` supplémentaire) s'ajoute en CSS pur. Cliquable, mène à
+`apropos.html`.
 
 ### Formulaire de contact
 Envoi via [FormSubmit](https://formsubmit.co) vers `leo.tache.09@gmail.com`
@@ -141,6 +160,11 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-23 — Refonte du hero sur maquette client : nom énorme, portrait
+  bas-droite qui chevauche le texte, plus de logo/eyebrow/rôle. Portrait
+  et lueur grossissent ensemble à l'approche de la souris, contour bleu
+  net au survol direct. Corrige un bug d'héritage de custom property CSS
+  et un `drop-shadow` à la syntaxe invalide.
 - 2026-09-23 — Portrait de Léo dans le hero (photo détourée fournie par le
   client), avec lueur bleue au survol proportionnelle à la distance de la
   souris, cliquable vers la nouvelle page `apropos.html`. Renforce aussi

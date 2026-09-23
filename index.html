@@ -73,20 +73,18 @@
 
   /* ---- cover ---- */
   #cover{
-    max-width:none; border-top:none; padding: 0 var(--gutter);
-    min-height: 100svh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; position:relative;
+    max-width:none; border-top:none; padding: calc(var(--unit)*7) var(--gutter) 0;
+    min-height: 100svh; position:relative; text-align:left;
   }
-  #cover .logo{ height: clamp(48px,9vw,84px); width:auto; margin-bottom: calc(var(--unit)*1.5); filter: invert(1); }
-  #cover .eyebrow{ justify-content:center; }
-  #cover .eyebrow::after{ display:none; }
   h1.cover-name{
     font-family:"Archivo Black"; text-transform:uppercase;
-    font-size: clamp(2.6rem, 10vw, 7rem); line-height:.94; letter-spacing:-.01em; margin:0;
+    font-size: clamp(3.2rem, 13vw, 9.5rem); line-height:.88; letter-spacing:-.01em; margin:0;
+    position:relative; z-index:1;
   }
   h1.cover-name em{ font-style:normal; color: var(--blue); }
-  .cover-role{
-    margin: calc(var(--unit)*1.2) 0 0; font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-soft);
+  .cover-mark{
+    position:relative; z-index:1;
+    margin: calc(var(--unit)*.9) 0 0; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint);
   }
   /* carré décoratif (pas un bouton, pointer-events:none) : fixe DANS LA PAGE
      (scrolle avec le hero, pas avec l'écran), légèrement rogné par le bas au
@@ -98,11 +96,10 @@
      page (travaux, textes), jamais devant. Seul .cover-hint-bg est mis à
      l'échelle ; le texte reste à taille fixe, superposé par-dessus. */
   .cover-hint{
-    position:absolute; left:50%; bottom: calc(clamp(88px,11vw,116px) * -0.15);
+    position:absolute; left:var(--gutter); bottom: calc(clamp(88px,11vw,116px) * -0.15);
     width: clamp(190px,36vw,240px); height: clamp(88px,11vw,116px);
     pointer-events:none; z-index:-1;
     display:flex; align-items:center; justify-content:center; text-align:center; padding:0 8px;
-    transform: translateX(-50%);
   }
   .cover-hint-bg{
     position:absolute; inset:0; border-radius:8px; transform-origin:50% 0%;
@@ -118,15 +115,15 @@
      Une lueur bleue grandit autour de lui à mesure que la souris s'approche
      (pilotée en JS via la custom property --glow sur .cover-portrait-glow). ---- */
   .cover-portrait-link{
-    position:relative; display:block; margin-top: calc(var(--unit)*1.5);
-    height: clamp(150px, 24vh, 250px); text-decoration:none;
+    position:absolute; right:0; bottom:0; z-index:2;
+    display:block; height: clamp(280px, 62vh, 640px); text-decoration:none;
   }
   .cover-portrait-glow{
-    position:absolute; left:50%; bottom:-6%; width:150%; height:150%;
-    transform: translate(-50%, 8%) scale(calc(.7 + var(--glow, 0) * .5));
-    background: radial-gradient(circle, rgba(24,156,216,.85) 0%, rgba(24,156,216,.32) 42%, transparent 72%);
-    filter: blur(32px);
-    opacity: var(--glow, 0);
+    position:absolute; left:50%; top:50%; width:150%; height:150%;
+    transform: translate(-50%, -50%) scale(calc(.78 + var(--glow, 0) * .38));
+    background: radial-gradient(circle, rgba(24,156,216,.9) 0%, rgba(24,156,216,.35) 42%, transparent 72%);
+    filter: blur(36px);
+    opacity: calc(.32 + var(--glow, 0) * .68);
     transition: opacity .2s ease;
     pointer-events:none;
   }
@@ -134,19 +131,24 @@
     position:relative; z-index:1; display:block; margin:0 auto;
     height:100%; width:auto; object-fit:contain;
     filter: drop-shadow(0 20px 46px rgba(0,0,0,.55));
+    transform: scale(calc(1 + var(--glow, 0) * .07));
+    transition: filter .3s ease;
+  }
+  /* contour bleu net quand la souris est directement sur la photo (en plus
+     de la lueur continue pilotée par la distance) */
+  .cover-portrait-link:hover .cover-portrait,
+  .cover-portrait-link:focus-visible .cover-portrait{
+    filter: drop-shadow(0 20px 46px rgba(0,0,0,.55)) drop-shadow(0 0 3px var(--blue)) drop-shadow(0 0 16px rgba(24,156,216,.85));
   }
 
   @keyframes rise{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:none; } }
-  #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-role{
-    position:relative; z-index:1;
+  #cover .cover-name, #cover .cover-mark{
     animation: rise .8s cubic-bezier(.2,.7,.2,1) both;
   }
-  #cover .logo{ animation-delay: 0s; }
-  #cover .eyebrow{ animation-delay: .12s; }
-  #cover .cover-name{ animation-delay: .22s; }
-  #cover .cover-role{ animation-delay: .34s; }
+  #cover .cover-name{ animation-delay: 0s; }
+  #cover .cover-mark{ animation-delay: .16s; }
   @media (prefers-reduced-motion: reduce){
-    #cover .logo, #cover .eyebrow, #cover .cover-name, #cover .cover-role{ animation:none; }
+    #cover .cover-name, #cover .cover-mark{ animation:none; }
   }
 
   .eyebrow{
@@ -357,6 +359,10 @@
     .tv-card-media{ width:38vw; }
     .tv-title-card{ width:84vw; }
     .tv-cat-arrow{ width:36px; }
+    /* écran étroit : le portrait plein-hauteur mange toute la largeur et
+       chevauche le carré "Mes travaux" — on le réduit et on le remonte. */
+    .cover-portrait-link{ height: clamp(190px, 34vh, 300px); }
+    .cover-hint{ bottom: calc(clamp(88px,11vw,116px) * -0.15 + 14vh); }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -530,10 +536,8 @@
 
 <main>
   <section id="cover">
-    <img class="logo" src="assets/logo-black.png" alt="">
-    <p class="eyebrow">Portfolio</p>
     <h1 class="cover-name balance">Léo <em>Tâche</em></h1>
-    <p class="cover-role mono">Étudiant en communication visuelle · CPNV Sainte-Croix</p>
+    <p class="cover-mark mono">LT Design</p>
     <a class="cover-portrait-link" href="apropos.html" aria-label="À propos de Léo Tâche">
       <span class="cover-portrait-glow" aria-hidden="true"></span>
       <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
@@ -1020,9 +1024,9 @@
       var dx = mouseX - cx, dy = mouseY - cy;
       var dist = Math.sqrt(dx * dx + dy * dy);
       var t = Math.max(0, Math.min(1, 1 - dist / MAX_DIST));
-      glow.style.setProperty('--glow', t.toFixed(3));
+      link.style.setProperty('--glow', t.toFixed(3));
     } else {
-      glow.style.setProperty('--glow', 0);
+      link.style.setProperty('--glow', 0);
     }
     requestAnimationFrame(tick);
   }
