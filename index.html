@@ -248,8 +248,9 @@
     color:#fff; transition: color .3s;
   }
   .tv-more a:hover{ color: var(--blue); }
-  .tv-more a svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
-  .tv-more a:hover svg{ transform: translateX(3px); }
+  .tv-more a svg:last-child{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
+  .tv-more a:hover svg:last-child{ transform: translateX(3px); }
+  .tv-more a svg:first-child{ width:15px; height:15px; }
   .tv-cat-inner{
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
     margin:0 auto; padding: 0 var(--gutter);
@@ -359,18 +360,30 @@
   h2.contact-title em{ font-style:normal; color: var(--blue); }
   .contact-lede{ font-size: clamp(1rem,1.7vw,1.2rem); line-height:1.65; color: var(--ink-soft); max-width:52ch; margin:0 0 calc(var(--unit)*2.5); }
 
-  .mail{
-    display:flex; align-items:center; justify-content:space-between; gap: var(--unit);
-    text-decoration:none; background: var(--card); border:1px solid var(--line); border-radius:3px;
-    padding: calc(var(--unit)*1.5) calc(var(--unit)*1.75);
-    transition: border-color .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s cubic-bezier(.2,.7,.2,1), transform .4s cubic-bezier(.2,.7,.2,1);
+  .contact-form{
+    display:flex; flex-direction:column; gap: var(--unit);
+    background: var(--card); border:1px solid var(--line); border-radius:3px;
+    padding: calc(var(--unit)*1.75);
+    transition: border-color .4s cubic-bezier(.2,.7,.2,1);
   }
-  .mail:hover{ border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue), 0 14px 40px rgba(24,156,216,.16); transform: translateY(-2px); }
-  .mail .k{ display:block; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); margin-bottom:8px; }
-  .mail .addr{ font-size: clamp(1.05rem,3.2vw,1.9rem); font-weight:700; letter-spacing:-.01em; word-break:break-all; }
-  .mail .arrow{ flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color: var(--blue); transition: background .4s, color .4s, transform .4s cubic-bezier(.2,.7,.2,1); }
-  .mail:hover .arrow{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); transform: translateX(4px); }
-  .mail .arrow svg{ width:15px; height:15px; }
+  .contact-form:focus-within{ border-color: var(--blue); }
+  .cf-row{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--unit); }
+  .cf-field{ display:flex; flex-direction:column; gap:8px; }
+  .cf-field label{ font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); }
+  .cf-field input, .cf-field textarea{
+    width:100%; background: var(--paper); border:1px solid var(--line); border-radius:3px; color: var(--ink);
+    font-family:"Roboto"; font-size:.96rem; padding: calc(var(--unit)*.75) var(--unit); resize:vertical;
+    transition: border-color .3s;
+  }
+  .cf-field input:focus, .cf-field textarea:focus{ outline:none; border-color: var(--blue); }
+  .cf-submit{
+    align-self:flex-end; display:flex; align-items:center; gap: var(--unit);
+    background:none; border:none; cursor:pointer; padding:0; font:inherit;
+    font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:#fff;
+  }
+  .cf-submit .arrow{ flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color: var(--blue); transition: background .4s, color .4s, transform .4s cubic-bezier(.2,.7,.2,1); }
+  .cf-submit:hover .arrow{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); transform: translateX(4px); }
+  .cf-submit .arrow svg{ width:15px; height:15px; }
 
   .contact-foot{
     display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap: var(--unit);
@@ -447,7 +460,7 @@
 
   @media (max-width: 760px){
     .shots{ flex-direction:column; }
-    .mail{ flex-direction:column; align-items:flex-start; gap: var(--unit); }
+    .cf-row{ grid-template-columns:1fr; }
     .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }
     .vaud-map{ max-width:none; margin:0; position:static; }
     .vaud-map svg{ height:33vh; }
@@ -525,6 +538,7 @@
 
     <div class="tv-more">
       <a href="https://instagram.com/lt_design_09" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         Plus de travaux
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -641,15 +655,30 @@
     <h2 class="contact-title balance">Convaincu ?<br><em>Écrivez-moi.</em></h2>
     <p class="contact-lede">Si ces projets vous ont plu ou que vous avez une question, la boîte mail est ouverte, je réponds sous 48&nbsp;h.</p>
 
-    <a class="mail" href="mailto:leo.tache.09@gmail.com">
-      <span>
-        <span class="k">Écrire</span>
-        <span class="addr">leo.tache.09@gmail.com</span>
-      </span>
-      <span class="arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </span>
-    </a>
+    <form class="contact-form" action="https://formsubmit.co/leo.tache.09@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Nouveau message — portfolio">
+      <input type="hidden" name="_template" value="table">
+      <div class="cf-row">
+        <div class="cf-field">
+          <label for="cf-name">Nom</label>
+          <input type="text" id="cf-name" name="Nom" autocomplete="name" required>
+        </div>
+        <div class="cf-field">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="Email" autocomplete="email" required>
+        </div>
+      </div>
+      <div class="cf-field">
+        <label for="cf-message">Message</label>
+        <textarea id="cf-message" name="Message" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="cf-submit">
+        <span>Envoyer</span>
+        <span class="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+    </form>
 
     <div class="contact-foot">
       <div class="contact-foot-loc">Suisse romande · CPNV, Sainte-Croix</div>
