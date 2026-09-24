@@ -160,6 +160,8 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-24 — `richol.html` : retire la carte "La liberté" (il ne reste que
+  "Ce qu'il m'a appris" dans le bloc `.outcome`).
 - 2026-09-23 — Retire le voile sombre derrière "À propos" au survol du
   portrait (ne reste que le texte, avec un `text-shadow` pour la
   lisibilité à la place).
