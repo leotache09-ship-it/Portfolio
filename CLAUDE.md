@@ -160,6 +160,9 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-09-24 — Remplace `assets/leo-portrait.webp` par la nouvelle photo
+  fournie par le client (même chemin, donc hero et `apropos.html` se mettent
+  à jour ; le navigateur peut garder l'ancienne image en cache : Ctrl+Maj+R).
 - 2026-09-24 — `richol.html` : retire la carte "La liberté" (il ne reste que
   "Ce qu'il m'a appris" dans le bloc `.outcome`).
 - 2026-09-23 — Retire le voile sombre derrière "À propos" au survol du
