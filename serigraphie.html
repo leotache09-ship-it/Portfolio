@@ -139,9 +139,7 @@
     .facts{ grid-template-columns: 1fr 1fr; }
     .gallery{ grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 480px){
-    .gallery{ grid-template-columns: 1fr; }
-  }
+  /* .gallery (2 images côte à côte) reste à 2 colonnes même sur mobile */
   @media (prefers-reduced-motion: reduce){
     .frame img{ transition:none; opacity:1; transform:none; }
   }
@@ -162,6 +160,11 @@
   .more-date{ display:block; margin-top:5px; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); }
   @media (prefers-reduced-motion: reduce){
     .more-media img, .more-veil, .more-cta{ transition-duration:.01ms; }
+  }
+  @media (max-width:480px){
+    /* 2 images proposees : toujours cote a cote, meme sur mobile, jamais empilees */
+    .more-grid{ grid-template-columns: 1fr 1fr; gap: calc(var(--unit)*.8); }
+    .more-name{ font-size: clamp(.82rem, 3.6vw, 1rem); }
   }
 </style>
 

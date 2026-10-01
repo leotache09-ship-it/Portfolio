@@ -157,6 +157,11 @@
   @media (prefers-reduced-motion: reduce){
     .more-media img, .more-veil, .more-cta{ transition-duration:.01ms; }
   }
+  @media (max-width:480px){
+    /* 2 images proposees : toujours cote a cote, meme sur mobile, jamais empilees */
+    .more-grid{ grid-template-columns: 1fr 1fr; gap: calc(var(--unit)*.8); }
+    .more-name{ font-size: clamp(.82rem, 3.6vw, 1rem); }
+  }
 </style>
 
 <style>

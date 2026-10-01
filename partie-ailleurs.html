@@ -180,7 +180,8 @@
 
   @media (max-width: 860px){
     .case-hero{ grid-template-columns: 1fr; gap: calc(var(--unit)*2); }
-    .split, .split.wide-left, .rs{ grid-template-columns: 1fr; }
+    .split, .split.wide-left{ grid-template-columns: 1fr; }
+    /* .rs (2 images côte à côte : story / post) reste à 2 colonnes même sur mobile */
   }
   @media (max-width: 760px){
     #hero{ padding-top: calc(var(--unit)*7); }
@@ -202,6 +203,11 @@
   .more-date{ display:block; margin-top:5px; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); }
   @media (prefers-reduced-motion: reduce){
     .more-media img, .more-veil, .more-cta{ transition-duration:.01ms; }
+  }
+  @media (max-width:480px){
+    /* 2 images proposees : toujours cote a cote, meme sur mobile, jamais empilees */
+    .more-grid{ grid-template-columns: 1fr 1fr; gap: calc(var(--unit)*.8); }
+    .more-name{ font-size: clamp(.82rem, 3.6vw, 1rem); }
   }
 </style>
 

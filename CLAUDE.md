@@ -170,6 +170,30 @@ Solution : recharger, cliquer réellement sur la page pour forcer le
 focus, revérifier. Ne jamais conclure à un bug sur la seule foi d'un test
 automatisé sans avoir revérifié après un clic réel.
 
+**Le panneau de prévisualisation ne descend pas sous ~425px de large**,
+même en demandant explicitement 375px (préréglage "mobile") : `window.
+innerWidth` y vaut ~425 (voire plus, de façon instable d'un appel à
+l'autre) et la capture d'écran, elle, est forcée à 375px de large — donc
+du texte qui tient très bien dans les 425px réels peut apparaître coupé
+net sur le bord droit de la capture, alors qu'il n'y a **aucun**
+débordement CSS réel (vérifié via `getBoundingClientRect()` : le texte
+s'arrête bien avant `innerWidth`). Ne jamais conclure à un bug de mise en
+page mobile sur la seule foi d'une capture d'écran ici en dessous de
+~480px ; vérifier plutôt les valeurs calculées (`getComputedStyle`,
+`getBoundingClientRect`) et, en cas de doute, faire confiance au CSS
+plutôt qu'au rendu visuel de cet outil précis.
+
+**Quand deux `@media (max-width: …)` différents visent le même sélecteur
+avec la même spécificité** (ex. un correctif ajouté près du haut du
+fichier vs une règle existante plus bas, toutes deux déclenchées en
+dessous d'un certain seuil), **c'est l'ordre d'apparition dans le fichier
+qui tranche, pas la largeur du breakpoint** : une règle `max-width:480px`
+placée *avant* une règle `max-width:760px` sur le même sélecteur perd
+face à elle dès que les deux s'appliquent en même temps (en dessous de
+480px). Toujours ajouter un correctif ciblé *après* la dernière règle
+existante qui touche le même sélecteur, jamais en tête de fichier par
+réflexe.
+
 **Les fichiers `.js` référencés par `<script src="assets/xxx.js">` restent
 en cache même quand la page HTML est rechargée avec `?cb=`.** Un `?cb=`
 sur l'URL de la page ne rafraîchit QUE le document HTML, pas les scripts
@@ -184,6 +208,17 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Corrections mobile uniquement (la version desktop n'est pas
+  touchée) : (1) header `Travaux/Parcours/Contact` resserré sous 480px
+  (gap, police, padding) pour qu'il tienne sur les téléphones étroits ;
+  (2) le dégradé de fond des travaux mettait `vh` (= `window.innerHeight`)
+  en cache plutôt que de le relire à chaque frame — sur mobile, la barre
+  d'adresse qui se rétracte pendant le scroll fait varier cette valeur en
+  continu, ce qui faisait sauter le dégradé de façon erratique ; `vh`
+  n'est maintenant remis à jour que sur un vrai resize/changement
+  d'orientation ; (3) les paires de 2 images (`.two-up`, `.rs`,
+  `.gallery`, et la grille "Autres projets" `.more-grid`) restent
+  côte à côte sous 480-760px au lieu de s'empiler verticalement.
 - 2026-10-01 — Section "Autres projets" allégée : retire le numéro
   d'eyebrow, le libellé "Autres projets", le titre "À voir aussi" et la
   date sous chaque carte (ne reste que l'image + le nom). Ajoute une

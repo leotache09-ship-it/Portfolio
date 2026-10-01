@@ -515,6 +515,18 @@
     header.nav nav{ gap:16px; }
     header.nav nav a{ font-size:.64rem; }
   }
+
+  @media (max-width:480px){
+    /* sur les téléphones étroits, "Travaux / Parcours / Contact" pouvait
+       déborder du cadre (texte en majuscules + letter-spacing très large) :
+       on resserre gap/police/espacement pour que les trois tiennent. Placé
+       après le bloc @media(max-width:760px) ci-dessus pour gagner la
+       cascade (même sélecteur, même spécificité : le dernier déclaré
+       l'emporte). */
+    header.nav{ padding-left: calc(var(--unit)*1.1); padding-right: calc(var(--unit)*1.1); }
+    header.nav nav{ gap:10px; }
+    header.nav nav a{ font-size:.58rem; letter-spacing:.06em; }
+  }
 </style>
 
 <style>
@@ -1210,8 +1222,21 @@ var TRAVAUX_FAMILIES = [
   var REVEAL_START = 0.1; /* fraction du trajet total (entrée en bas -> sortie en haut) */
   var REVEAL_END = 0.55; /* le glissement dure plus longtemps : on voit vraiment les projets entrer/sortir sur les côtés */
 
+  /* vh mis en cache plutôt que relu à chaque frame : sur mobile, la barre
+     d'adresse qui se rétracte/réapparaît pendant le scroll fait varier
+     window.innerHeight en continu (de façon instable, pas un vrai resize) —
+     recalculer tout le dégradé sur cette valeur mouvante le faisait sauter
+     dans tous les sens ("n'importe quoi"). On ne la remet à jour que sur un
+     vrai resize/changement d'orientation, jamais pendant le scroll. */
+  var vh = window.innerHeight;
+  var resizeTimer = null;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){ vh = window.innerHeight; }, 150);
+  }, { passive: true });
+  window.addEventListener('orientationchange', function(){ vh = window.innerHeight; });
+
   function tick(){
-    var vh = window.innerHeight;
     var scrollY = window.scrollY;
     var stops = [];
 
