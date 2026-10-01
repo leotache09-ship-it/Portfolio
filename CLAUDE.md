@@ -208,6 +208,11 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Mobile : portrait plus grand et centré (au lieu d'ancré à
+  droite) ; nom "Léo Tâche" plus grand et plus aéré (`line-height:1.08`
+  au lieu de `.86`) ; le bandeau "Mes travaux." passe d'un bleu plat à un
+  dégradé (plus sombre en haut, bleu plein en bas) pour se raccorder en
+  douceur avec le noir du hero juste au-dessus. Uniquement sur mobile.
 - 2026-10-01 — Mobile : refonte du hero au repos sur maquette client.
   "Mes travaux." n'est plus un pavé flottant centré mais un bandeau pleine
   largeur collé en bas de l'écran (`left/right:0`, plus de `border-radius`

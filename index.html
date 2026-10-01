@@ -390,13 +390,24 @@
        Maquette validée par le client : "Mes travaux." devient un bandeau
        pleine largeur collé en bas de l'écran (plus un pavé flottant
        centré), avec le portrait posé au-dessus, bien dégagé des deux
-       côtés (texte en haut, bandeau en bas). */
-    .cover-portrait-link{ height: clamp(190px, 34vh, 300px); }
+       côtés (texte en haut, bandeau en bas). Nom plus grand et plus aéré,
+       portrait plus grand et centré (plus ancré à droite). */
+    h1.cover-name{ font-size: clamp(5.4rem, 20vw, 8.5rem); line-height:1.08; }
+    .cover-portrait-link{
+      height: clamp(260px, 46vh, 420px);
+      left:50%; right:auto; transform: translateX(-50%);
+    }
     .cover-hint{
       left:0; right:0; bottom:0; width:100%; height: clamp(64px, 9vh, 96px);
       transform:none; padding:0 var(--gutter);
     }
-    .cover-hint-bg{ border-radius:0; }
+    /* dégradé plutôt qu'un bleu plat, pour que le bandeau se raccorde en
+       douceur avec le noir du hero juste au-dessus plutôt que de créer une
+       ligne nette entre les deux. */
+    .cover-hint-bg{
+      border-radius:0;
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--blue) 55%, #0D0D0F) 0%, var(--blue) 65%);
+    }
     /* le portrait est ancré pile au-dessus du bandeau, en reprenant la même
        expression `clamp(64px, 9vh, 96px)` que sa hauteur ci-dessus, plus un
        écart fixe : aucun chevauchement possible, quelle que soit la hauteur
