@@ -208,6 +208,22 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Le passage à `svh` ne suffisait pas : toujours impossible
+  d'atteindre Contact sur téléphone ("bug vers Mon parcours"). Au lieu de
+  continuer à ajuster l'épinglage, applique la leçon déjà tirée pour les
+  travaux (voir CLAUDE.md, "la caméra se bloque") : **désactive
+  complètement le `position:sticky` sous 760px**. `.parcours-track`
+  (hauteur normale) et `.parcours-stage` (`position:static`) redeviennent
+  un bloc de flux normal qui défile comme le reste de la page ; le script
+  dédié saute directement à "tout est atteint" sans animation liée au
+  scroll (même chemin que `prefers-reduced-motion`). Revert au passage
+  l'ancienne mise en page mobile de la timeline (items empilés un par un
+  en `position:absolute`, pensée pour l'épinglage) vers la mise en page de
+  base (liste verticale normale), sinon seule la dernière étape restait
+  visible. Piège rencontré en l'écrivant : avoir mis la règle de
+  désactivation dans le mauvais bloc `@media` (plus haut dans le fichier
+  que la règle de base qu'elle devait écraser) ne suffisait pas — voir
+  "Pièges connus" plus haut, même cause que pour le header.
 - 2026-10-01 — Deux bugs mobile trouvés et corrigés après nouveaux
   retours client :
   - **Header toujours invisible** malgré trois tentatives de rétrécir le

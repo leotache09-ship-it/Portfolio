@@ -516,14 +516,15 @@
   .contact-foot-social svg{ width:17px; height:17px; }
   footer{ text-align:center; padding: var(--unit) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
 
-  /* ---- parcours (séquence bloquée au scroll) ---- */
+  /* ---- parcours (séquence bloquée au scroll, desktop uniquement) ---- */
   #parcours{ position:relative; border-top:1px solid var(--line); }
   /* `svh` (small viewport height) plutôt que `vh` : sur mobile, `100vh`
      inclut l'espace caché derrière la barre d'adresse qui se rétracte au
      scroll, donc la zone "collée" (.parcours-stage) devient réellement
-     plus grande que ce qui est visible à l'écran — le scroll semblait
-     bloqué sur "Mon parcours" car il fallait faire défiler cette portion
-     invisible avant que la section ne se libère. */
+     plus grande que ce qui est visible à l'écran. Insuffisant à soi seul
+     (voir media query plus bas : l'épinglage est carrément désactivé sur
+     mobile, même leçon que pour les travaux — voir CLAUDE.md, "la caméra
+     se bloque"), mais ne change rien sur desktop où ça reste utile. */
   .parcours-track{ position:relative; height: 360svh; }
   .parcours-stage{ position:sticky; top:0; height:100svh; display:flex; align-items:center; overflow:hidden; }
   .parcours-inner{ width:100%; border-top:none; padding-top: calc(var(--unit)*1.5); padding-bottom: calc(var(--unit)*1.5); }
@@ -581,6 +582,20 @@
   }
 
   @media (max-width: 760px){
+    /* Parcours : désactive complètement l'épinglage au scroll sur mobile
+       (même leçon déjà tirée pour les travaux, voir CLAUDE.md : "la
+       caméra se bloque" — ici ça rendait "Mon parcours" infranchissable,
+       impossible d'atteindre Contact). La section redevient un bloc
+       normal, de hauteur normale, qui défile comme le reste de la page ;
+       le script dédié (voir plus bas, `window.innerWidth <= 760`) affiche
+       alors directement toutes les étapes sans animation liée au scroll.
+       Placé APRÈS la règle de base `.parcours-track`/`.parcours-stage`
+       (même sélecteur, même spécificité : sinon la règle de base,
+       déclarée plus bas dans le fichier, l'emporterait quand même —
+       piège déjà rencontré pour le header, voir "Pièges connus" plus
+       haut dans CLAUDE.md). */
+    .parcours-track{ height:auto; }
+    .parcours-stage{ position:static; height:auto; display:block; }
     .shots{ flex-direction:column; }
     .cf-row{ grid-template-columns:1fr; }
     .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }
@@ -588,11 +603,6 @@
     .vaud-map svg{ height:33vh; }
     .parcours-inner .section-sub{ display:none; }
     .map-dot .sub{ display:none; }
-    html.js .timeline{ position:relative; min-height:168px; border-left:none; padding-left:0; gap:0; }
-    html.js .timeline .tl-item{ position:absolute; left:0; right:0; top:0; opacity:0; transform:none; pointer-events:none; }
-    html.js .timeline .tl-item.active{ opacity:1; pointer-events:auto; }
-    html.js .timeline .tl-item::before{ display:none; }
-    html.js .timeline .tl-item.active ul{ max-height:160px; }
     #progress{ display:none; }
   }
 </style>
@@ -937,7 +947,15 @@
       });
     }
 
-    if (reduced) {
+    /* sur mobile, pas d'épinglage au scroll (voir CLAUDE.md : la même
+       idée avait déjà été essayée et rejetée pour les travaux — "la
+       caméra se bloque" — et reproduisait ici le même problème : scroll
+       qui semble bloqué sur "Mon parcours", impossible d'atteindre
+       contact). Le CSS désactive le `position:sticky`/la grande hauteur
+       de piste sous 760px (voir plus haut) ; on traite ce cas comme
+       `reduced` : tout est affiché d'emblée, sans consommer de hauteur de
+       scroll supplémentaire. */
+    if (reduced || window.innerWidth <= 760) {
       apply(segCount);
       if (bar) bar.style.width = '100%';
       return;
