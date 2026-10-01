@@ -208,6 +208,22 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — Précision client : le souci apparaît en descendant jusqu'à
+  Contact puis en remontant. Trouvé la vraie cause probable : la boucle
+  `requestAnimationFrame` du dégradé de fond des travaux tournait en
+  continu, 60×/seconde, **pour toute la durée de vie de la page** — y
+  compris en restant immobile tout en bas sur Contact, à ne rien faire de
+  visible (couleur déjà figée au noir). Tout ce travail de fond (5
+  lectures de mise en page par image, indéfiniment) pouvait créer un
+  à-coup juste au moment de reprendre le scroll vers le haut. La boucle
+  s'arrête maintenant une fois largement repassé sous les travaux (marge
+  d'un écran) et se relance via un simple listener `scroll`/`touchstart`
+  (bien moins coûteux qu'une boucle perpétuelle) dès qu'on se rapproche à
+  nouveau — `touchstart` en plus de `scroll` pour relancer dès que le
+  doigt touche l'écran, avant même le premier pixel de défilement.
+  Vérifié : après un arrêt (simulé en forçant le scroll tout en bas), la
+  couleur et la position des cartes se remettent bien à jour correctement
+  en remontant.
 - 2026-10-02 — Retour client : toujours un souci en remontant dans les
   travaux malgré le cache de `maxTravel`. Trouvé une 2e source de travail
   redondant dans le même `tick()` : `getBoundingClientRect()` était

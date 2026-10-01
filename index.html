@@ -1467,10 +1467,34 @@ var TRAVAUX_FAMILIES = [
     }
     document.body.style.backgroundColor = bg;
 
+    /* cette boucle tournait en continu, 60×/seconde, pour toute la durée
+       de vie de la page — y compris en restant immobile tout en bas sur
+       Contact, à ne rien faire de visible. Tout ce travail de fond
+       (5 lectures de mise en page par image) pouvait créer un à-coup au
+       tout début du geste quand on se remettait enfin à scroller vers le
+       haut. On s'arrête maintenant une fois largement repassé sous les
+       travaux (avec une marge d'un écran), et un simple scroll listener
+       (bien moins coûteux qu'une boucle perpétuelle) la relance dès qu'on
+       se rapproche à nouveau. */
+    var farBelow = refY > stops[stops.length - 1].y + vh;
+    if (farBelow){ running = false; return; }
     requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
+
+  var running = false;
+  function startIfNeeded(){
+    if (running) return;
+    running = true;
+    requestAnimationFrame(tick);
+  }
+  startIfNeeded();
   tick();
+  /* 'scroll' relance une fois le geste déjà commencé ; 'touchstart' la
+     relance dès que le doigt touche l'écran, avant même le premier pixel
+     de défilement, pour qu'il n'y ait jamais un frame de retard au tout
+     début d'un nouveau geste vers le haut. */
+  window.addEventListener('scroll', startIfNeeded, { passive: true });
+  window.addEventListener('touchstart', startIfNeeded, { passive: true });
 })();
 </script>
 
