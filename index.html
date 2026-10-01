@@ -389,14 +389,24 @@
        chevauche le carré "Mes travaux" — on le réduit et on le remonte.
        Maquette validée par le client : "Mes travaux." devient un bandeau
        pleine largeur collé en bas de l'écran (plus un pavé flottant
-       centré), avec le portrait posé au-dessus, bien dégagé des deux
-       côtés (texte en haut, bandeau en bas). Nom plus grand et plus aéré,
-       portrait plus grand et centré (plus ancré à droite). */
+       centré). Nom plus grand et plus aéré, portrait plus grand et centré
+       (plus ancré à droite), volontairement coupé en bas par le bandeau
+       (même ancrage `bottom:0` que le bandeau, portrait assez grand pour
+       déborder derrière — on repasse donc au même ordre d'empilement que
+       sur desktop, le bandeau au-dessus (z-index:3 contre 2), pour que le
+       bord du bandeau coupe net le bas du corps). */
     h1.cover-name{ font-size: clamp(5.4rem, 20vw, 8.5rem); line-height:1.08; }
     .cover-portrait-link{
-      height: clamp(260px, 46vh, 420px);
-      left:50%; right:auto; transform: translateX(-50%);
+      height: clamp(340px, 60vh, 520px);
+      /* ratio réel du fichier portrait (667×788) : fixé explicitement sur
+         le lien, sinon `width:auto` sur l'image (combiné au `max-width:100%`
+         global des <img>) se résout mal sur un conteneur en position
+         absolue sans largeur propre, et l'image rendait deux fois trop
+         étroite — le bas du corps n'atteignait jamais le bandeau. */
+      aspect-ratio: 667 / 788; width:auto;
+      left:50%; right:auto; bottom:0; transform: translateX(-50%);
     }
+    .cover-portrait{ width:100%; }
     .cover-hint{
       left:0; right:0; bottom:0; width:100%; height: clamp(64px, 9vh, 96px);
       transform:none; padding:0 var(--gutter);
@@ -408,16 +418,6 @@
       border-radius:0;
       background: linear-gradient(to bottom, color-mix(in srgb, var(--blue) 55%, #0D0D0F) 0%, var(--blue) 65%);
     }
-    /* le portrait est ancré pile au-dessus du bandeau, en reprenant la même
-       expression `clamp(64px, 9vh, 96px)` que sa hauteur ci-dessus, plus un
-       écart fixe : aucun chevauchement possible, quelle que soit la hauteur
-       d'écran (même principe que pour le bandeau et le haut du portrait). */
-    .cover-portrait-link{ bottom: calc(clamp(64px, 9vh, 96px) + var(--unit)*1.5); }
-    /* le portrait reste au premier plan pendant que le bandeau grandit au
-       scroll (voir script dédié) : il se fond proprement par-dessus plutôt
-       que d'être tranché par son bord. */
-    .cover-portrait-link{ z-index:4; }
-    .cover-hint{ z-index:2; }
   }
 
   @media (prefers-reduced-motion: reduce){

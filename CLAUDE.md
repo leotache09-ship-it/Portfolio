@@ -208,6 +208,19 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Mobile : portrait encore agrandi (jusqu'à 520px) et
+  volontairement coupé en bas par le bandeau "Mes travaux." (retour au
+  même ordre d'empilement que le desktop : bandeau `z-index:3` au-dessus
+  du portrait `z-index:2`, portrait ancré `bottom:0` comme le bandeau, au
+  lieu de l'écart fixe au-dessus ajouté précédemment — changement de
+  direction demandé par le client après avoir vu le rendu). Corrige au
+  passage un vrai bug découvert à cette occasion : `.cover-portrait`
+  utilisait `width:auto` + le `max-width:100%` global des `<img>`, qui se
+  résolvait mal sur `.cover-portrait-link` en position absolue sans
+  largeur propre — l'image rendait deux fois trop étroite et son bas
+  n'atteignait jamais le bandeau quelle que soit la hauteur demandée.
+  Fixé en donnant au lien un `aspect-ratio: 667/788` explicite (le ratio
+  réel du fichier portrait) et `width:100%` sur l'image.
 - 2026-10-01 — Mobile : portrait plus grand et centré (au lieu d'ancré à
   droite) ; nom "Léo Tâche" plus grand et plus aéré (`line-height:1.08`
   au lieu de `.86`) ; le bandeau "Mes travaux." passe d'un bleu plat à un
