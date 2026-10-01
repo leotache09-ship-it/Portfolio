@@ -208,6 +208,14 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Mobile : le carré "Mes travaux." chevauchait la tête du
+  portrait (son bord bas tombait 30px plus bas que le haut du portrait).
+  Corrigé en calculant le bas du carré avec exactement la même expression
+  `clamp(190px, 34vh, 300px)` que la hauteur du portrait + une marge fixe
+  (`var(--unit)*1.5`) : les deux valeurs se neutralisent, donc l'écart
+  reste constant quelle que soit la hauteur réelle de l'écran — plus
+  jamais de chevauchement, sans avoir à retoucher ces chiffres par essai-
+  erreur pour chaque taille de téléphone.
 - 2026-10-01 — Corrections mobile uniquement (la version desktop n'est pas
   touchée) : (1) header `Travaux/Parcours/Contact` resserré sous 480px
   (gap, police, padding) pour qu'il tienne sur les téléphones étroits ;

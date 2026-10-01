@@ -387,8 +387,14 @@
     .tv-cat-arrow{ width:36px; }
     /* écran étroit : le portrait plein-hauteur mange toute la largeur et
        chevauche le carré "Mes travaux" — on le réduit et on le remonte. */
+    /* le carré "Mes travaux." et le portrait sont tous les deux ancrés en
+       `bottom` sur #cover : en réutilisant exactement la même expression
+       `clamp(190px, 34vh, 300px)` pour calculer le bas du carré, son bord
+       bas tombe toujours pile `var(--unit)*1.5` au-dessus du haut du
+       portrait, quelle que soit la hauteur réelle de l'écran — fini le
+       chevauchement (le carré coupait la tête du portrait). */
     .cover-portrait-link{ height: clamp(190px, 34vh, 300px); }
-    .cover-hint{ bottom: calc(clamp(88px,11vw,116px) * -0.15 + 32vh); }
+    .cover-hint{ bottom: calc(clamp(190px, 34vh, 300px) + var(--unit)*1.5); }
   }
 
   @media (prefers-reduced-motion: reduce){
