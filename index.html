@@ -1418,9 +1418,16 @@ var TRAVAUX_FAMILIES = [
   function tick(){
     var scrollY = window.scrollY;
     var stops = [];
+    var rects = []; /* un seul getBoundingClientRect() par bande et par frame,
+                        réutilisé pour tout (position, dégradé, bande de
+                        tête/queue) — en appeler un deuxième pour les
+                        bandes 0 et dernière forçait une 2e mise en page
+                        inutile à chaque frame, ça pouvait saccader le
+                        scroll (surtout sensible en remontant vite). */
 
     bands.forEach(function(band){
       var rect = band.el.getBoundingClientRect();
+      rects.push(rect);
       var total = vh + rect.height;
       var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
       var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
@@ -1433,8 +1440,8 @@ var TRAVAUX_FAMILIES = [
       stops.push({ y: scrollY + rect.top + rect.height / 2, color: band.color });
     });
 
-    var first = bands[0].el.getBoundingClientRect();
-    var last = bands[bands.length - 1].el.getBoundingClientRect();
+    var first = rects[0];
+    var last = rects[rects.length - 1];
     /* le bleu de "Des vrais clients" commence à apparaître une demi-écran
        avant l'entrée réelle de la bande, pour accompagner le carré du hero
        plutôt que d'attendre qu'il ait déjà grandi et disparu. */

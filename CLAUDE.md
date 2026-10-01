@@ -208,6 +208,21 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — Retour client : toujours un souci en remontant dans les
+  travaux malgré le cache de `maxTravel`. Trouvé une 2e source de travail
+  redondant dans le même `tick()` : `getBoundingClientRect()` était
+  appelé une seconde fois pour la première et la dernière bande (`first`/
+  `last`, utilisées pour les bornes du dégradé), en plus de l'appel déjà
+  fait pour elles dans la boucle `forEach` — un appel de mise en page en
+  trop, par frame, pour rien. Réutilise maintenant le `rect` déjà calculé
+  dans la boucle (tableau `rects`) au lieu de le relire. Vérifié par un
+  test programmatique (position + couleur identiques en descendant vs. en
+  remontant jusqu'au même point de scroll) : aucun bug de calcul, donc ce
+  qui reste est bien une question de performance pendant le geste, pas de
+  logique. Si ça persiste après ce commit, il faudra des précisions
+  précises (ça saccade visuellement, ou le scroll s'arrête net ?) pour
+  cibler la suite — toutes les pistes de calcul ont été vérifiées
+  correctes.
 - 2026-10-02 — Retour client : "presque", léger bug/saccade en remontant
   dans les travaux (défilement horizontal des cartes + dégradé de fond).
   Optimisation de perf trouvée dans `tick()` (#travaux) : `getComputedStyle`
