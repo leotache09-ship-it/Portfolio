@@ -208,6 +208,17 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Mobile : refonte du hero au repos sur maquette client.
+  "Mes travaux." n'est plus un pavé flottant centré mais un bandeau pleine
+  largeur collé en bas de l'écran (`left/right:0`, plus de `border-radius`
+  ni de `transform:translateX`) ; le portrait est ancré juste au-dessus,
+  avec le même écart fixe que pour le haut (`clamp(64px,9vh,96px)` du
+  bandeau + marge), donc toujours bien dégagé des deux côtés, sans
+  chevauchement possible. La version desktop n'est pas touchée (tout est
+  dans `@media (max-width:640px)`). L'animation de croissance/disparition
+  au scroll n'a pas été modifiée, elle s'adapte automatiquement à la
+  nouvelle forme (le script calcule la mise à l'échelle dynamiquement à
+  partir de la taille réelle de l'élément).
 - 2026-10-01 — Mobile : le portrait passe devant le carré "Mes travaux."
   (`z-index:4` contre `2`) au lieu de derrière. Pendant le scroll, le
   carré grandit (jusqu'à prendre tout l'écran) pendant que le portrait
