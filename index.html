@@ -26,6 +26,11 @@
 
   *{ box-sizing: border-box; }
   html, body{ margin:0; padding:0; }
+  /* empêche les navigateurs mobiles (surtout Safari iOS) d'agrandir le
+     texte automatiquement après un scroll/zoom : ça faisait déborder le
+     header "Travaux/Parcours/Contact" hors cadre sans aucune erreur CSS
+     visible dans les outils de dev classiques. */
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
   body{
     background: var(--paper);
     color: var(--ink);
@@ -411,13 +416,10 @@
       left:0; right:0; bottom:0; width:100%; height: clamp(64px, 9vh, 96px);
       transform:none; padding:0 var(--gutter);
     }
-    /* dégradé plutôt qu'un bleu plat, pour que le bandeau se raccorde en
-       douceur avec le noir du hero juste au-dessus plutôt que de créer une
-       ligne nette entre les deux. */
-    .cover-hint-bg{
-      border-radius:0;
-      background: linear-gradient(to bottom, color-mix(in srgb, var(--blue) 55%, #0D0D0F) 0%, var(--blue) 65%);
-    }
+    /* retour au bleu uni (le dégradé essayé précédemment faisait "bizarre"
+       au retour client) : seul le `border-radius` change par rapport au
+       desktop, pour un bandeau plein écran aux bords nets. */
+    .cover-hint-bg{ border-radius:0; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -546,15 +548,21 @@
   }
 
   @media (max-width:480px){
-    /* sur les téléphones étroits, "Travaux / Parcours / Contact" pouvait
-       déborder du cadre (texte en majuscules + letter-spacing très large) :
-       on resserre gap/police/espacement pour que les trois tiennent. Placé
-       après le bloc @media(max-width:760px) ci-dessus pour gagner la
+    /* sur les téléphones étroits, "Travaux / Parcours / Contact" débordait
+       du cadre et restait invisible (texte en majuscules + letter-spacing
+       large, plus l'agrandissement automatique du texte par certains
+       navigateurs mobiles). Resserré au maximum + `flex-wrap` en filet de
+       sécurité : si jamais ça ne tient toujours pas sur un très petit
+       écran, ça repasse sur deux lignes au lieu de disparaître hors cadre.
+       Placé après le bloc @media(max-width:760px) ci-dessus pour gagner la
        cascade (même sélecteur, même spécificité : le dernier déclaré
        l'emporte). */
-    header.nav{ padding-left: calc(var(--unit)*1.1); padding-right: calc(var(--unit)*1.1); }
-    header.nav nav{ gap:10px; }
-    header.nav nav a{ font-size:.58rem; letter-spacing:.06em; }
+    header.nav{
+      padding-left: var(--unit); padding-right: var(--unit);
+      flex-wrap:wrap; row-gap:6px;
+    }
+    header.nav nav{ gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    header.nav nav a{ font-size:.54rem; letter-spacing:.02em; }
   }
 </style>
 
@@ -1038,7 +1046,17 @@
   var MAX_SCALE = 20;
   function computeScale(){
     var vw = window.innerWidth, vh = window.innerHeight;
-    var size = hint.getBoundingClientRect().width || 116;
+    var r = hint.getBoundingClientRect();
+    /* la plus petite des deux dimensions, pas juste la largeur : sur
+       mobile le bandeau est plein largeur (donc déjà "large"), c'est sa
+       hauteur qui est petite et qui doit grandir beaucoup — utiliser la
+       largeur sous-estimait l'échelle nécessaire et la croissance
+       n'atteignait jamais le haut de l'écran avant de s'effacer. */
+    /* sur mobile (bandeau pleine largeur, cf. @media max-width:640px plus
+       haut), on prend la plus petite des deux dimensions ; sur desktop on
+       garde le calcul d'origine (basé sur la largeur du pavé) pour ne pas
+       changer un comportement déjà validé ("nickel"). */
+    var size = (vw <= 640 ? Math.min(r.width, r.height) : r.width) || 116;
     var reach = Math.sqrt((vw / 2) * (vw / 2) + vh * vh);
     MAX_SCALE = (2 * reach) / size + 2;
   }

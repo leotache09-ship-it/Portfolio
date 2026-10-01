@@ -208,6 +208,31 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Mobile, retours client après test sur téléphone réel :
+  - Header `Travaux/Parcours/Contact` toujours invisible malgré le
+    resserrement précédent : ajoute `-webkit-text-size-adjust:100%`
+    (certains navigateurs mobiles agrandissent le texte tout seuls, ce qui
+    ne se voit pas dans les outils de dev classiques) + `flex-wrap` en
+    filet de sécurité sur le header (repasse sur 2 lignes plutôt que de
+    déborder hors cadre si jamais ça ne suffit toujours pas) + police et
+    gap encore réduits sous 480px.
+  - Le bandeau "Mes travaux." revient à un bleu uni (le dégradé essayé
+    juste avant faisait "bizarre" au retour client).
+  - La croissance du bandeau au scroll ("transition pas nickel") : le
+    calcul de l'échelle max (`computeScale` dans le script du carré hero)
+    se basait sur la LARGEUR du pavé, ce qui marchait bien pour le petit
+    pavé centré du desktop mais sous-estimait largement l'échelle
+    nécessaire pour le bandeau mobile, déjà pleine largeur — la croissance
+    n'atteignait jamais le haut de l'écran avant de s'effacer. Corrigé en
+    basant le calcul sur la plus petite des deux dimensions (sa hauteur,
+    sur mobile), mais uniquement sous 640px de large pour ne pas changer
+    le calcul desktop déjà validé.
+  - Signalé : la section "Autres projets" semblait absente sous
+    `afmbb.html`. Vérifié dans le code et en rechargement forcé : elle est
+    bien présente et bien formée (markup identique aux 10 autres pages,
+    images valides) — probablement une page mise en cache côté téléphone
+    (voir le piège de cache documenté plus haut) plutôt qu'un vrai bug ;
+    à reconfirmer après un Ctrl+Maj+R / fermeture-réouverture de l'onglet.
 - 2026-10-01 — Mobile : portrait encore agrandi (jusqu'à 520px) et
   volontairement coupé en bas par le bandeau "Mes travaux." (retour au
   même ordre d'empilement que le desktop : bandeau `z-index:3` au-dessus
