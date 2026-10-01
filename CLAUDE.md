@@ -208,16 +208,29 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
-- 2026-10-01 — Header `Travaux/Parcours/Contact` toujours invisible sur
-  téléphone malgré deux correctifs précédents par palier fixe (640px puis
-  480px) : abandonne l'approche par palier pour une taille et un
-  espacement **fluides en `vw`** (`clamp(.5rem, 2.3vw, .72rem)` etc.),
-  directement dans la règle de base plutôt qu'en surcharge de media query
-  — le texte se resserre en continu avec la largeur réelle de l'écran, il
-  n'y a donc plus de largeur de téléphone "entre deux paliers" où ça
-  débordait encore. Le `max` du clamp reproduit exactement l'ancienne
-  taille desktop, donc aucun changement au-dessus de ~640px. `flex-wrap`
-  reste en toute dernière sécurité.
+- 2026-10-01 — Deux bugs mobile trouvés et corrigés après nouveaux
+  retours client :
+  - **Header toujours invisible** malgré trois tentatives de rétrécir le
+    texte (paliers fixes, puis fluide en `vw`) : abandon complet de cette
+    approche. Sur mobile, le header devient un bouton **hamburger**
+    (`#navToggle`) qui ouvre un panneau plein largeur avec les 3 liens
+    empilés en grand (`#navLinks.is-open`) — un bouton de taille fixe
+    (34×34px) ne peut pas déborder, quelle que soit la largeur du
+    téléphone, contrairement à du texte qui doit toujours être rétréci
+    "juste assez". Desktop inchangé (bouton caché par défaut, menu
+    toujours affiché en ligne au-dessus de 640px).
+  - **Impossible de scroller plus loin que "Mon parcours"** : la section
+    utilise un `position:sticky` "bloqué" pendant `360vh` de scroll
+    (`.parcours-track`/`.parcours-stage`, voir Mécanismes clés). Sur
+    mobile, `100vh` inclut l'espace caché derrière la barre d'adresse qui
+    se rétracte pendant le scroll, donc la zone collée devenait réellement
+    plus haute que ce qui est visible à l'écran — il fallait faire
+    défiler une portion invisible avant que la section se libère, ce qui
+    donnait l'impression d'un blocage. Remplacé `100vh`/`360vh` par
+    `100svh`/`360svh` (small viewport height, la valeur stable qui ne
+    bouge pas avec la barre d'adresse) — vérifié : la hauteur de la zone
+    collée passe de l'ancienne valeur instable à une valeur fixe et
+    cohérente avec l'écran réellement visible.
 - 2026-10-01 — Mobile, retours client après test sur téléphone réel :
   - Header `Travaux/Parcours/Contact` toujours invisible malgré le
     resserrement précédent : ajoute `-webkit-text-size-adjust:100%`

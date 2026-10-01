@@ -68,6 +68,7 @@
     white-space:nowrap; flex-shrink:0;
   }
   header.nav nav a:hover{ color: var(--blue); }
+  .nav-toggle{ display:none; }
 
   section{ position:relative; }
   .grid-pattern{
@@ -395,6 +396,41 @@
   .tv3-noscript a:hover{ color: var(--blue); }
 
   @media (max-width:640px){
+    /* Travaux/Parcours/Contact restait invisible sur téléphone malgré
+       plusieurs tentatives de resserrement (paliers fixes, puis police
+       fluide en vw) — abandon de l'idée de faire tenir les 3 mots sur une
+       ligne : sur mobile, le menu devient un bouton "hamburger" qui ouvre
+       un panneau déroulant plein écran avec les liens empilés en grand,
+       bien plus fiable qu'une course au rétrécissement du texte. */
+    header.nav nav{
+      position:fixed; top:0; left:0; right:0; z-index:499;
+      flex-direction:column; align-items:stretch; gap:0; min-width:auto;
+      padding: calc(var(--unit)*3.2) var(--gutter) var(--unit);
+      background: var(--paper); border-bottom:1px solid var(--line);
+      transform: translateY(-100%); transition: transform .3s cubic-bezier(.2,.7,.2,1);
+    }
+    header.nav nav.is-open{ transform:none; }
+    header.nav nav a{
+      font-size:1.1rem; letter-spacing:.04em; white-space:normal;
+      padding: calc(var(--unit)*.9) 0; border-bottom:1px solid var(--line);
+    }
+    header.nav nav a:last-child{ border-bottom:none; }
+    .nav-toggle{
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:5px; width:34px; height:34px; flex:none; z-index:501; position:relative;
+      background:none; border:none; padding:0; cursor:pointer;
+    }
+    .nav-toggle span{
+      display:block; width:20px; height:2px; background: var(--ink);
+      border-radius:2px; transition: transform .25s ease, opacity .2s ease;
+    }
+    .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+    .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+    @media (prefers-reduced-motion: reduce){
+      header.nav nav{ transition-duration:.01ms; }
+      .nav-toggle span{ transition-duration:.01ms; }
+    }
     .tv-card-info{ max-width:46vw; }
     .tv-card-media{ width:38vw; }
     .tv-title-card{ width:84vw; }
@@ -482,8 +518,14 @@
 
   /* ---- parcours (séquence bloquée au scroll) ---- */
   #parcours{ position:relative; border-top:1px solid var(--line); }
-  .parcours-track{ position:relative; height: 360vh; }
-  .parcours-stage{ position:sticky; top:0; height:100vh; display:flex; align-items:center; overflow:hidden; }
+  /* `svh` (small viewport height) plutôt que `vh` : sur mobile, `100vh`
+     inclut l'espace caché derrière la barre d'adresse qui se rétracte au
+     scroll, donc la zone "collée" (.parcours-stage) devient réellement
+     plus grande que ce qui est visible à l'écran — le scroll semblait
+     bloqué sur "Mon parcours" car il fallait faire défiler cette portion
+     invisible avant que la section ne se libère. */
+  .parcours-track{ position:relative; height: 360svh; }
+  .parcours-stage{ position:sticky; top:0; height:100svh; display:flex; align-items:center; overflow:hidden; }
   .parcours-inner{ width:100%; border-top:none; padding-top: calc(var(--unit)*1.5); padding-bottom: calc(var(--unit)*1.5); }
   .parcours-inner .section-sub{ margin-bottom: calc(var(--unit)*2); }
   .parcours-wrap{ display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: calc(var(--tile)*.9); align-items:center; }
@@ -552,15 +594,6 @@
     html.js .timeline .tl-item::before{ display:none; }
     html.js .timeline .tl-item.active ul{ max-height:160px; }
     #progress{ display:none; }
-    /* "Travaux / Parcours / Contact" déborde du cadre et reste invisible
-       malgré plusieurs resserrements par palier fixe (640px, 480px) : la
-       taille/l'espacement sont maintenant fluides en `vw` (voir règle de
-       base `header.nav nav a` plus haut), donc plus de palier "entre deux"
-       où ça déborde encore. `flex-wrap` reste en toute dernière sécurité :
-       si ça ne suffisait vraiment pas, le menu repasse sur 2 lignes au
-       lieu de disparaître hors cadre, plutôt que de rester invisible. */
-    header.nav{ padding-left: var(--unit); padding-right: var(--unit); flex-wrap:wrap; row-gap:6px; }
-    header.nav nav{ flex-wrap:wrap; justify-content:flex-end; }
   }
 </style>
 
@@ -600,11 +633,14 @@
 
 <header class="nav grid-pattern">
   <a class="mark" href="#cover" aria-label="Retour en haut"><img src="assets/logo-black.png" alt="LT Design"></a>
-  <nav>
+  <nav id="navLinks">
     <a href="#travaux">Travaux</a>
     <a href="#parcours">Parcours</a>
     <a href="#contact">Contact</a>
   </nav>
+  <button type="button" class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
 <main>
@@ -971,8 +1007,30 @@
         e.preventDefault();
         target.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
       }
+      closeNav();
     });
   });
+
+  /* menu mobile : bouton hamburger qui ouvre/ferme le panneau de liens. */
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  function closeNav(){
+    if (!navToggle || !navLinks) return;
+    navToggle.setAttribute('aria-expanded', 'false');
+    navLinks.classList.remove('is-open');
+  }
+  if (navToggle && navLinks){
+    navToggle.addEventListener('click', function(){
+      var open = navToggle.getAttribute('aria-expanded') === 'true';
+      navToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+      navLinks.classList.toggle('is-open', !open);
+    });
+    /* referme si l'écran repasse en largeur desktop (le panneau mobile
+       resterait sinon "ouvert" en mémoire, invisible mais actif). */
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 640) closeNav();
+    });
+  }
 })();
 </script>
 
