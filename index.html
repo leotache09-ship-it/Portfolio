@@ -37,6 +37,10 @@
     font-family: "Roboto", -apple-system, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
+    /* garde-fou : garantit que le swipe vertical n'est jamais capturé par
+       un élément (carte, visuel, etc.) qui ne devrait gérer que des
+       gestes horizontaux ou aucun geste du tout. */
+    touch-action: pan-y;
   }
   img{ max-width:100%; display:block; }
   [hidden]{ display:none !important; }
@@ -594,8 +598,8 @@
        déclarée plus bas dans le fichier, l'emporterait quand même —
        piège déjà rencontré pour le header, voir "Pièges connus" plus
        haut dans CLAUDE.md). */
-    .parcours-track{ height:auto; }
-    .parcours-stage{ position:static; height:auto; display:block; }
+    .parcours-track{ height:auto; overflow:visible; }
+    .parcours-stage{ position:static; height:auto; display:block; overflow:visible; }
     .shots{ flex-direction:column; }
     .cf-row{ grid-template-columns:1fr; }
     .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }

@@ -208,6 +208,21 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Retour client : "toujours quelque chose qui bloque" après
+  le correctif ci-dessous. Vérifié en profondeur : un `scrollTo`
+  programmatique direct atteint bien le footer/contact sans accroc (donc
+  la mise en page/la hauteur réelle du document n'est plus en cause), ce
+  qui pointe plutôt vers le geste tactile lui-même. Aucun gestionnaire
+  `touchmove`/`preventDefault` trouvé dans le code qui pourrait intercepter
+  un swipe vertical. Durcit quand même par prudence : `touch-action:pan-y`
+  sur `body` (garantit qu'aucun élément ne puisse jamais capturer le swipe
+  vertical) et `overflow:visible` sur `.parcours-track`/`.parcours-stage`
+  en mobile (`overflow:hidden` était un reliquat de la version épinglée,
+  inutile maintenant que la section est en flux normal). **Si ça persiste
+  malgré tout après ce commit, forte suspicion de cache navigateur** :
+  contrairement à desktop (Ctrl+Maj+R), un téléphone doit être testé en
+  fermant complètement l'onglet/l'appli et en le rouvrant, un simple
+  "retour" ou "actualiser" ne suffit souvent pas sur mobile.
 - 2026-10-01 — Le passage à `svh` ne suffisait pas : toujours impossible
   d'atteindre Contact sur téléphone ("bug vers Mon parcours"). Au lieu de
   continuer à ajuster l'épinglage, applique la leçon déjà tirée pour les
