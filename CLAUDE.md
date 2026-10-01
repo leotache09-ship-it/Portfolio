@@ -208,6 +208,13 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Retour client : descendre fonctionne, mais remonter se
+  bloque en arrivant en bas (les couleurs qui s'activent — "dégradés" —
+  semblent en cause). Sur demande explicite, retire en plus toutes les
+  animations d'apparition de "Mon parcours" sur mobile (fondu des étapes
+  de la timeline, halo des points sur la carte du canton) : tout est
+  visible d'emblée, sans transition, en plus de ne plus être épinglé.
+  Uniquement mobile, desktop inchangé (toujours animé).
 - 2026-10-01 — Retour client : "toujours quelque chose qui bloque" après
   le correctif ci-dessous. Vérifié en profondeur : un `scrollTo`
   programmatique direct atteint bien le footer/contact sans accroc (donc

@@ -600,6 +600,14 @@
        haut dans CLAUDE.md). */
     .parcours-track{ height:auto; overflow:visible; }
     .parcours-stage{ position:static; height:auto; display:block; overflow:visible; }
+    /* retire aussi toutes les animations d'apparition de "Mon parcours"
+       (fondu des étapes, halo des points sur la carte) : en plus de ne
+       plus être épinglée, la section ne doit plus rien animer du tout au
+       scroll sur mobile — tout est visible d'emblée, sans transition. */
+    html.js .tl-item{ opacity:1; transform:none; transition:none; }
+    html.js .tl-item::before{ transition:none; }
+    html.js .map-dot{ opacity:1; transition:none; }
+    html.js .map-dot .halo{ transform:scale(1); transition:none; }
     .shots{ flex-direction:column; }
     .cf-row{ grid-template-columns:1fr; }
     .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }
