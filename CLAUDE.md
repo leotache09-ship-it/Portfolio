@@ -208,6 +208,16 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Header `Travaux/Parcours/Contact` toujours invisible sur
+  téléphone malgré deux correctifs précédents par palier fixe (640px puis
+  480px) : abandonne l'approche par palier pour une taille et un
+  espacement **fluides en `vw`** (`clamp(.5rem, 2.3vw, .72rem)` etc.),
+  directement dans la règle de base plutôt qu'en surcharge de media query
+  — le texte se resserre en continu avec la largeur réelle de l'écran, il
+  n'y a donc plus de largeur de téléphone "entre deux paliers" où ça
+  débordait encore. Le `max` du clamp reproduit exactement l'ancienne
+  taille desktop, donc aucun changement au-dessus de ~640px. `flex-wrap`
+  reste en toute dernière sécurité.
 - 2026-10-01 — Mobile, retours client après test sur téléphone réel :
   - Header `Travaux/Parcours/Contact` toujours invisible malgré le
     resserrement précédent : ajoute `-webkit-text-size-adjust:100%`

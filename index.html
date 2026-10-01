@@ -54,10 +54,19 @@
     background-color: rgba(13,13,15,.82); backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--line);
   }
-  header.nav .mark{ display:flex; align-items:center; cursor:pointer; }
+  header.nav .mark{ display:flex; align-items:center; cursor:pointer; flex:none; }
   header.nav .mark img{ height:22px; width:auto; display:block; filter: invert(1); }
-  header.nav nav{ display:flex; gap: clamp(14px,3vw,32px); }
-  header.nav nav a{ text-decoration:none; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; font-weight:500; color: var(--ink-soft); }
+  /* gap, taille et espacement des lettres sont fonction de vw (pas de
+     paliers fixes par breakpoint) : le texte se resserre en continu avec
+     l'écran, donc il n'y a jamais de largeur de téléphone "entre deux"
+     paliers où ça déborde encore. `white-space:nowrap` + `flex-shrink:0`
+     empêchent un mot de se couper tout seul au milieu. */
+  header.nav nav{ display:flex; gap: clamp(6px, 3vw, 32px); min-width:0; }
+  header.nav nav a{
+    text-decoration:none; text-transform:uppercase; font-weight:500; color: var(--ink-soft);
+    font-size: clamp(.5rem, 2.3vw, .72rem); letter-spacing: clamp(.01em, .3vw, .12em);
+    white-space:nowrap; flex-shrink:0;
+  }
   header.nav nav a:hover{ color: var(--blue); }
 
   section{ position:relative; }
@@ -543,26 +552,15 @@
     html.js .timeline .tl-item::before{ display:none; }
     html.js .timeline .tl-item.active ul{ max-height:160px; }
     #progress{ display:none; }
-    header.nav nav{ gap:16px; }
-    header.nav nav a{ font-size:.64rem; }
-  }
-
-  @media (max-width:480px){
-    /* sur les téléphones étroits, "Travaux / Parcours / Contact" débordait
-       du cadre et restait invisible (texte en majuscules + letter-spacing
-       large, plus l'agrandissement automatique du texte par certains
-       navigateurs mobiles). Resserré au maximum + `flex-wrap` en filet de
-       sécurité : si jamais ça ne tient toujours pas sur un très petit
-       écran, ça repasse sur deux lignes au lieu de disparaître hors cadre.
-       Placé après le bloc @media(max-width:760px) ci-dessus pour gagner la
-       cascade (même sélecteur, même spécificité : le dernier déclaré
-       l'emporte). */
-    header.nav{
-      padding-left: var(--unit); padding-right: var(--unit);
-      flex-wrap:wrap; row-gap:6px;
-    }
-    header.nav nav{ gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-    header.nav nav a{ font-size:.54rem; letter-spacing:.02em; }
+    /* "Travaux / Parcours / Contact" déborde du cadre et reste invisible
+       malgré plusieurs resserrements par palier fixe (640px, 480px) : la
+       taille/l'espacement sont maintenant fluides en `vw` (voir règle de
+       base `header.nav nav a` plus haut), donc plus de palier "entre deux"
+       où ça déborde encore. `flex-wrap` reste en toute dernière sécurité :
+       si ça ne suffisait vraiment pas, le menu repasse sur 2 lignes au
+       lieu de disparaître hors cadre, plutôt que de rester invisible. */
+    header.nav{ padding-left: var(--unit); padding-right: var(--unit); flex-wrap:wrap; row-gap:6px; }
+    header.nav nav{ flex-wrap:wrap; justify-content:flex-end; }
   }
 </style>
 
