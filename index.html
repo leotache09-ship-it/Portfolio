@@ -1264,3 +1264,52 @@ var TRAVAUX_FAMILIES = [
   tick();
 })();
 </script>
+
+<script>
+/*
+ * Lecture robuste des vidéos des cartes travaux (Meublon, Flow State).
+ * `autoplay` seul ne suffit pas toujours : certains navigateurs (surtout
+ * mobiles, mode économie de données, ou vidéo positionnée hors-écran via
+ * `transform` au premier rendu) ne démarrent jamais la lecture malgré
+ * l'attribut. On relance explicitement .play() dès qu'une vidéo entre dans
+ * le viewport, puis on retente une dernière fois à la première interaction
+ * de l'utilisateur (geste requis par la plupart des politiques d'autoplay).
+ */
+(function(){
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reducedMotion) return;
+
+  function tryPlay(v){
+    if (v && v.paused) { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+  }
+
+  function wireVideos(){
+    var vids = document.querySelectorAll('.tv-card-vid');
+    if (!vids.length) return;
+
+    if ('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){ if (entry.isIntersecting) tryPlay(entry.target); });
+      }, { threshold: .1 });
+      vids.forEach(function(v){ io.observe(v); tryPlay(v); });
+    } else {
+      vids.forEach(tryPlay);
+    }
+
+    var retryOnce = function(){
+      vids.forEach(tryPlay);
+      ['pointerdown','touchstart','scroll','keydown'].forEach(function(evt){
+        window.removeEventListener(evt, retryOnce);
+      });
+    };
+    ['pointerdown','touchstart','scroll','keydown'].forEach(function(evt){
+      window.addEventListener(evt, retryOnce, { passive: true, once: true });
+    });
+  }
+
+  /* les <video> sont injectées en JS par le script des travaux ci-dessus,
+     qui s'exécute juste avant celui-ci dans l'ordre du document : elles
+     existent donc déjà quand ce script tourne. */
+  wireVideos();
+})();
+</script>

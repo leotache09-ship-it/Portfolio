@@ -184,6 +184,14 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Section "Autres projets" allégée : retire le numéro
+  d'eyebrow, le libellé "Autres projets", le titre "À voir aussi" et la
+  date sous chaque carte (ne reste que l'image + le nom). Ajoute une
+  relance robuste de lecture pour les vidéos des cartes travaux (Meublon,
+  Flow State) et pour la vidéo héros de `meublon.html` : `autoplay` seul
+  ne suffit pas toujours selon le navigateur/les réglages, donc un
+  `IntersectionObserver` relance `.play()` à l'entrée dans le viewport,
+  avec une dernière tentative à la première interaction utilisateur.
 - 2026-10-01 — Corrige la navigation "Portfolio"/"Retour au portfolio" :
   les cartes de `#travaux` n'avaient pas d'`id`, donc les liens
   `index.html#<slug>` retombaient en haut de page au lieu de scroller

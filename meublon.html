@@ -396,8 +396,6 @@
 
   <!-- ══ 05 · autres projets ══ -->
   <section class="block">
-    <p class="eyebrow"><span class="num">05</span> Autres projets</p>
-    <h2 class="section-title">À voir aussi</h2>
     <div class="more-grid">
       <a class="more-card" href="cervin.html">
         <span class="more-media">
@@ -407,7 +405,6 @@
         </span>
         <span class="more-info">
           <span class="more-name">Flow State</span>
-          <span class="more-date">Juin 2026</span>
         </span>
       </a>
       <a class="more-card" href="fragments.html">
@@ -418,7 +415,6 @@
         </span>
         <span class="more-info">
           <span class="more-name">Fragments<br>of Silence</span>
-          <span class="more-date">Mars 2026</span>
         </span>
       </a>
     </div>
@@ -441,5 +437,28 @@
   toTop();
   window.addEventListener('load', toTop);
   window.addEventListener('pageshow', toTop);
+})();
+</script>
+<script>
+/* `autoplay` seul ne suffit pas toujours (mode économie de données, etc.) :
+   on relance explicitement la lecture quand la vidéo entre dans le
+   viewport, puis une dernière fois à la première interaction. */
+(function(){
+  var v = document.getElementById('meublonFilm');
+  if (!v || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function tryPlay(){ if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function(){}); } }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) tryPlay(); });
+    }, { threshold: .1 }).observe(v);
+  }
+  tryPlay();
+  var retryOnce = function(){
+    tryPlay();
+    ['pointerdown','touchstart','scroll','keydown'].forEach(function(evt){ window.removeEventListener(evt, retryOnce); });
+  };
+  ['pointerdown','touchstart','scroll','keydown'].forEach(function(evt){
+    window.addEventListener(evt, retryOnce, { passive: true, once: true });
+  });
 })();
 </script>
