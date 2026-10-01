@@ -520,6 +520,16 @@
   .contact-foot-social svg{ width:17px; height:17px; }
   footer{ text-align:center; padding: var(--unit) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
 
+  /* Parcours/Contact/footer n'avaient pas leur propre couleur de fond :
+     ils affichaient simplement le fond du <body>, piloté en JS par le
+     dégradé des travaux (voir #travaux plus bas). Si ce script reste
+     "coincé" sur une couleur de catégorie au lieu de revenir au noir de
+     base une fois les travaux dépassés (observé sur téléphone : fond
+     violet qui persiste derrière Parcours et Contact), tout ce qui suit
+     héritait de la mauvaise couleur. Leur donner leur propre fond uni les
+     rend immunisés contre ce bug, quelle qu'en soit la cause exacte. */
+  #parcours, #contact, footer{ background-color: var(--paper); }
+
   /* ---- parcours (séquence bloquée au scroll, desktop uniquement) ---- */
   #parcours{ position:relative; border-top:1px solid var(--line); }
   /* `svh` (small viewport height) plutôt que `vh` : sur mobile, `100vh`

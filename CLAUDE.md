@@ -208,6 +208,21 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Retour client (capture d'écran) : fond violet (couleur
+  "Marques fictives") qui persistait derrière Parcours et le formulaire
+  Contact sur téléphone, au lieu de redevenir noir. Cause : ces sections
+  n'avaient jamais leur propre couleur de fond, elles affichaient
+  simplement celle du `<body>`, pilotée en JS par le dégradé des travaux —
+  si ce script reste "coincé" sur une couleur de catégorie au lieu de
+  revenir au noir de base une fois les travaux dépassés, tout ce qui suit
+  hérite de la mauvaise couleur. Corrigé en donnant à `#parcours`,
+  `#contact` et `footer` leur propre `background-color: var(--paper)` —
+  immunisés contre ce bug quelle qu'en soit la cause exacte côté JS.
+  Vérifié : même en forçant le fond du body à rester violet, ces trois
+  sections restent correctement noires. S'applique partout (pas
+  seulement mobile), sans rien changer visuellement là où ça marchait
+  déjà (la couleur de secours est identique à celle du body à cet
+  endroit).
 - 2026-10-01 — Retour client : descendre fonctionne, mais remonter se
   bloque en arrivant en bas (les couleurs qui s'activent — "dégradés" —
   semblent en cause). Sur demande explicite, retire en plus toutes les
