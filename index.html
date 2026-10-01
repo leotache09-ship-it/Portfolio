@@ -439,6 +439,14 @@
     .tv-card-media{ width:38vw; }
     .tv-title-card{ width:84vw; }
     .tv-cat-arrow{ width:36px; }
+    /* les cartes sont plus petites sur mobile, donc chaque catégorie
+       occupe moins de hauteur qu'au desktop : le dégradé de fond (calé
+       sur le centre de chaque catégorie, voir #travaux plus bas) changeait
+       de couleur trop vite par rapport au défilement, sans vraiment avoir
+       le temps de se poser sur une couleur pleine avant la suivante.
+       Plus de respiration verticale entre catégories pour laisser le
+       dégradé suivre confortablement. */
+    .tv-cat{ padding: calc(var(--unit)*7) 0; }
     /* écran étroit : le portrait plein-hauteur mange toute la largeur et
        chevauche le carré "Mes travaux" — on le réduit et on le remonte.
        Maquette validée par le client : "Mes travaux." devient un bandeau

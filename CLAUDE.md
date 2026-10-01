@@ -208,6 +208,16 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — Confirmé : plus de blocage au scroll. Dernier réglage
+  demandé : sur mobile, les cartes travaux sont plus petites qu'au
+  desktop, donc chaque catégorie occupait moins de hauteur de page — le
+  dégradé de fond (calé sur le centre de chaque catégorie) changeait de
+  couleur trop vite par rapport au défilement et n'avait jamais vraiment
+  le temps de se stabiliser sur une couleur pleine avant la suivante.
+  Augmente l'espacement vertical entre catégories sur mobile
+  (`.tv-cat{padding}` : `var(--unit)*4.5` → `*7`) pour laisser au dégradé
+  le temps de suivre confortablement. Uniquement mobile, desktop
+  inchangé.
 - 2026-10-02 — Retour client persistant : "je ne peux pas remonter la
   page" (scroll vers le haut bloqué) malgré tous les correctifs
   précédents. Suspect principal identifié : le script qui plafonne la
