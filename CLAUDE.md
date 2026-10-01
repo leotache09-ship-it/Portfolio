@@ -208,6 +208,15 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Mobile : le portrait passe devant le carré "Mes travaux."
+  (`z-index:4` contre `2`) au lieu de derrière. Pendant le scroll, le
+  carré grandit (jusqu'à prendre tout l'écran) pendant que le portrait
+  s'efface, et comme le carré passait devant, il semblait "couper" le
+  corps en pleine transition. Le portrait reste maintenant au premier
+  plan et se fond proprement par-dessus, sans jamais être tranché par le
+  bord du carré. Uniquement sur mobile — la version desktop garde l'ordre
+  inverse (le carré doit passer devant le nom/portrait en grandissant,
+  comportement voulu, voir "Hero" plus haut).
 - 2026-10-01 — Mobile : le carré "Mes travaux." chevauchait la tête du
   portrait (son bord bas tombait 30px plus bas que le haut du portrait).
   Corrigé en calculant le bas du carré avec exactement la même expression

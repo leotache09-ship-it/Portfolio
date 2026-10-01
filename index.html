@@ -395,6 +395,13 @@
        chevauchement (le carré coupait la tête du portrait). */
     .cover-portrait-link{ height: clamp(190px, 34vh, 300px); }
     .cover-hint{ bottom: calc(clamp(190px, 34vh, 300px) + var(--unit)*1.5); }
+    /* sur mobile, le carré doit grandir DERRIÈRE le portrait, jamais devant :
+       au scroll, le carré grossit pendant que le portrait s'efface, et comme
+       le carré passait devant (z-index plus haut), il semblait "couper" le
+       corps pendant la transition. Le portrait reste maintenant toujours au
+       premier plan et se fond proprement par-dessus le carré qui grandit. */
+    .cover-portrait-link{ z-index:4; }
+    .cover-hint{ z-index:2; }
   }
 
   @media (prefers-reduced-motion: reduce){
