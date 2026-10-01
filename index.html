@@ -1079,8 +1079,16 @@
   /* plafonne la vitesse de scroll (molette/trackpad) pour laisser le temps
      de voir les animations liées au défilement : le scroll ne s'arrête
      JAMAIS (on reste toujours en mouvement fluide), il est juste lissé et
-     plafonné au lieu de sauter instantanément d'un gros delta de molette. */
+     plafonné au lieu de sauter instantanément d'un gros delta de molette.
+     Strictement réservé aux appareils avec un pointeur "fin" (souris /
+     trackpad) : sur un appareil tactile, ce script ne doit jamais tourner
+     — un `addEventListener('wheel', ..., {passive:false})` qui appelle
+     `preventDefault()` est le seul endroit du site qui prend la main sur
+     le scroll natif, donc le premier suspect en cas de blocage au scroll
+     sur téléphone, même si les évènements `wheel` ne sont normalement
+     censés être émis que par une molette/un trackpad. */
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
 
   var target = window.scrollY;
   var ticking = false;

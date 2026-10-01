@@ -208,6 +208,17 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — Retour client persistant : "je ne peux pas remonter la
+  page" (scroll vers le haut bloqué) malgré tous les correctifs
+  précédents. Suspect principal identifié : le script qui plafonne la
+  vitesse de scroll molette/trackpad (`addEventListener('wheel', ...,
+  {passive:false})` + `preventDefault()`) est le SEUL endroit du site qui
+  prend la main sur le scroll natif. En théorie les évènements `wheel` ne
+  sont émis que par une souris/un trackpad, jamais par un doigt sur un
+  écran tactile — mais par prudence, ce script est maintenant strictement
+  réservé aux appareils à pointeur fin (`(hover: none), (pointer: coarse)`
+  → ne s'exécute pas du tout). Vérifié : s'exécute toujours normalement
+  sur un pointeur fin (desktop), donc aucun changement là où ça marchait.
 - 2026-10-01 — Retour client (capture d'écran) : fond violet (couleur
   "Marques fictives") qui persistait derrière Parcours et le formulaire
   Contact sur téléphone, au lieu de redevenir noir. Cause : ces sections
