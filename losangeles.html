@@ -146,6 +146,24 @@
   @media (prefers-reduced-motion: reduce){
     .frame img{ transition:none; opacity:1; transform:none; }
   }
+
+  /* ---- autres projets ---- */
+  .more-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: calc(var(--unit)*1.5) calc(var(--unit)*2); margin-top: var(--unit); }
+  .more-card{ display:block; text-decoration:none; color:inherit; }
+  .more-media{ position:relative; display:block; overflow:hidden; border-radius:5px; border:1px solid var(--line); background: var(--card); aspect-ratio: 4/5; }
+  .more-media img{ width:100%; height:100%; object-fit:cover; display:block; transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+  .more-veil{ position:absolute; inset:0; background: rgba(10,10,10,.55); opacity:0; transition: opacity .3s cubic-bezier(.2,.7,.2,1); pointer-events:none; }
+  .more-cta{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:"Roboto Mono"; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:#fff; opacity:0; transform:translateY(6px); transition: opacity .25s cubic-bezier(.2,.7,.2,1) .04s, transform .3s cubic-bezier(.2,.7,.2,1) .04s; pointer-events:none; }
+  .more-cta span{ border-bottom:1px solid rgba(255,255,255,.6); padding-bottom:3px; }
+  .more-card:hover .more-media img{ transform: scale(1.06); }
+  .more-card:hover .more-veil{ opacity:1; }
+  .more-card:hover .more-cta{ opacity:1; transform:none; }
+  .more-info{ display:block; margin-top:10px; }
+  .more-name{ display:block; font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1rem,2vw,1.2rem); line-height:1.12; }
+  .more-date{ display:block; margin-top:5px; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); }
+  @media (prefers-reduced-motion: reduce){
+    .more-media img, .more-veil, .more-cta{ transition-duration:.01ms; }
+  }
 </style>
 
 <style>
@@ -295,6 +313,36 @@
           <span class="swatch" style="background:#ffffff" title="#ffffff"></span>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ══ 04 · autres projets ══ -->
+  <section class="block">
+    <p class="eyebrow"><span class="num">04</span> Autres projets</p>
+    <h2 class="section-title">À voir aussi</h2>
+    <div class="more-grid">
+      <a class="more-card" href="chearn.html">
+        <span class="more-media">
+          <img src="assets/chearn/cover.jpg" alt="Chearn" loading="lazy">
+          <span class="more-veil"></span>
+          <span class="more-cta"><span>Voir plus</span></span>
+        </span>
+        <span class="more-info">
+          <span class="more-name">Chearn</span>
+          <span class="more-date">Avril 2026</span>
+        </span>
+      </a>
+      <a class="more-card" href="afmbb.html">
+        <span class="more-media">
+          <img src="assets/afmbb/logo.jpg" alt="AFMBB" loading="lazy">
+          <span class="more-veil"></span>
+          <span class="more-cta"><span>Voir plus</span></span>
+        </span>
+        <span class="more-info">
+          <span class="more-name">AFMBB</span>
+          <span class="more-date">Avril 2026</span>
+        </span>
+      </a>
     </div>
   </section>
 

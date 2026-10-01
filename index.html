@@ -324,6 +324,7 @@
   .tv-card{
     flex:0 0 auto; text-decoration:none; color:inherit;
     display:flex; align-items:center; gap: calc(var(--unit)*.7);
+    scroll-margin-top: calc(var(--unit)*4); /* évite que le header fixe cache la carte visée par un lien #ancre */
   }
   .tv-card--rev{ flex-direction:row-reverse; }
   .tv-card, .tv-card *{ -webkit-user-drag:none; }
@@ -1148,7 +1149,14 @@ var TRAVAUX_FAMILIES = [
         ? '<img class="tv-card-peek" src="' + p.peek + '" alt="" aria-hidden="true" loading="lazy" draggable="false">'
         : '';
       var veilCta = '<span class="tv-card-veil"></span><span class="tv-card-cta"><span>Voir plus</span></span>';
-      return '<a class="tv-card' + (reversed ? ' tv-card--rev' : '') + (isVideo ? ' tv-card--video' : '') + '" href="' + p.href + '" style="--glow:' + fam.color + '">' +
+      /* id = le nom de fichier du projet (ex. "richol" pour richol.html) : c'est
+         sur cet id que pointent les liens "Portfolio"/"Retour au portfolio" des
+         pages projet (index.html#richol). Sans lui, le navigateur ne trouve
+         aucune cible et retombe en haut de page au lieu de scroller jusqu'à la
+         bonne carte — d'où une navigation qui semblait ne "marcher pas tout le
+         temps". */
+      var id = p.href.replace(/\.html$/, '');
+      return '<a id="' + id + '" class="tv-card' + (reversed ? ' tv-card--rev' : '') + (isVideo ? ' tv-card--video' : '') + '" href="' + p.href + '" style="--glow:' + fam.color + '">' +
           '<span class="tv-card-info">' +
             '<span class="tv-card-name">' + p.name + '</span>' +
             '<span class="tv-card-date">' + p.date + '</span>' +

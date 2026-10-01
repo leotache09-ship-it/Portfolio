@@ -128,6 +128,30 @@ survol), pilotée par rAF. Au survol direct, un contour bleu net
 (`drop-shadow` supplémentaire) s'ajoute en CSS pur. Cliquable, mène à
 `apropos.html`.
 
+### Navigation "Portfolio" / "Retour au portfolio" (bug corrigé)
+Chaque page projet a un lien retour vers `index.html#<slug>` (ex.
+`index.html#richol`), censé scroller jusqu'à la carte du projet dans
+`#travaux`. **Ce lien ne marchait pas de façon fiable** car les cartes
+(`.tv-card`) sont générées en JS (`TRAVAUX_FAMILIES`) sans aucun `id` — le
+navigateur ne trouvait donc jamais la cible et retombait simplement en
+haut de la page d'accueil. Corrigé en ajoutant `id="<slug>"` sur chaque
+`.tv-card` (dérivé de `p.href` dans le script des travaux) + un
+`scroll-margin-top` sur `.tv-card` pour que le header fixe ne masque pas
+la carte une fois atteinte.
+
+### Section "Autres projets" (bas de chaque page projet)
+Les 11 pages projet ont désormais, juste avant le footer, une section
+"Autres projets" qui reprend le format des cartes "cover" de la page
+d'accueil (image + nom + date), avec au survol un voile gris semi-
+transparent et un texte "Voir plus" — mêmes classes `.more-card` /
+`.more-media` / `.more-veil` / `.more-cta` sur toutes les pages, stylées
+avec les variables CSS déjà définies par chaque page (`--card`, `--line`,
+`--ink-faint`) donc sans dépendance à un thème particulier. Chaque page
+suggère les deux projets suivants dans l'ordre canonique du portfolio
+(même ordre que `TRAVAUX_FAMILIES` dans `index.html`, en boucle), pour
+que les 11 pages se renvoient les unes aux autres sans jamais suggérer le
+projet déjà affiché.
+
 ### Formulaire de contact
 Envoi via [FormSubmit](https://formsubmit.co) vers `leo.tache.09@gmail.com`
 (pas de backend à héberger). **La toute première soumission déclenche un
@@ -160,6 +184,12 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-01 — Corrige la navigation "Portfolio"/"Retour au portfolio" :
+  les cartes de `#travaux` n'avaient pas d'`id`, donc les liens
+  `index.html#<slug>` retombaient en haut de page au lieu de scroller
+  jusqu'au bon projet. Ajoute une section "Autres projets" (2 suggestions,
+  format "cover" avec voile gris + "Voir plus" au survol) en bas des 11
+  pages projet.
 - 2026-09-24 — Remplace `assets/leo-portrait.webp` par la nouvelle photo
   fournie par le client (même chemin, donc hero et `apropos.html` se mettent
   à jour ; le navigateur peut garder l'ancienne image en cache : Ctrl+Maj+R).
