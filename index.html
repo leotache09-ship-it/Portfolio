@@ -1393,7 +1393,27 @@ var TRAVAUX_FAMILIES = [
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function(){ vh = window.innerHeight; }, 150);
   }, { passive: true });
-  window.addEventListener('orientationchange', function(){ vh = window.innerHeight; });
+  window.addEventListener('orientationchange', function(){ vh = window.innerHeight; computeMaxTravel(); });
+
+  /* la distance de défilement horizontal de chaque bande (maxTravel) ne
+     dépend que de la largeur des cartes et de l'écran, jamais du scroll —
+     la calculer une fois (puis au resize) au lieu de relire
+     `getComputedStyle` + `scrollWidth`/`clientWidth` à CHAQUE frame évite
+     un gros travail de mise en page répété 60×/seconde, qui pouvait saccader
+     le défilement (surtout perceptible en remontant vite sur mobile). */
+  function computeMaxTravel(){
+    bands.forEach(function(band){
+      var stripCs = getComputedStyle(band.strip);
+      var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
+      band.maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
+    });
+  }
+  computeMaxTravel();
+  /* re-mesure une fois la page (polices, mises en page) vraiment stabilisée,
+     au cas où les largeurs auraient très légèrement bougé entre le premier
+     calcul et la fin du chargement. */
+  window.addEventListener('load', computeMaxTravel, { once: true });
+  window.addEventListener('resize', computeMaxTravel, { passive: true });
 
   function tick(){
     var scrollY = window.scrollY;
@@ -1404,9 +1424,7 @@ var TRAVAUX_FAMILIES = [
       var total = vh + rect.height;
       var raw = (vh - rect.top) / total; /* 0 = touche le bas, 1 = a fini de sortir en haut */
       var hp = Math.max(0, Math.min(1, (raw - REVEAL_START) / (REVEAL_END - REVEAL_START)));
-      var stripCs = getComputedStyle(band.strip);
-      var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
-      var maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
+      var maxTravel = band.maxTravel || 0;
       /* bande inversée (row-reverse en CSS) : le titre est physiquement à
          droite au repos, donc le trajet est le miroir du trajet normal. */
       var x = band.reversed ? (hp * maxTravel - maxTravel) : (-hp * maxTravel);

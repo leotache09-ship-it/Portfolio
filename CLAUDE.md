@@ -208,6 +208,19 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — Retour client : "presque", léger bug/saccade en remontant
+  dans les travaux (défilement horizontal des cartes + dégradé de fond).
+  Optimisation de perf trouvée dans `tick()` (#travaux) : `getComputedStyle`
+  + lecture de `scrollWidth`/`clientWidth` pour calculer la distance de
+  défilement horizontal de chaque bande (`maxTravel`) tournaient à CHAQUE
+  frame, pour les 5 bandes, en continu, pour toute la durée de vie de la
+  page — un gros travail de mise en page répété 60×/seconde qui pouvait
+  saccader le scroll, surtout perceptible pendant un geste rapide (flick
+  vers le haut) sur un CPU mobile plus faible. `maxTravel` ne dépend que de
+  la largeur des cartes/de l'écran, jamais du scroll : calculé une seule
+  fois (+ au resize, + une fois après le chargement complet par sécurité)
+  au lieu de chaque frame. Vérifié : les cartes continuent de glisser
+  normalement avec les valeurs mises en cache.
 - 2026-10-02 — Confirmé : plus de blocage au scroll. Dernier réglage
   demandé : sur mobile, les cartes travaux sont plus petites qu'au
   desktop, donc chaque catégorie occupait moins de hauteur de page — le
