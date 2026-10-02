@@ -691,6 +691,9 @@
     .tv-title-card, .tv-card{ scroll-snap-align:start; }
     .tv-strip{ scroll-padding-left: var(--gutter); }
     .tv-cat{ padding: calc(var(--unit)*3) 0; }
+    /* « Plus de travaux » remonte sur la fin du dégradé vert → noir de la dernière bande */
+    .tv-more{ position:relative; z-index:1; margin-top: calc(var(--unit)*-3.5); padding-top:0; }
+    .tv-cat:last-child{ padding-bottom: calc(var(--unit)*5.5); }
     .tv-title-card{ width:58vw; } /* laisse dépasser le 1er projet : on voit qu'on peut swiper */
   }
   @media (max-width:640px){
@@ -1466,7 +1469,7 @@ var TRAVAUX_FAMILIES = [
       var next = i < bands.length - 1 ? bands[i + 1].color : '#0D0D0F';
       /* 1re bande : le bleu du bandeau « Ma vitrine. » du hero se prolonge jusqu'au milieu de la bande (pas de fondu depuis le noir) */
       var from = i ? mix(prev, band.color) + ' 0%, ' + band.color + ' 30%' : band.color + ' 0%, ' + band.color + ' 50%';
-      band.el.style.background = 'linear-gradient(to bottom, ' + from + ', ' + band.color + ' 70%, ' + mix(band.color, next) + ' 100%)';
+      band.el.style.background = 'linear-gradient(to bottom, ' + from + ', ' + band.color + ' 70%, ' + (i < bands.length - 1 ? mix(band.color, next) : next) + ' 100%)';
       band.el.style.borderTop = 'none';
     });
   }
