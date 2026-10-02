@@ -153,7 +153,7 @@
       out += '<section class="block"><div class="more-grid">' + others.map(function(p){
         return '<a class="more-card" href="' + esc(p.href) + '"><span class="more-media">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(D.plain(p.name)) + '" loading="lazy"' + (p.imgStyle ? ' style="' + esc(p.imgStyle) + '"' : '') + '>' : '') +
           '<span class="more-veil"></span><span class="more-cta"><span>Voir plus</span></span></span><span class="more-name">' + p.name + '</span></a>';
-      }).join('') + '</div><div class="more-all"><a href="projets.html">Tous les projets</a></div></section>';
+      }).join('') + '</div><div class="more-all"><a href="projets.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>Tous les projets</a></div></section>';
     }
     return out;
   }
