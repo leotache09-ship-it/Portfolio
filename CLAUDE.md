@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Icônes du hero : portée réduite (~3-4 em au lieu de 5-6) et Photoshop passe à DROITE du portrait (Ai et Id restent à gauche). Pages projet d'origine : le logo/"LT Design" en haut à droite (`.mark`, qui était un `<span>` inerte) devient un lien vers `index.html` (`header.nav a.mark` sans soulignement).
+
 - 2026-10-02 — Hero : au survol (même variable `--glow` que la lueur bleue), trois icônes Ps / Ai / Id sortent de derrière le portrait en s'éloignant, floues au début (blur qui diminue) avec chacune un halo flou coloré (`.cover-apps` / `.cover-app--ps|ai|id`, CSS pur piloté par `--glow` ; invisibles au repos, donc aussi sur tactile et avec `prefers-reduced-motion`). Ce sont des pastilles stylisées (texte + couleurs Adobe), pas les logos officiels. Pour tester sans souris : forcer `.cover-portrait-link{--glow:1 !important}`.
 
 - 2026-10-02 — Palette de couleurs du mode créateur : retire le bouton `EyeDropper` natif du navigateur (il grisait tout l'écran, non stylable) ; la pipette est maintenant le panneau « prendre dans une image », compact (image max 300px, vignettes 44px) et placé AU-DESSUS du carré de couleur. Non testé en navigateur après coup (le test exige le faux Supabase) : syntaxe vérifiée seulement.
