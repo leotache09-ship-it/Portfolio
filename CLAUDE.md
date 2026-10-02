@@ -208,6 +208,32 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — (1) Mobile : le portrait devient petit et se place à droite
+  du prénom "Léo" (même hauteur qu'une ligne du nom, ratio 667/788 fixé sur
+  le lien) — plus grand, centré ni coupé par le bandeau. (2) `apropos.html`
+  : les boutons CV / Portfolio physique sont désactivés ("Pas encore
+  disponible · en cours de finalisation") ; AUCUN PDF n'est dans le dépôt
+  (le CV contient adresse/téléphone/date de naissance — un push avec ce
+  fichier avait été bloqué, le client a préféré attendre). (3) Formulaire
+  de contact : envoi via l'endpoint AJAX de FormSubmit
+  (`https://formsubmit.co/ajax/leo.tache.09@gmail.com`, JSON) avec message
+  de confirmation/erreur dans la page (`#cfStatus`), honeypot `_honey`,
+  `_captcha=false`, champ `email` (devient automatiquement l'adresse de
+  réponse). Sans JS : POST classique vers FormSubmit. **À faire une fois
+  par Léo : le premier envoi déclenche un email d'activation de FormSubmit
+  à valider dans la boîte `leo.tache.09@gmail.com`, sinon les messages ne
+  sont pas livrés** (le formulaire affichera alors l'erreur). Testé avec un
+  faux `fetch` uniquement (aucun vrai message envoyé).
+- 2026-10-02 — `apropos.html` : ajoute en bas deux boutons de
+  téléchargement (`assets/cv-leo-tache.pdf`, copie de `Bureau/cv.pdf`, et
+  `assets/portfolio-physique-leo-tache.pdf`, copie de `Bureau/portfolio
+  leo tahce.pdf`, 24 pages, 11 Mo) ; **le CV publié contient adresse,
+  téléphone et date de naissance** (publication voulue par le client).
+  Retire la section Loisirs, les tags "Communication visuelle" et "CPNV
+  Sainte-Croix", et TOUTES les lignes horizontales de la page (bordures
+  de sections, séparateurs des compétences, traits des eyebrows, bordure
+  du header). Numérotation : 01 Expérience, 02 Compétences, 03 Ce que je
+  fais. Pour mettre à jour un PDF : recopier le fichier au même chemin.
 - 2026-10-02 — `apropos.html`, retours client : logo (`logo-black.png`,
   inversé) en haut à gauche du header (lien vers `index.html`), le lien
   "← Portfolio" passe à droite ; Expérience = un court texte ("lancé en
