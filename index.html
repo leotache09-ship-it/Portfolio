@@ -171,6 +171,16 @@
   .cover-app--ps{ --c:#31A8FF; --bg:#001E36; --tx:3.9; --ty:-3.4; --rot:35deg; }
   .cover-app--ai{ --c:#FF9A00; --bg:#330000; --tx:-3.6; --ty:-2; --rot:30deg; }
   .cover-app--id{ --c:#FF3366; --bg:#49021F; --tx:-4.1; --ty:.9; --rot:-25deg; }
+  /* petite flèche blanche qui pointe le portrait : indique qu'il est cliquable
+     (mène à la page « à propos »). Légère oscillation, coupée si mouvement réduit. */
+  .cover-point{
+    position:absolute; left:-9%; top:58%; z-index:3; pointer-events:none;
+    width: clamp(46px, 5.6vw, 80px); height:auto; overflow:visible;
+    animation: coverPoint 1.7s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,.45));
+  }
+  @keyframes coverPoint{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(7px,4px); } }
+  @media (prefers-reduced-motion: reduce){ .cover-point{ animation:none; } }
   .cover-portrait{
     position:relative; z-index:1; display:block; margin:0 auto;
     height:100%; width:auto; object-fit:contain;
@@ -667,7 +677,8 @@
      chaque catégorie est une bande de couleur unie dont les projets se
      font défiler au doigt (scroll horizontal natif, avec accroche douce). */
   @media (max-width:760px){
-    body{ touch-action: pan-x pan-y; }
+    html{ overflow-x:hidden; }
+    body{ touch-action: pan-y; } /* la page ne se déplace jamais en horizontal ; seules les bandes (ci-dessous) le font */
     .tv-strip{
       overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch;
       scroll-snap-type:x proximity; scrollbar-width:none; overscroll-behavior-x:contain;
@@ -681,6 +692,10 @@
     .tv-strip{ scroll-padding-left: var(--gutter); }
     .tv-cat{ padding: calc(var(--unit)*3) 0; }
     .tv-title-card{ width:58vw; } /* laisse dépasser le 1er projet : on voit qu'on peut swiper */
+  }
+  @media (max-width:640px){
+    /* le portrait déborde l'écran sur mobile : la flèche va dans l'espace libre à gauche du cou */
+    .cover-point{ left:13.5%; top:25%; width:52px; }
   }
 </style>
 
@@ -740,6 +755,7 @@
       <span class="cover-portrait-glow" aria-hidden="true"></span>
       <span class="cover-apps" aria-hidden="true"><span class="cover-app cover-app--ps"><span>Ps</span></span><span class="cover-app cover-app--ai"><span>Ai</span></span><span class="cover-app cover-app--id"><span>Id</span></span></span>
       <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
+      <svg class="cover-point" viewBox="0 0 80 50" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8 C26 4 54 14 72 38"/><path d="M57 36 L72 38 L68 23"/></svg>
       <span class="cover-portrait-cta" aria-hidden="true"><span>À propos</span></span>
     </a>
     <div class="cover-hint" id="coverHint"><div class="cover-hint-bg" id="coverHintBg"></div><span>Ma vitrine.</span></div>
@@ -854,6 +870,10 @@
               <article class="tl-item current" data-reach="4">
                 <div class="tl-head"><h3>CPNV, médiamatique</h3><span class="tl-date mono">En cours</span></div>
                 <p class="tl-loc">Sainte-Croix · CFC de médiamaticien</p>
+              </article>
+              <article class="tl-item current" data-reach="4">
+                <div class="tl-head"><h3>Lancement en freelance</h3><span class="tl-date mono">Dès mars 2026</span></div>
+                <p class="tl-loc">LT Design · graphiste indépendant, en parallèle des cours</p>
               </article>
             </div>
           </div>
