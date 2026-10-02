@@ -310,7 +310,7 @@
   #travaux{ position:relative; z-index:4; }
   .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
-  .tv-more{ padding: calc(var(--unit)*4) var(--gutter) 0; display:flex; justify-content:center; }
+  .tv-more{ padding: calc(var(--unit)*2) var(--gutter) calc(var(--unit)*4); display:flex; justify-content:center; }
   .tv-more a{
     display:inline-flex; align-items:center; gap:10px; text-decoration:none;
     font-family:"Roboto Mono"; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
@@ -720,14 +720,15 @@
   </section>
 
   <section id="travaux">
+
+    <div id="tvCats"></div>
+
     <div class="tv-more">
       <a href="projets.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>
         Plus de travaux
       </a>
     </div>
-
-    <div id="tvCats"></div>
 
 
     <noscript>

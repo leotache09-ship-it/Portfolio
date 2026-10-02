@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Bouton "Plus de travaux" remis en BAS de la section travaux (après la dernière catégorie), centré, style pilule (le placer en haut n'était pas voulu).
+
 - 2026-10-02 — "Mon parcours" : le trait de la carte va maintenant simplement Mézières → Lausanne → Sainte-Croix (plus d'aller-retour dans Lausanne). Le chemin garde 4 segments pour rester synchronisé avec les 5 étapes de la timeline : les deux segments du milieu sont de longueur nulle (`C356,417 356,417 356,417`), le marqueur reste donc à Lausanne pendant ces étapes. Bouton "Plus de travaux" : déplacé EN HAUT et centré dans la section travaux, au même style pilule que "Tous les projets" des pages projet (icône grille seule, sans flèche).
 
 - 2026-10-02 — Icônes du hero : portée réduite (~3-4 em au lieu de 5-6) et Photoshop passe à DROITE du portrait (Ai et Id restent à gauche). Pages projet d'origine : le logo/"LT Design" en haut à droite (`.mark`, qui était un `<span>` inerte) devient un lien vers `index.html` (`header.nav a.mark` sans soulignement).
