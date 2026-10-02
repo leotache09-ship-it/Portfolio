@@ -25,6 +25,7 @@
     padding:var(--unit) var(--gutter); background:rgba(13,13,15,.88); backdrop-filter:blur(6px);
   }
   header.nav .mark img{ height:22px; width:auto; filter:invert(1); }
+  header.nav .right{ display:flex; align-items:center; }
   header.nav a.back{ display:flex; align-items:center; gap:8px; text-decoration:none; font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
   header.nav a.back:hover{ color:var(--accent); }
   header.nav a.back svg{ width:13px; height:13px; }
@@ -83,7 +84,7 @@
 
 <header class="nav">
   <a class="mark" href="index.html" aria-label="LT Design, retour au portfolio"><img src="assets/logo-black.png" alt="LT Design"></a>
-  <a class="back" href="index.html#travaux"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
+  <div class="right"><a class="back" href="index.html#travaux"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a></div>
 </header>
 
 <main>
@@ -108,81 +109,69 @@
   Léo Tâche · <a href="confidentialite.html">Confidentialité</a>
 </footer>
 
+<script src="assets/config.js"></script>
+<script src="assets/lt-data.js"></script>
+<script src="assets/lt-auth.js"></script>
 <script>
-/* Même liste et mêmes catégories que TRAVAUX_FAMILIES dans index.html
-   (couleurs comprises). Pour ajouter un projet : l'ajouter ici ET là-bas. */
-var FAMILIES = [
-  { id:'clients',  title:'Des vrais clients', color:'#189CD8', projects:[
-    { name:'Chearn', href:'chearn.html', img:'assets/chearn/cover.jpg', date:'Avril 2026' },
-    { name:'AFMBB', href:'afmbb.html', img:'assets/afmbb/logo.jpg', date:'Avril 2026' },
-    { name:"La Partie<br>d'Ailleurs", href:'partie-ailleurs.html', img:'assets/partie-ailleurs/thumb.jpg', date:'Mars 2026' } ] },
-  { id:'fictives', title:'Marques fictives', color:'#A855F7', projects:[
-    { name:'Richol', href:'richol.html', img:'assets/richol/fraise-can.jpg', date:'Avril 2026' },
-    { name:'Meublon', href:'meublon.html', img:'assets/meublon/hover.jpg', date:'Sept. 2026' } ] },
-  { id:'affiches', title:'Affiches', color:'#E5B800', projects:[
-    { name:'Flow State', href:'cervin.html', img:'assets/cervin/poster.jpg', date:'Juin 2026' },
-    { name:'Fragments<br>of Silence', href:'fragments.html', img:'assets/fragments/mockup.jpg', date:'Mars 2026' } ] },
-  { id:'sport',    title:'Sport design', color:'#FF5A1F', projects:[
-    { name:'Damien Riat', href:'riat.html', img:'assets/riat/poster.jpg', date:'Sept. 2026' },
-    { name:'Morgan Rogers', href:'rogers.html', img:'assets/rogers/poster.jpg', date:'Sept. 2026' } ] },
-  { id:'edition',  title:'Édition & print', color:'#16A085', projects:[
-    { name:'Sérigraphie &amp;<br>Tampographie', href:'serigraphie.html', img:'assets/serigraphie/cover-mockup.jpg', date:'Juin 2026' },
-    { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', date:'Mars 2026' } ] }
-];
-
-var MONTHS = { 'janv.':1, 'févr.':2, 'mars':3, 'avril':4, 'mai':5, 'juin':6, 'juil.':7, 'août':8, 'sept.':9, 'oct.':10, 'nov.':11, 'déc.':12 };
-function dateKey(label){ /* "Sept. 2026" -> 2026*12+9 */
-  var m = label.toLowerCase().split(/\s+/);
-  return (parseInt(m[1], 10) || 0) * 12 + (MONTHS[m[0]] || 0);
-}
-
+/* Les projets d'origine et ceux créés dans le mode administrateur viennent
+   de assets/lt-data.js (LT_DATA) : plus de liste à tenir à jour ici. */
 (function(){
+  var D = window.LT_DATA;
   var grid = document.getElementById('grid');
   var filters = document.getElementById('filters');
-  var html = '', total = 0;
-  FAMILIES.forEach(function(f){
-    f.projects.forEach(function(p){
-      total++;
-      var alt = p.name.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
-      html += '<a class="card" href="' + p.href + '" data-cat="' + f.id + '" data-ts="' + dateKey(p.date) + '" data-name="' + alt.replace(/"/g, '') + '" data-i="' + total + '" style="--c:' + f.color + '">' +
-        '<span class="media"><img src="' + p.img + '" alt="' + alt + '" loading="lazy"><span class="veil"><span>Voir plus</span></span></span>' +
-        '<span class="info"><span class="name">' + p.name + '</span>' +
-        '<span class="meta"><i class="dot"></i>' + f.title + ' · ' + p.date + '</span></span></a>';
-    });
-  });
-  grid.innerHTML = html;
+  var sortSel = document.getElementById('sort');
+  var current = 'all';
 
-  var btns = '<button type="button" aria-pressed="true" data-cat="all">Tous (' + total + ')</button>';
-  FAMILIES.forEach(function(f){
-    btns += '<button type="button" aria-pressed="false" data-cat="' + f.id + '" style="--c:' + f.color + '"><i class="dot"></i>' + f.title + ' (' + f.projects.length + ')</button>';
-  });
-  filters.innerHTML = btns;
+  function render(projects){
+    var counts = {};
+    var html = '';
+    projects.forEach(function(p, i){
+      var cat = D.catOf(p.cat);
+      counts[cat.id] = (counts[cat.id] || 0) + 1;
+      var alt = D.plain(p.name);
+      html += '<a class="card" href="' + p.href + '" data-cat="' + cat.id + '" data-ts="' + D.dateKey(D.plain(p.date)) + '" data-name="' + D.esc(alt) + '" data-i="' + i + '" style="--c:' + cat.color + '">' +
+        '<span class="media">' + (p.img ? '<img src="' + D.esc(p.img) + '" alt="' + D.esc(alt) + '" loading="lazy">' : '') + '<span class="veil"><span>Voir plus</span></span></span>' +
+        '<span class="info"><span class="name">' + p.name + '</span>' +
+        '<span class="meta"><i class="dot"></i>' + D.esc(cat.title) + ' · ' + p.date + '</span></span></a>';
+    });
+    grid.innerHTML = html;
+
+    var btns = '<button type="button" aria-pressed="true" data-cat="all">Tous (' + projects.length + ')</button>';
+    D.cats.forEach(function(c){
+      if (!counts[c.id]) return;
+      btns += '<button type="button" aria-pressed="false" data-cat="' + c.id + '" style="--c:' + c.color + '"><i class="dot"></i>' + D.esc(c.title) + ' (' + counts[c.id] + ')</button>';
+    });
+    filters.innerHTML = btns;
+    apply(counts[current] ? current : 'all');
+    sortCards(sortSel.value);
+  }
 
   function apply(cat){
-    Array.prototype.forEach.call(filters.children, function(b){
-      b.setAttribute('aria-pressed', b.getAttribute('data-cat') === cat ? 'true' : 'false');
-    });
-    Array.prototype.forEach.call(grid.children, function(c){
-      c.hidden = !(cat === 'all' || c.getAttribute('data-cat') === cat);
-    });
+    current = cat;
+    Array.prototype.forEach.call(filters.children, function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-cat') === cat ? 'true' : 'false'); });
+    Array.prototype.forEach.call(grid.children, function(c){ c.hidden = !(cat === 'all' || c.getAttribute('data-cat') === cat); });
     try { history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); } catch(e){}
   }
-  var sortSel = document.getElementById('sort');
+
   function sortCards(mode){
     var cards = Array.prototype.slice.call(grid.children);
     var byName = function(a, b){ return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'), 'fr', { sensitivity:'base' }); };
     var byIdx = function(a, b){ return a.getAttribute('data-i') - b.getAttribute('data-i'); };
     var byTs = function(dir){ return function(a, b){ return (dir * (a.getAttribute('data-ts') - b.getAttribute('data-ts'))) || byIdx(a, b); }; };
-    var cmp = { 'default': byIdx, 'date-desc': byTs(-1), 'date-asc': byTs(1),
-                'az': byName, 'za': function(a, b){ return byName(b, a); } }[mode] || byIdx;
+    var cmp = { 'default': byIdx, 'date-desc': byTs(-1), 'date-asc': byTs(1), 'az': byName, 'za': function(a, b){ return byName(b, a); } }[mode] || byIdx;
     cards.sort(cmp).forEach(function(c){ grid.appendChild(c); });
   }
-  sortSel.addEventListener('change', function(){ sortCards(sortSel.value); });
 
-  filters.addEventListener('click', function(e){
-    var b = e.target.closest('button'); if (b) apply(b.getAttribute('data-cat'));
-  });
+  sortSel.addEventListener('change', function(){ sortCards(sortSel.value); });
+  filters.addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) apply(b.getAttribute('data-cat')); });
+
   var start = (location.hash || '').slice(1);
-  apply(FAMILIES.some(function(f){ return f.id === start; }) ? start : 'all');
+  if (D.cats.some(function(c){ return c.id === start; })) current = start;
+
+  render(D.legacy);                       /* affichage immédiat : projets d'origine */
+  if (D.configured()){                    /* puis ajout des projets créés dans le mode administrateur */
+    D.loadAll().then(function(all){ if (all.length > D.legacy.length) render(all); }).catch(function(){});
+  }
 })();
 </script>
+<script src="assets/star.js"></script>

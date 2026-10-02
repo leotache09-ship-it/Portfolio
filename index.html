@@ -65,7 +65,7 @@
      l'écran, donc il n'y a jamais de largeur de téléphone "entre deux"
      paliers où ça déborde encore. `white-space:nowrap` + `flex-shrink:0`
      empêchent un mot de se couper tout seul au milieu. */
-  header.nav nav{ display:flex; gap: clamp(6px, 3vw, 32px); min-width:0; }
+  header.nav nav{ display:flex; gap: clamp(6px, 3vw, 32px); min-width:0; margin-left:auto; }
   header.nav nav a{
     text-decoration:none; text-transform:uppercase; font-weight:500; color: var(--ink-soft);
     font-size: clamp(.5rem, 2.3vw, .72rem); letter-spacing: clamp(.01em, .3vw, .12em);
@@ -420,6 +420,7 @@
     }
     header.nav nav a:last-child{ border-bottom:none; }
     .nav-toggle{
+      margin-left:auto;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       gap:5px; width:34px; height:34px; flex:none; z-index:501; position:relative;
       background:none; border:none; padding:0; cursor:pointer;
@@ -1326,8 +1327,17 @@ var TRAVAUX_FAMILIES = [
   var ARROW = '<svg class="tv-cat-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12H40M28 2L40 12L28 22"/></svg>';
 
   var bands = []; /* { el, strip, row } — pour le pilotage continu au scroll ci-dessous */
+  var afterRebuild = null; /* défini plus bas (pilotage au scroll) */
 
-  TRAVAUX_FAMILIES.forEach(function(fam, ci){
+  /* Construit (ou reconstruit) les bandes à partir d'une liste de familles.
+     Appelé une fois avec la liste d'origine ci-dessous ; le mode
+     administrateur peut le rappeler (window.LT_rebuildTravaux) avec une
+     composition différente de la page principale. `bands` est vidé et
+     rempli EN PLACE : tous les écouteurs ci-dessous le voient. */
+  function build(families){
+  root.innerHTML = '';
+  bands.length = 0;
+  families.forEach(function(fam, ci){
     var dir = (ci % 2 === 0) ? 1 : -1; /* +1 = flèche à droite, -1 = flèche à gauche (alterne à chaque famille) */
 
     var reversed = dir === -1; /* Marques fictives + Sport design : tout est mis en miroir */
@@ -1352,7 +1362,7 @@ var TRAVAUX_FAMILIES = [
          aucune cible et retombe en haut de page au lieu de scroller jusqu'à la
          bonne carte — d'où une navigation qui semblait ne "marcher pas tout le
          temps". */
-      var id = p.href.replace(/\.html$/, '');
+      var id = p.slug || p.href.replace(/\.html$/, '');
       return '<a id="' + id + '" class="tv-card' + (reversed ? ' tv-card--rev' : '') + (isVideo ? ' tv-card--video' : '') + '" href="' + p.href + '" style="--glow:' + fam.color + '">' +
           '<span class="tv-card-info">' +
             '<span class="tv-card-name">' + p.name + '</span>' +
@@ -1376,11 +1386,24 @@ var TRAVAUX_FAMILIES = [
     bands.push({ el: cat, color: fam.color, reversed: reversed, strip: cat.querySelector('.tv-strip'), row: cat.querySelector('.tv-strip-row') });
   });
 
-  if (reducedMotion) return; /* la media query CSS empile tout verticalement, sans mouvement — chaque bande garde la couleur unie posée ci-dessus */
-
   /* en mouvement normal, c'est le fond de la page qui dégrade en continu
      (ci-dessous) : les bandes elles-mêmes redeviennent transparentes. */
-  bands.forEach(function(band){ band.el.style.background = 'transparent'; });
+  if (!reducedMotion) bands.forEach(function(band){ band.el.style.background = 'transparent'; });
+  }
+
+  build(TRAVAUX_FAMILIES);
+  window.LT_rebuildTravaux = function(families){
+    build(families);
+    if (afterRebuild) afterRebuild();
+    /* les liens #slug (retour depuis une page projet) visent des cartes qui
+       viennent d'être recréées : on réapplique l'ancre. */
+    var id = decodeURIComponent((location.hash || '').slice(1));
+    var t = id && document.getElementById(id);
+    if (t && root.contains(t)) t.scrollIntoView({ block:'center' });
+    if (window.LT_wireVideos) window.LT_wireVideos();
+  };
+
+  if (reducedMotion) return; /* la media query CSS empile tout verticalement, sans mouvement — chaque bande garde la couleur unie posée ci-dessus */
 
   function hexToRgb(hex){
     hex = hex.replace('#','');
@@ -1527,6 +1550,7 @@ var TRAVAUX_FAMILIES = [
       requestAnimationFrame(loop);
     }
   }
+  afterRebuild = function(){ computeMaxTravel(); onActivity(); };
   update();
   onActivity();
   ['scroll', 'touchstart', 'touchmove', 'touchend', 'resize', 'orientationchange']
@@ -1579,7 +1603,9 @@ var TRAVAUX_FAMILIES = [
 
   /* les <video> sont injectées en JS par le script des travaux ci-dessus,
      qui s'exécute juste avant celui-ci dans l'ordre du document : elles
-     existent donc déjà quand ce script tourne. */
+     existent donc déjà quand ce script tourne. Re-câblable après une
+     reconstruction de la page principale (mode administrateur). */
+  window.LT_wireVideos = wireVideos;
   wireVideos();
 })();
 </script>
@@ -1638,3 +1664,20 @@ var TRAVAUX_FAMILIES = [
   });
 })();
 </script>
+
+<script src="assets/config.js"></script>
+<script src="assets/lt-data.js"></script>
+<script src="assets/lt-auth.js"></script>
+<script>
+/* Page principale pilotée par le mode administrateur : si Supabase est
+   configuré ET qu'une composition a été enregistrée, on remplace la liste
+   d'origine (déjà affichée) par celle-ci. Sinon, rien ne bouge. En cas
+   d'erreur réseau, la liste d'origine reste affichée. */
+(function(){
+  if (!window.LT_DATA || !LT_DATA.configured() || !window.LT_rebuildTravaux) return;
+  LT_DATA.loadHome().then(function(families){
+    if (families && families.length) LT_rebuildTravaux(families);
+  }).catch(function(){});
+})();
+</script>
+<script src="assets/star.js"></script>

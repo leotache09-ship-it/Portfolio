@@ -206,8 +206,59 @@ avec certitude, soit ajouter un paramètre anti-cache directement sur le
 `src` du script (temporairement, pour le test), soit injecter le script
 dynamiquement avec un `?fresh=<timestamp>`.
 
+## Mode administrateur / mini-CMS (Supabase)
+
+Hébergement prévu : Infomaniak (leotache.ch), site statique. Les données
+dynamiques vivent dans **Supabase** (guide : `supabase/INSTALLATION.md`,
+SQL : `supabase/setup.sql`, clés publiques dans `assets/config.js`, vide
+tant que non configuré → le site se comporte exactement comme avant).
+
+- **Étoile bleue** en haut à droite (`assets/star.js`, sur index, projets et
+  pages projet générées) → fenêtre nom + mot de passe → `admin.html`.
+  Le "nom" devient `<nom>@admin.leotache.ch` (compte créé à la main dans
+  Supabase, inscriptions désactivées). Auth via `assets/lt-auth.js`
+  (supabase-js chargé à la demande depuis jsdelivr, jamais pour un visiteur).
+- **`admin.html` + `assets/admin.js`** : Projets (liste, modèles, éditeur à
+  blocs avec aperçu en direct dans un iframe `projet.html?preview=1` par
+  `postMessage`), Page principale (ajouter / retirer / remplacer / ordonner
+  les projets par catégorie). Types de blocs et modèles (identité, affiche,
+  sport, édition, vierge) : `assets/admin-templates.js`.
+- **`projet.html` + `assets/project-render.js` + `assets/project-page.css`** :
+  page publique d'un projet créé (`projet.html?p=<slug>`), thème clair/sombre
+  + couleur d'accent par projet. Cover et image au survol = `cover_url` /
+  `hover_url`.
+- **`assets/lt-data.js`** : données partagées (copie des 11 projets
+  d'origine `LEGACY` + lecture publique REST de Supabase, sans bibliothèque).
+  `projets.html` s'en sert ; `index.html` garde sa liste inline
+  `TRAVAUX_FAMILIES` (sécurité : l'accueil ne dépend d'aucun fichier
+  externe) → **un projet d'origine ajouté à la main doit l'être dans
+  `index.html` ET `lt-data.js`**.
+- **Accueil** : `build(families)` du script des travaux est ré-appelable
+  (`window.LT_rebuildTravaux`). Si une composition existe dans
+  `site_settings` (clé `home`, `{categories:{clients:[slug…]}}`), elle
+  remplace la liste d'origine après chargement ; sinon / en cas d'erreur
+  réseau, rien ne bouge. Ancre `#slug` réappliquée après reconstruction.
+- Sécurité : la clé `anon` est publique par conception ; les règles RLS
+  (lecture publique des projets publiés, écriture réservée aux
+  utilisateurs authentifiés) font la sécurité. **Désactiver les
+  inscriptions dans Supabase** (sinon n'importe qui pourrait créer un
+  compte "authentifié").
+- Testé avec un faux Supabase en mémoire (connexion, création depuis un
+  modèle, envoi d'images, aperçu, publication, placement/remplacement sur
+  l'accueil, répertoire) ; **jamais testé contre un vrai Supabase** — à
+  valider après l'installation.
+
 ## Changelog
 
+- 2026-10-02 — **Mode administrateur (mini-CMS)** : voir la section dédiée
+  ci-dessus. Ajoute `admin.html`, `projet.html`, `assets/{config,lt-data,
+  lt-auth,star,admin,admin-templates,project-render}.js`,
+  `assets/project-page.css`, `supabase/{setup.sql,INSTALLATION.md}`.
+  Refactor de `index.html` : construction des bandes travaux dans
+  `build()`, id de carte = slug, vidéos re-câblables, étoile + fusion avec
+  la base. `projets.html` lit désormais `lt-data.js` et inclut les projets
+  créés. Page de confidentialité mise à jour (Supabase, Infomaniak,
+  session admin).
 - 2026-10-02 — `projets.html` : menu "Trier" (ordre du portfolio, date du
   plus récent / du plus ancien, alphabétique A→Z / Z→A), combinable avec
   le filtre par catégorie. La date des projets ("Sept. 2026") est

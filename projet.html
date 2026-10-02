@@ -1,0 +1,85 @@
+<!doctype html>
+<title>Projet, LT Design</title>
+<meta charset="utf-8">
+<link rel="icon" type="image/png" href="assets/logo-black.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/project-page.css">
+
+<header class="nav">
+  <a class="mark" href="index.html" aria-label="LT Design, retour au portfolio"><img id="markImg" src="assets/logo-black.png" alt="LT Design"></a>
+  <div class="right">
+    <a class="back" id="backLink" href="index.html"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
+  </div>
+</header>
+
+<main id="app"><div class="lt-state"><p>Chargement…</p></div></main>
+
+<footer>
+  <a id="footBack" href="index.html">← Retour au portfolio</a><br>
+  Léo Tâche · <a href="confidentialite.html">Confidentialité</a>
+</footer>
+
+<script src="assets/config.js"></script>
+<script src="assets/lt-data.js"></script>
+<script src="assets/lt-auth.js"></script>
+<script src="assets/project-render.js"></script>
+<script>
+(function(){
+  var app = document.getElementById('app');
+  var params = new URLSearchParams(location.search);
+  var slug = params.get('p') || '';
+  var preview = params.get('preview') === '1';
+  var lightboxLoaded = false;
+
+  function state(title, text){
+    app.innerHTML = '<div class="lt-state"><h1>' + LT_DATA.esc(title) + '</h1><p>' + LT_DATA.esc(text) + '</p><p><a href="index.html" style="color:var(--accent)">← Retour au portfolio</a></p></div>';
+  }
+
+  function show(project, others, id){
+    LT_RENDER.applyTheme(project.theme);
+    /* le logo noir devient blanc sur un thème sombre */
+    document.getElementById('markImg').style.filter = (project.theme && project.theme.mode === 'dark') ? 'invert(1)' : 'none';
+    document.title = (project.title || 'Projet').replace(/\*/g, '') + ', LT Design';
+    app.innerHTML = LT_RENDER.renderBody(project, others);
+    var back = 'index.html#' + (project.slug || '');
+    document.getElementById('backLink').href = back;
+    document.getElementById('footBack').href = back;
+    if (!preview && !lightboxLoaded){
+      lightboxLoaded = true;
+      var s = document.createElement('script'); s.src = 'assets/lightbox.js'; document.body.appendChild(s);
+    }
+    if (!preview && id && window.LT_AUTH && LT_AUTH.looksLoggedIn() && !document.querySelector('.lt-edit')){
+      var a = document.createElement('a'); a.className = 'lt-edit'; a.href = 'admin.html#/projet/' + encodeURIComponent(id); a.textContent = 'Modifier';
+      document.body.appendChild(a);
+    }
+  }
+
+  /* aperçu en direct depuis l'éditeur (même origine uniquement) */
+  if (preview){
+    window.addEventListener('message', function(e){
+      if (e.origin !== location.origin || !e.data || e.data.type !== 'lt-preview') return;
+      show(e.data.project || {}, e.data.others || [], null);
+    });
+    if (window.parent !== window) window.parent.postMessage({ type: 'lt-preview-ready' }, location.origin);
+    return;
+  }
+
+  /* l'étoile de connexion (même script que sur l'accueil) */
+  var st = document.createElement('script'); st.src = 'assets/star.js'; document.body.appendChild(st);
+
+  if (!slug){ state('Projet introuvable', "Aucun projet n'est indiqué dans l'adresse."); return; }
+  if (!LT_DATA.configured()){ state('Projet introuvable', "Cette page n'est pas disponible pour le moment."); return; }
+
+  LT_DATA.fetchProject(slug).then(function(project){
+    if (!project){ state('Projet introuvable', "Ce projet n'existe pas ou n'est plus publié."); return; }
+    LT_DATA.loadAll().then(function(all){
+      show(project, LT_RENDER.pickOthers(all, project.slug), project.id);
+    });
+  }).catch(function(){
+    state('Connexion impossible', 'Le projet ne peut pas être chargé pour le moment. Réessaie dans un instant.');
+  });
+})();
+</script>
