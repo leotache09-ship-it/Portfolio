@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Hero : interligne "Léo / Tâche" augmenté (desktop `.86`→`1.04`, mobile `1.08`→`1.2`). Le lien "Travaux" du header de `index.html` mène désormais à `projets.html` (répertoire de tous les projets) au lieu de scroller vers `#travaux`. Site publié via Netlify (auto-déploiement à chaque push sur `main`) sur leotache.ch.
+
 - 2026-10-02 — Retire l'étoile bleue : le mode créateur s'ouvre en ajoutant `_mode-createur` au lien (`index.html#_mode-createur` ouvre la fenêtre de connexion ; `/_mode-createur/` redirige vers `admin.html`). Docs et page de confidentialité mises à jour.
 
 - 2026-10-02 — Mode créateur : (1) session en `sessionStorage` (il faut se reconnecter à chaque nouvelle visite/onglet) ; (2) recadrage/zoom des images (`frame` {zoom,fx,fy}, appliqué via `D.frameCss`, nécessite un ratio fixe ; option « Agrandir au clic » = `noZoom`) y compris sur les couvertures/survols (`meta.cover_frame/hover_frame` -> `imgStyle/peekStyle`) ; (3) dossier automatique par projet dans le stockage Supabase (`projects/<meta.folder>/`, pas dans le dossier `assets/` du dépôt) ; (4) sélecteur de couleur multicolore (carré SV + teinte + hex + pipette sur image) ; (5) import des 11 projets existants : `assets/legacy-projects.json` (généré par un convertisseur BeautifulSoup depuis les pages HTML) -> bouton « Importer » dans l'admin, arrivent en brouillons, les pages d'origine restent en ligne ; une fois publié, le projet DB remplace l'entrée legacy (dédoublonnage par slug dans `LT_DATA.loadAll`). Limite : Meublon/Flow State perdent la vidéo de carte d'accueil une fois publiés (carte = image de couverture). Vérifié avec un Supabase simulé (jamais testé avec le vrai).
