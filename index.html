@@ -1197,10 +1197,26 @@
     var fadeT = Math.max(0, Math.min(1, (t - GROW_END) / (FADE_END - GROW_END)));
     bg.style.opacity = String(1 - fadeT);
     bg.style.visibility = fadeT >= 1 ? 'hidden' : 'visible';
-    requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
+  /* même principe que le dégradé des travaux : mise à jour directe à
+     chaque évènement (aucune dépendance à une chaîne rAF qui peut mourir
+     si un frame est perdu), plus une courte boucle de lissage qui
+     s'éteint seule 400 ms après le dernier évènement. */
+  var lastAct = 0, lastLoopTs = 0, loopRunning = false;
+  function loop(){
+    lastLoopTs = performance.now();
+    tick();
+    if (lastLoopTs - lastAct < 400){ requestAnimationFrame(loop); } else { loopRunning = false; }
+  }
+  function onAct(){
+    lastAct = performance.now();
+    tick();
+    if (!loopRunning || lastAct - lastLoopTs > 150){ loopRunning = true; requestAnimationFrame(loop); }
+  }
   tick();
+  onAct();
+  ['scroll', 'touchstart', 'touchmove', 'touchend', 'resize', 'orientationchange']
+    .forEach(function(evt){ window.addEventListener(evt, onAct, { passive: true }); });
 })();
 </script>
 
@@ -1415,7 +1431,7 @@ var TRAVAUX_FAMILIES = [
   window.addEventListener('load', computeMaxTravel, { once: true });
   window.addEventListener('resize', computeMaxTravel, { passive: true });
 
-  function tick(){
+  function update(){
     var scrollY = window.scrollY;
     var stops = [];
     var rects = []; /* un seul getBoundingClientRect() par bande et par frame,
@@ -1467,34 +1483,45 @@ var TRAVAUX_FAMILIES = [
     }
     document.body.style.backgroundColor = bg;
 
-    /* cette boucle tournait en continu, 60×/seconde, pour toute la durée
-       de vie de la page — y compris en restant immobile tout en bas sur
-       Contact, à ne rien faire de visible. Tout ce travail de fond
-       (5 lectures de mise en page par image) pouvait créer un à-coup au
-       tout début du geste quand on se remettait enfin à scroller vers le
-       haut. On s'arrête maintenant une fois largement repassé sous les
-       travaux (avec une marge d'un écran), et un simple scroll listener
-       (bien moins coûteux qu'une boucle perpétuelle) la relance dès qu'on
-       se rapproche à nouveau. */
-    var farBelow = refY > stops[stops.length - 1].y + vh;
-    if (farBelow){ running = false; return; }
-    requestAnimationFrame(tick);
   }
 
-  var running = false;
-  function startIfNeeded(){
-    if (running) return;
-    running = true;
-    requestAnimationFrame(tick);
+  /* ---- pilotage : événementiel, à l'épreuve des frames perdues ----
+     Avant : une boucle rAF qui se re-planifiait elle-même (puis, à la
+     version suivante, qui s'arrêtait/se relançait via un drapeau
+     `running`). Défaut des deux : si UN SEUL callback rAF est perdu (le
+     navigateur mobile en abandonne pendant les gestes tactiles / les
+     changements de barre d'adresse), la chaîne meurt pour de bon — ou le
+     drapeau reste bloqué sur "en cours" et plus rien ne la relance. C'est
+     ce qui cassait tout après plusieurs allers-retours de scroll : les
+     cartes ne défilaient plus et le dégradé n'apparaissait plus.
+     Maintenant : chaque évènement de scroll/toucher appelle update()
+     DIRECTEMENT (synchrone, aucune dépendance à rAF), donc rien ne peut
+     "mourir". Une courte boucle rAF n'est là que pour lisser les trous
+     entre évènements (inertie du doigt) et s'éteint toute seule 400 ms
+     après le dernier évènement — aucun coût au repos, et si un frame rAF
+     est perdu, le prochain évènement relance tout (chien de garde sur
+     l'âge du dernier tour de boucle). */
+  var lastActivity = 0, lastLoop = 0, loopOn = false;
+  function loop(){
+    var now = performance.now();
+    lastLoop = now;
+    update();
+    if (now - lastActivity < 400){ requestAnimationFrame(loop); }
+    else { loopOn = false; }
   }
-  startIfNeeded();
-  tick();
-  /* 'scroll' relance une fois le geste déjà commencé ; 'touchstart' la
-     relance dès que le doigt touche l'écran, avant même le premier pixel
-     de défilement, pour qu'il n'y ait jamais un frame de retard au tout
-     début d'un nouveau geste vers le haut. */
-  window.addEventListener('scroll', startIfNeeded, { passive: true });
-  window.addEventListener('touchstart', startIfNeeded, { passive: true });
+  function onActivity(){
+    lastActivity = performance.now();
+    update();
+    if (!loopOn || lastActivity - lastLoop > 150){
+      loopOn = true;
+      requestAnimationFrame(loop);
+    }
+  }
+  update();
+  onActivity();
+  ['scroll', 'touchstart', 'touchmove', 'touchend', 'resize', 'orientationchange']
+    .forEach(function(evt){ window.addEventListener(evt, onActivity, { passive: true }); });
+  window.addEventListener('load', onActivity, { once: true });
 })();
 </script>
 

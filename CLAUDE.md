@@ -208,6 +208,28 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — **Vraie cause du "tout se casse après plusieurs allers-
+  retours"** (cartes qui ne défilent plus, dégradé qui n'apparaît plus) :
+  les scripts de scroll (dégradé/cartes des travaux, croissance du carré
+  hero) reposaient sur une chaîne `requestAnimationFrame` qui se
+  re-planifie elle-même, puis (commit précédent) sur un drapeau `running`
+  pour l'arrêter/relancer. Dans les deux cas, **UN SEUL callback rAF perdu**
+  (les navigateurs mobiles en abandonnent pendant les gestes tactiles et
+  les changements de barre d'adresse) tue la chaîne définitivement — ou
+  laisse le drapeau bloqué sur "en cours" sans que rien ne la relance :
+  d'où un site qui marche, puis se fige au bout de quelques allers-
+  retours. Réécrit en **événementiel** : `scroll`/`touchstart`/
+  `touchmove`/`touchend`/`resize`/`orientationchange` appellent
+  `update()` DIRECTEMENT (synchrone, zéro dépendance à rAF → rien ne peut
+  mourir), plus une courte boucle rAF de lissage (inertie du doigt) qui
+  s'éteint seule 400 ms après le dernier évènement et que le prochain
+  évènement relance via un chien de garde sur l'âge du dernier tour
+  (`lastActivity - lastLoop > 150`). Plus aucun coût au repos. Même
+  traitement pour le script du carré hero. **Règle à retenir : ne jamais
+  piloter une animation au scroll avec une chaîne rAF auto-reprogrammée
+  ou un drapeau d'état — toujours des évènements + garde-fou.** Vérifié :
+  bas → haut → catégorie 3 enchaînés avec rendu forcé, couleur et
+  position corrects, aucune erreur console.
 - 2026-10-02 — Précision client : le souci apparaît en descendant jusqu'à
   Contact puis en remontant. Trouvé la vraie cause probable : la boucle
   `requestAnimationFrame` du dégradé de fond des travaux tournait en
