@@ -660,6 +660,28 @@
     .map-dot .sub{ display:none; }
     #progress{ display:none; }
   }
+
+  /* ---- TÉLÉPHONE : travaux en swipe NATIF ----
+     Sur mobile, le défilement horizontal piloté par le scroll vertical et le
+     dégradé de fond continu étaient saccadés/figés. Ici plus aucun script :
+     chaque catégorie est une bande de couleur unie dont les projets se
+     font défiler au doigt (scroll horizontal natif, avec accroche douce). */
+  @media (max-width:760px){
+    body{ touch-action: pan-x pan-y; }
+    .tv-strip{
+      overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch;
+      scroll-snap-type:x proximity; scrollbar-width:none; overscroll-behavior-x:contain;
+      touch-action: pan-x pan-y;
+    }
+    .tv-strip::-webkit-scrollbar{ display:none; }
+    .tv-strip-row, .tv-strip-row--rev{ flex-direction:row; transform:none !important; will-change:auto; }
+    .tv-title-card, .tv-strip-row--rev .tv-title-card{ justify-content:flex-start; text-align:left; }
+    .tv-cat-arrow--rev{ transform:none; }
+    .tv-title-card, .tv-card{ scroll-snap-align:start; }
+    .tv-strip{ scroll-padding-left: var(--gutter); }
+    .tv-cat{ padding: calc(var(--unit)*3) 0; }
+    .tv-title-card{ width:58vw; } /* laisse dépasser le 1er projet : on voit qu'on peut swiper */
+  }
 </style>
 
 <style>
@@ -1179,6 +1201,7 @@
   var portrait = document.querySelector('.cover-portrait-link');
   if (!hint || !bg) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(max-width:760px)').matches) return; /* mobile : bandeau fixe, pas de croissance au scroll */
 
   /* seul le fond (bg) est mis à l'échelle : le conteneur (hint), qui centre
      le texte, ne bouge jamais — le texte garde donc toujours la même taille.
@@ -1343,6 +1366,7 @@ var TRAVAUX_FAMILIES = [
   if (!root) return;
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mobileLayout = window.matchMedia('(max-width:760px)').matches; /* swipe natif, sans script de scroll (voir CSS) */
   var ARROW = '<svg class="tv-cat-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12H40M28 2L40 12L28 22"/></svg>';
 
   var bands = []; /* { el, strip, row } — pour le pilotage continu au scroll ci-dessous */
@@ -1407,7 +1431,7 @@ var TRAVAUX_FAMILIES = [
 
   /* en mouvement normal, c'est le fond de la page qui dégrade en continu
      (ci-dessous) : les bandes elles-mêmes redeviennent transparentes. */
-  if (!reducedMotion) bands.forEach(function(band){ band.el.style.background = 'transparent'; });
+  if (!reducedMotion && !mobileLayout) bands.forEach(function(band){ band.el.style.background = 'transparent'; });
   }
 
   build(TRAVAUX_FAMILIES);
@@ -1422,7 +1446,7 @@ var TRAVAUX_FAMILIES = [
     if (window.LT_wireVideos) window.LT_wireVideos();
   };
 
-  if (reducedMotion) return; /* la media query CSS empile tout verticalement, sans mouvement — chaque bande garde la couleur unie posée ci-dessus */
+  if (reducedMotion || mobileLayout) return; /* la media query CSS empile tout verticalement, sans mouvement — chaque bande garde la couleur unie posée ci-dessus */
 
   function hexToRgb(hex){
     hex = hex.replace('#','');
