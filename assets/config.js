@@ -13,5 +13,5 @@
  */
 window.LT_CONFIG = {
   SUPABASE_URL: 'https://ljwgtguirnatdbgxfyuh.supabase.co',
-  SUPABASE_ANON_KEY: ''
+  SUPABASE_ANON_KEY: 'sb_publishable_8EcBjQiLBSSnlbor9EHqog_hU4VlDiE'
 };

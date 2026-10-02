@@ -250,6 +250,15 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Supabase branché : projet `ljwgtguirnatdbgxfyuh`, clé
+  publique (publishable) dans `assets/config.js`, tables et stockage créés
+  via `supabase/setup.sql` (exécuté en 3 blocs depuis un téléphone).
+  Vérifié depuis ici : lecture publique OK (tables vides), **écriture
+  anonyme refusée par la RLS** (HTTP 401). Compte administrateur créé à la
+  main par Léo dans Supabase (jamais testé ici : la connexion n'a pas été
+  essayée avec le vrai mot de passe). Reste à tester la connexion + un
+  premier projet une fois le site en ligne. Le mot de passe n'est stocké
+  nulle part dans le dépôt.
 - 2026-10-02 — **Mode administrateur (mini-CMS)** : voir la section dédiée
   ci-dessus. Ajoute `admin.html`, `projet.html`, `assets/{config,lt-data,
   lt-auth,star,admin,admin-templates,project-render}.js`,
