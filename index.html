@@ -310,20 +310,15 @@
   #travaux{ position:relative; z-index:4; }
   .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
-  .tv-more{
-    max-width: calc(var(--tile)*18 + var(--gutter)*2);
-    margin:0 auto; padding: calc(var(--unit)*1.5) var(--gutter) calc(var(--unit)*3);
-    text-align:right;
-  }
+  .tv-more{ padding: calc(var(--unit)*4) var(--gutter) 0; display:flex; justify-content:center; }
   .tv-more a{
-    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-    font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase;
-    color:#fff; transition: color .3s;
+    display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+    font-family:"Roboto Mono"; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
+    color:#fff; border:1px solid currentColor; border-radius:999px; padding:13px 26px;
+    transition: background .25s, color .25s;
   }
-  .tv-more a:hover{ color: var(--blue); }
-  .tv-more a svg:last-child{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
-  .tv-more a:hover svg:last-child{ transform: translateX(3px); }
-  .tv-more a svg:first-child{ width:15px; height:15px; }
+  .tv-more a:hover{ background:#fff; color:#0D0D0F; }
+  .tv-more a svg{ width:1.15em; height:1.15em; }
   .tv-cat-inner{
     max-width: calc(var(--tile)*18 + var(--gutter)*2);
     margin:0 auto; padding: 0 var(--gutter);
@@ -725,15 +720,15 @@
   </section>
 
   <section id="travaux">
-    <div id="tvCats"></div>
-
     <div class="tv-more">
       <a href="projets.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>
         Plus de travaux
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
+
+    <div id="tvCats"></div>
+
 
     <noscript>
       <div class="tv3-noscript block">
@@ -771,7 +766,7 @@
                 <path class="vaud-lake" d="M522,46 L515,24 L448,8 L435,8 L350,37 L297,72 L297,84 L309,91 L371,87 L459,88 L460,82 L472,82 L522,57 Z"/>
                 <path class="vaud-lake" d="M163,303 L151,303 L142,312 L124,345 L124,355 L134,355 L144,346 L163,313 Z"/>
 
-                <path class="route-line" id="routeLine" d="M445,348 C420,370 385,398 356,417 C344,414 330,404 318,395 C328,398 340,404 349,409 C330,360 295,240 270,143"/>
+                <path class="route-line" id="routeLine" d="M445,348 C420,370 385,398 356,417 C356,417 356,417 356,417 C356,417 356,417 356,417 C340,350 295,230 270,143"/>
 
                 <g class="map-dot" data-reach="0">
                   <circle class="halo" cx="445" cy="348" r="20"/>
