@@ -208,6 +208,15 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — "Plus de travaux" (section travaux de `index.html`) ne mène
+  plus à Instagram (le lien Instagram du bas de la section Contact reste) :
+  il ouvre la nouvelle page `projets.html`, un répertoire en grille des
+  11 projets, filtrable par catégorie (Tous / Des vrais clients / Marques
+  fictives / Affiches / Sport design / Édition & print ; `#sport` etc. dans
+  l'URL pré-filtre). Icône du lien : Instagram → grille. **La liste des
+  projets est dupliquée** dans le script de `projets.html` (`FAMILIES`) et
+  dans `TRAVAUX_FAMILIES` de `index.html` : pour ajouter un projet, le
+  modifier aux deux endroits (+ les pages projet et "Autres projets").
 - 2026-10-02 — (1) **Annule** le petit portrait à droite de "Léo" sur
   mobile (malentendu client) : retour exact au portrait grand, centré et
   coupé par le bandeau — la demande réelle ("petit à droite de mon prénom")
