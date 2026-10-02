@@ -174,13 +174,13 @@
   /* petite flèche blanche qui pointe le portrait : indique qu'il est cliquable
      (mène à la page « à propos »). Légère oscillation, coupée si mouvement réduit. */
   .cover-point{
-    position:absolute; left:-9%; top:58%; z-index:3; pointer-events:none;
+    position:absolute; right:-9%; top:58%; z-index:3; pointer-events:none;
     width: clamp(46px, 5.6vw, 80px); height:auto; overflow:visible;
     animation: coverPoint 1.7s ease-in-out infinite;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,.45));
   }
-  @keyframes coverPoint{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(7px,4px); } }
-  @media (prefers-reduced-motion: reduce){ .cover-point{ animation:none; } }
+  @keyframes coverPoint{ 0%,100%{ transform:translate(0,0) scaleX(-1); } 50%{ transform:translate(-7px,4px) scaleX(-1); } }
+  @media (prefers-reduced-motion: reduce){ .cover-point{ animation:none; transform:scaleX(-1); } }
   .cover-portrait{
     position:relative; z-index:1; display:block; margin:0 auto;
     height:100%; width:auto; object-fit:contain;
@@ -694,8 +694,8 @@
     .tv-title-card{ width:58vw; } /* laisse dépasser le 1er projet : on voit qu'on peut swiper */
   }
   @media (max-width:640px){
-    /* le portrait déborde l'écran sur mobile : la flèche va dans l'espace libre à gauche du cou */
-    .cover-point{ left:13.5%; top:25%; width:52px; }
+    /* le portrait déborde l'écran sur mobile : la flèche va dans l'espace libre à droite du cou */
+    .cover-point{ right:auto; left:73%; top:20.5%; width:52px; }
   }
 </style>
 
