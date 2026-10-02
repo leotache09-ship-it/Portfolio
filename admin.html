@@ -138,6 +138,31 @@
   .cat .addrow select{ width:auto; max-width:280px; }
   .warn{ color:#ffb347; font-size:.84rem; padding:10px 16px; border-top:1px solid var(--line); }
 
+
+  /* sélecteur de couleur */
+  .swatchbtn{ width:44px; height:36px; border-radius:6px; border:1px solid var(--line); cursor:pointer; padding:0; flex:none; box-shadow:inset 0 0 0 2px rgba(0,0,0,.25); }
+  .cp-prev{ width:52px; height:44px; border-radius:6px; border:1px solid var(--line); flex:none; }
+  .cp-hex{ max-width:130px; font-family:"Roboto Mono",monospace; }
+  .cp-sv{ position:relative; height:190px; border-radius:6px; touch-action:none; cursor:crosshair; border:1px solid var(--line); }
+  .cp-th{ position:absolute; width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,.6); pointer-events:none; }
+  .cp-hue{ -webkit-appearance:none; appearance:none; width:100%; height:16px; border-radius:8px; padding:0; border:0; margin:0; background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00); }
+  .cp-hue::-webkit-slider-thumb{ -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:#fff; border:2px solid #111; cursor:pointer; }
+  .cp-hue::-moz-range-thumb{ width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid #111; cursor:pointer; }
+  .cp-presets{ display:flex; gap:6px; flex-wrap:wrap; margin:12px 0 0; }
+  .cp-pre{ width:28px; height:28px; border-radius:50%; border:1px solid var(--line); cursor:pointer; padding:0; }
+  .cp-img{ margin:14px 0 0; padding:12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); }
+  .cp-thumbs{ display:flex; gap:8px; overflow-x:auto; padding:0 0 8px; }
+  .cp-thumb{ flex:none; width:64px; height:64px; border-radius:6px; border:2px solid transparent; background:#222 center/cover no-repeat; cursor:pointer; padding:0; }
+  .cp-thumb.on{ border-color:var(--blue); }
+  .cp-cwrap{ position:relative; display:inline-block; max-width:100%; }
+  .cp-canvas{ max-width:100%; height:auto; display:block; border-radius:4px; cursor:crosshair; touch-action:none; }
+  .cp-dot{ position:absolute; width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,.7); pointer-events:none; }
+  /* zoom et cadrage */
+  .fbox{ position:relative; width:100%; max-width:260px; overflow:hidden; border-radius:6px; border:1px solid var(--line); background:#111; cursor:grab; touch-action:none; }
+  .fbox:active{ cursor:grabbing; }
+  .fbox img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none; }
+  .frame-ed input[type=range]{ width:160px; padding:0; }
+
   /* modale + toasts */
   .mback{ position:fixed; inset:0; z-index:200; background:rgba(5,5,7,.75); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:16px; overflow:auto; }
   .modal{ background:var(--card); border:1px solid var(--line); border-radius:10px; padding:22px; width:100%; max-width:760px; max-height:92vh; overflow:auto; }

@@ -148,12 +148,32 @@
     var grid = h('div', { class:'grid' });
     box.appendChild(grid);
     grid.appendChild(h('button', { class:'pcard new', type:'button', onclick:pickTemplate }, h('span', {}, h('span', { class:'plus', text:'+' }), 'Nouveau projet')));
-    sb.from('projects').select('id,slug,title,category,date_label,cover_url,published,updated_at').order('updated_at', { ascending:false })
+    sb.from('projects').select('id,slug,title,category,date_label,cover_url,published,updated_at,meta').order('updated_at', { ascending:false })
       .then(function(res){
         if (res.error) throw res.error;
         (res.data || []).forEach(function(p){ grid.appendChild(projectCard(p)); });
-        if (!(res.data || []).length) box.appendChild(h('p', { class:'hint', text:'Aucun projet créé pour l\'instant. Clique sur « Nouveau projet ».' }));
+        importPanel(box, grid, res.data || []);
       }).catch(function(e){ toast('Impossible de charger les projets : ' + errMsg(e), 'err'); });
+  }
+
+  /* proposer d'importer les 11 pages d'origine pour pouvoir les modifier */
+  function importPanel(box, grid, rows){
+    var have = rows.map(function(r){ return r.slug; });
+    fetch('assets/legacy-projects.json?v=' + Date.now()).then(function(r){ return r.json(); }).then(function(list){
+      var todo = list.filter(function(p){ return have.indexOf(p.slug) < 0; });
+      if (!todo.length) return;
+      var btn = h('button', { class:'btn primary', type:'button', text:'Importer mes ' + todo.length + ' projets existants', onclick:function(){
+        btn.disabled = true; btn.textContent = 'Import en cours…';
+        sb.from('projects').insert(todo).then(function(res){
+          if (res.error) throw res.error;
+          toast(todo.length + ' projets importés (en brouillon).', 'ok'); viewProjects();
+        }).catch(function(e){ toast('Import impossible : ' + errMsg(e), 'err'); btn.disabled = false; btn.textContent = 'Importer mes ' + todo.length + ' projets existants'; });
+      } });
+      box.insertBefore(h('div', { class:'panel', style:'margin:0 0 20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap' },
+        h('div', { style:'flex:1 1 320px' },
+          h('b', { text:'Tes pages existantes ne sont pas encore modifiables ici.' }),
+          h('p', { class:'hint', style:'margin:6px 0 0', text:'Importe-les : chaque projet (Richol, Chearn, AFMBB…) devient une page que tu peux modifier librement. Elles arrivent en BROUILLON : ton site actuel ne change pas tant que tu ne publies pas la nouvelle version.' })), btn), grid.parentNode.firstChild.nextSibling);
+    }).catch(function(){});
   }
 
   function projectCard(p){
@@ -167,6 +187,7 @@
         h('div', { class:'ac' },
           h('a', { class:'btn sm primary', href:'#/projet/' + p.id, text:'Modifier' }),
           p.published ? h('a', { class:'btn sm', href:'projet.html?p=' + encodeURIComponent(p.slug), target:'_blank', rel:'noopener', text:'Voir' }) : null,
+          (p.meta && p.meta.imported_from) ? h('a', { class:'btn sm ghost', href:p.meta.imported_from, target:'_blank', rel:'noopener', title:'La page actuellement en ligne', text:"Page d'origine" }) : null,
           h('button', { class:'btn sm danger', type:'button', text:'Supprimer', onclick:function(){ removeProject(p); } }))));
   }
 
@@ -319,12 +340,149 @@
     options.forEach(function(o){ var op = h('option', { value:o[0], text:o[1] }); if (String(obj[key] == null ? '' : obj[key]) === String(o[0])) op.selected = true; s.appendChild(op); });
     return s;
   }
+  /* ----- sélecteur de couleur : palette multicolore + pipette ----- */
+  function hexToRgb(hx){ var n = parseInt(hx.slice(1), 16); return [(n>>16)&255, (n>>8)&255, n&255]; }
+  function rgbToHex(c){ return '#' + c.map(function(v){ return ('0' + Math.round(v).toString(16)).slice(-2); }).join(''); }
+  function rgbToHsv(c){
+    var r = c[0]/255, g = c[1]/255, b = c[2]/255, mx = Math.max(r,g,b), mn = Math.min(r,g,b), d = mx - mn, hh = 0;
+    if (d){ if (mx === r) hh = ((g-b)/d) % 6; else if (mx === g) hh = (b-r)/d + 2; else hh = (r-g)/d + 4; hh *= 60; if (hh < 0) hh += 360; }
+    return { h:hh, s: mx ? d/mx : 0, v:mx };
+  }
+  function hsvToRgb(o){
+    var c = o.v * o.s, x = c * (1 - Math.abs((o.h/60) % 2 - 1)), m = o.v - c, r = 0, g = 0, b = 0, k = Math.floor(o.h/60) % 6;
+    if (k === 0){ r = c; g = x; } else if (k === 1){ r = x; g = c; } else if (k === 2){ g = c; b = x; }
+    else if (k === 3){ g = x; b = c; } else if (k === 4){ r = x; b = c; } else { r = c; b = x; }
+    return [(r+m)*255, (g+m)*255, (b+m)*255];
+  }
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+  /* toutes les images du projet en cours (pour "prendre la couleur dans une image") */
+  function projectImages(){
+    var p = state.project, out = [];
+    function push(u){ if (u && typeof u === 'string' && out.indexOf(u) < 0) out.push(u); }
+    if (!p) return out;
+    push(p.cover_url); push(p.hover_url); push((p.meta || {}).hero_image);
+    (function walk(o){
+      if (!o || typeof o !== 'object') return;
+      if (Array.isArray(o)) return o.forEach(walk);
+      Object.keys(o).forEach(function(k){
+        if ((k === 'url' || k === 'poster') && typeof o[k] === 'string' && !/\.(mp4|mov|webm)(\?|$)/i.test(o[k])) push(o[k]); else walk(o[k]);
+      });
+    })(p.blocks);
+    return out;
+  }
+
+  function openColorPicker(start, onApply){
+    var hsv = rgbToHsv(hexToRgb(R.hexOk(start) ? start : '#189CD8'));
+    var back = h('div', { class:'mback', style:'z-index:250', onmousedown:function(e){ if (e.target === back) close(); } });
+    var prev = h('div', { class:'cp-prev' });
+    var hexIn = h('input', { type:'text', maxlength:7, class:'cp-hex', 'aria-label':'Code couleur' });
+    var thumb = h('i', { class:'cp-th' });
+    var sv = h('div', { class:'cp-sv' }, thumb);
+    var hue = h('input', { type:'range', min:0, max:359, step:1, class:'cp-hue', 'aria-label':'Teinte' });
+    function cur(){ return rgbToHex(hsvToRgb(hsv)); }
+    function paint(skipHex){
+      var hx = cur();
+      prev.style.background = hx;
+      if (!skipHex) hexIn.value = hx;
+      sv.style.background = 'linear-gradient(to top,#000,rgba(0,0,0,0)),linear-gradient(to right,#fff,hsl(' + Math.round(hsv.h) + ',100%,50%))';
+      thumb.style.left = (hsv.s * 100) + '%'; thumb.style.top = ((1 - hsv.v) * 100) + '%';
+      hue.value = Math.round(hsv.h);
+    }
+    function setHex(hx){ hsv = rgbToHsv(hexToRgb(hx)); paint(); }
+    function svPick(e){
+      var r = sv.getBoundingClientRect();
+      hsv.s = clamp01((e.clientX - r.left) / r.width); hsv.v = 1 - clamp01((e.clientY - r.top) / r.height); paint();
+    }
+    var dragging = false;
+    sv.addEventListener('pointerdown', function(e){ dragging = true; sv.setPointerCapture(e.pointerId); svPick(e); e.preventDefault(); });
+    sv.addEventListener('pointermove', function(e){ if (dragging) svPick(e); });
+    sv.addEventListener('pointerup', function(){ dragging = false; });
+    sv.addEventListener('pointercancel', function(){ dragging = false; });
+    hue.addEventListener('input', function(){ hsv.h = +hue.value; paint(); });
+    hexIn.addEventListener('input', function(){
+      var v = hexIn.value.trim(); if (v[0] !== '#') v = '#' + v;
+      if (R.hexOk(v)){ hsv = rgbToHsv(hexToRgb(v)); paint(true); }
+    });
+
+    /* couleurs rapides : les couleurs du site */
+    var presets = h('div', { class:'cp-presets' });
+    ['#189CD8','#A855F7','#E5B800','#FF5A1F','#16A085','#db6661','#e0231a','#590300','#262121','#111111','#f4f8fb','#ffffff'].forEach(function(c){
+      presets.appendChild(h('button', { type:'button', class:'cp-pre', style:'background:' + c, title:c, 'aria-label':c, onclick:function(){ setHex(c); } }));
+    });
+
+    /* pipette sur l'écran (navigateurs qui la proposent) */
+    var tools = h('div', { style:'display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0' });
+    if (window.EyeDropper){
+      tools.appendChild(h('button', { class:'btn sm', type:'button', text:"Pipette (cliquer n'importe où)", onclick:function(){
+        new window.EyeDropper().open().then(function(r){ setHex(r.sRGBHex); }).catch(function(){});
+      } }));
+    }
+
+    /* prendre la couleur dans une image du projet : clic à un endroit = cette couleur */
+    var imgSec = h('div', { class:'cp-img', hidden:true });
+    var thumbs = h('div', { class:'cp-thumbs' });
+    var cvHost = h('div', { class:'cp-cv' });
+    var imgs = projectImages();
+    imgSec.appendChild(h('p', { class:'hint', style:'margin:0 0 8px', text: imgs.length ? "Choisis une image, puis touche ou clique à l'endroit dont tu veux la couleur." : "Ajoute d'abord une image au projet (cover, en-tête ou bloc image)." }));
+    imgSec.appendChild(thumbs); imgSec.appendChild(cvHost);
+    function loadSample(url){
+      clear(cvHost); cvHost.appendChild(h('p', { class:'hint', text:'Chargement…' }));
+      var im = new Image(); im.crossOrigin = 'anonymous';
+      im.onload = function(){
+        clear(cvHost);
+        var maxW = Math.min(520, cvHost.clientWidth || 360), k = Math.min(1, maxW / im.naturalWidth);
+        var cv = h('canvas', { width:Math.round(im.naturalWidth * k), height:Math.round(im.naturalHeight * k), class:'cp-canvas' });
+        var ctx = cv.getContext('2d', { willReadFrequently:true }); ctx.drawImage(im, 0, 0, cv.width, cv.height);
+        var dot = h('div', { class:'cp-dot', hidden:true });
+        var wrap = h('div', { class:'cp-cwrap' }, cv, dot);
+        function pickAt(e){
+          var r = cv.getBoundingClientRect(), x = (e.clientX - r.left) * cv.width / r.width, y = (e.clientY - r.top) * cv.height / r.height;
+          try {
+            var d = ctx.getImageData(Math.max(0, Math.min(cv.width - 1, Math.floor(x))), Math.max(0, Math.min(cv.height - 1, Math.floor(y))), 1, 1).data;
+            setHex(rgbToHex([d[0], d[1], d[2]]));
+            dot.hidden = false; dot.style.left = (e.clientX - r.left) + 'px'; dot.style.top = (e.clientY - r.top) + 'px';
+          } catch (ex){ toast("Cette image ne permet pas de prélever la couleur.", 'err'); }
+        }
+        var down = false;
+        cv.addEventListener('pointerdown', function(e){ down = true; cv.setPointerCapture(e.pointerId); pickAt(e); e.preventDefault(); });
+        cv.addEventListener('pointermove', function(e){ if (down) pickAt(e); });
+        cv.addEventListener('pointerup', function(){ down = false; });
+        cvHost.appendChild(wrap);
+      };
+      im.onerror = function(){ clear(cvHost); cvHost.appendChild(h('p', { class:'hint', text:"Impossible de lire cette image ici." })); };
+      im.src = url;
+    }
+    imgs.forEach(function(u){
+      thumbs.appendChild(h('button', { type:'button', class:'cp-thumb', style:'background-image:url("' + u.replace(/"/g, '%22') + '")', 'aria-label':'Choisir cette image', onclick:function(){
+        Array.prototype.forEach.call(thumbs.children, function(t){ t.classList.remove('on'); }); this.classList.add('on'); loadSample(u);
+      } }));
+    });
+    tools.appendChild(h('button', { class:'btn sm', type:'button', text:'Prendre dans une image', onclick:function(){ imgSec.hidden = !imgSec.hidden; if (!imgSec.hidden && imgs.length && !cvHost.firstChild){ thumbs.firstChild.click(); } } }));
+
+    function close(){ back.remove(); }
+    var modal = h('div', { class:'modal', style:'max-width:440px', role:'dialog', 'aria-modal':'true', 'aria-label':'Palette de couleurs' },
+      h('h2', { text:'Choisis une couleur' }),
+      h('div', { style:'display:flex;gap:12px;align-items:center;margin:0 0 12px' }, prev, hexIn),
+      sv, h('div', { style:'height:10px' }), hue, presets, tools, imgSec,
+      h('div', { style:'display:flex;gap:8px;margin-top:18px' },
+        h('button', { class:'btn primary', type:'button', text:'Utiliser cette couleur', onclick:function(){ var hx = cur(); close(); onApply(hx); } }),
+        h('button', { class:'btn ghost', type:'button', text:'Annuler', onclick:close })));
+    back.appendChild(modal); document.body.appendChild(back);
+    paint();
+  }
+
   function colorIn(obj, key, fallback){
     var val = R.hexOk(obj[key]) ? obj[key] : fallback;
-    var c = h('input', { type:'color', value:val, oninput:function(){ obj[key] = c.value; t.value = c.value; touch(); } });
-    var t = h('input', { type:'text', value:val, maxlength:7, style:'max-width:110px', oninput:function(){ if (R.hexOk(t.value)){ obj[key] = t.value; c.value = t.value; touch(); } } });
     if (!R.hexOk(obj[key])) obj[key] = val;
-    return h('div', { class:'row', style:'align-items:center;gap:8px' }, c, t);
+    var sw = h('button', { type:'button', class:'swatchbtn', style:'background:' + val, 'aria-label':'Ouvrir la palette de couleurs' });
+    var t = h('input', { type:'text', value:val, maxlength:7, style:'max-width:110px', oninput:function(){
+      var v = t.value.trim(); if (v[0] !== '#') v = '#' + v;
+      if (R.hexOk(v)){ obj[key] = v; sw.style.background = v; touch(); }
+    } });
+    function open(){ openColorPicker(obj[key], function(hx){ obj[key] = hx; sw.style.background = hx; t.value = hx; touch(); }); }
+    sw.addEventListener('click', open);
+    return h('div', { class:'row', style:'align-items:center;gap:8px' }, sw, t, h('button', { class:'btn sm', type:'button', text:'Palette…', onclick:open }));
   }
   function boolIn(obj, key, label){
     var c = h('input', { type:'checkbox', checked:!!obj[key], style:'width:auto', onchange:function(){ obj[key] = c.checked; touch(); } });
@@ -342,21 +500,32 @@
   }
   function prepareImage(file){
     if (!/^image\//.test(file.type)) return Promise.reject(new Error('Choisis un fichier image (jpg, png, webp…).'));
-    if (/gif|svg/.test(file.type)) return Promise.resolve({ blob:file, ext:file.type.indexOf('gif') > -1 ? 'gif' : 'svg', type:file.type });
+    if (/gif|svg/.test(file.type)) return Promise.resolve({ blob:file, ext:file.type.indexOf('gif') > -1 ? 'gif' : 'svg', type:file.type, name:baseName(file) });
     return loadImage(file).then(function(im){
       var max = 2200, w = im.naturalWidth, hh = im.naturalHeight, k = Math.min(1, max / Math.max(w, hh));
       var cv = document.createElement('canvas'); cv.width = Math.round(w * k); cv.height = Math.round(hh * k);
       cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
       return new Promise(function(resolve){
         cv.toBlob(function(b){
-          if (b && b.type === 'image/webp') return resolve({ blob:b, ext:'webp', type:'image/webp' });
-          cv.toBlob(function(j){ resolve({ blob:j, ext:'jpg', type:'image/jpeg' }); }, 'image/jpeg', 0.88);
+          if (b && b.type === 'image/webp') return resolve({ blob:b, ext:'webp', type:'image/webp', name:baseName(file) });
+          cv.toBlob(function(j){ resolve({ blob:j, ext:'jpg', type:'image/jpeg', name:baseName(file) }); }, 'image/jpeg', 0.88);
         }, 'image/webp', 0.88);
       });
     });
   }
-  function upload(blob, ext, type){
-    var path = 'p/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '.' + ext;
+  function baseName(file){ return String(file.name || 'fichier').replace(/\.[^.]+$/, ''); }
+  /* Dossier du projet, créé automatiquement au premier envoi : tous les
+     fichiers d'un projet vivent dans projects/<projet>-<code>/ du stockage
+     (un dossier n'existe pas "à vide" : il apparaît dès le premier
+     fichier). Mémorisé dans meta.folder. */
+  function folderPath(){
+    var p = state.project; p.meta = p.meta || {};
+    if (!p.meta.folder) p.meta.folder = (p.slug || slugify(p.title) || 'projet') + '-' + Math.random().toString(36).slice(2, 6);
+    var el = document.getElementById('folderInfo'); if (el) el.value = 'Stockage : projects/' + p.meta.folder + '/';
+    return 'projects/' + p.meta.folder;
+  }
+  function upload(blob, ext, type, name){
+    var path = folderPath() + '/' + (slugify(name || 'fichier').slice(0, 40) || 'fichier') + '-' + Math.random().toString(36).slice(2, 7) + '.' + ext;
     return sb.storage.from('project-media').upload(path, blob, { contentType:type, cacheControl:'31536000', upsert:false })
       .then(function(res){
         if (res.error) throw res.error;
@@ -372,13 +541,13 @@
       pv.textContent = obj[key] ? '' : 'Aucune';
       rm.hidden = !obj[key];
     }
-    var rm = h('button', { class:'btn sm danger', type:'button', text:'Retirer', onclick:function(){ obj[key] = ''; paint(); touch(); if (onDone) onDone(); } });
+    var rm = h('button', { class:'btn sm danger', type:'button', text:'Retirer', onclick:function(){ obj[key] = ''; paint(); touch(); if (onDone) onDone(); wrap.dispatchEvent(new Event('change', { bubbles:true })); } });
     var pick = h('button', { class:'btn sm', type:'button', text:'Choisir une image', onclick:function(){ file.click(); } });
     file.addEventListener('change', function(){
       var f = file.files && file.files[0]; if (!f) return;
       st.textContent = 'Envoi en cours…'; pick.disabled = true;
-      prepareImage(f).then(function(r){ return upload(r.blob, r.ext, r.type); }).then(function(url){
-        obj[key] = url; paint(); st.textContent = ''; touch(); if (onDone) onDone();
+      prepareImage(f).then(function(r){ return upload(r.blob, r.ext, r.type, r.name); }).then(function(url){
+        obj[key] = url; paint(); st.textContent = ''; touch(); if (onDone) onDone(); wrap.dispatchEvent(new Event('change', { bubbles:true }));
       }).catch(function(e){ st.textContent = ''; toast('Envoi impossible : ' + errMsg(e), 'err'); })
         .then(function(){ pick.disabled = false; file.value = ''; });
     });
@@ -395,7 +564,7 @@
       var f = file.files && file.files[0]; if (!f) return;
       if (f.size > 50 * 1024 * 1024){ toast('Vidéo trop lourde (50 Mo max). Compresse-la d\'abord.', 'err'); file.value = ''; return; }
       st.textContent = 'Envoi en cours…'; pick.disabled = true;
-      upload(f, (f.name.split('.').pop() || 'mp4').toLowerCase(), f.type || 'video/mp4').then(function(url){
+      upload(f, (f.name.split('.').pop() || 'mp4').toLowerCase(), f.type || 'video/mp4', baseName(f)).then(function(url){
         obj[key] = url; st.textContent = 'Vidéo ajoutée.'; rm.hidden = false; touch();
       }).catch(function(e){ st.textContent = 'Aucune vidéo.'; toast('Envoi impossible : ' + errMsg(e), 'err'); })
         .then(function(){ pick.disabled = false; file.value = ''; });
@@ -403,17 +572,71 @@
     return field(label, h('div', { class:'imgf' }, h('div', { style:'display:flex;gap:6px;flex-wrap:wrap' }, pick, rm), st, file));
   }
 
+  /* ----- zoom et cadrage d'une image dans son cadre -----
+     f = { zoom:1–4, fx:0–100, fy:0–100 }. Glisser dans l'aperçu déplace le
+     cadrage, le curseur règle le zoom. Il faut un format (cadre fixe) pour
+     que le zoom ait un sens. */
+  var RATIO_CSS = { '1:1':'1/1', '4:5':'4/5', '3:4':'3/4', '3:2':'3/2', '16:9':'16/9' };
+  function frameNode(f, getUrl, getRatio, onChange){
+    if (f.zoom == null) f.zoom = 1; if (f.fx == null) f.fx = 50; if (f.fy == null) f.fy = 50;
+    var msg = h('p', { class:'hint', style:'margin:0' });
+    var im = h('img', { alt:'', draggable:'false' });
+    var box = h('div', { class:'fbox' }, im);
+    var zoom = h('input', { type:'range', min:100, max:300, step:5, 'aria-label':'Zoom' });
+    var lbl = h('span', { class:'hint', style:'min-width:70px' });
+    var reset = h('button', { class:'btn sm ghost', type:'button', text:'Réinitialiser', onclick:function(){ f.zoom = 1; f.fx = 50; f.fy = 50; paint(); touch(); if (onChange) onChange(); } });
+    var ctl = h('div', { style:'display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0 0' }, h('span', { class:'hint', text:'Zoom' }), zoom, lbl, reset);
+    var wrap = h('div', { class:'frame-ed' }, msg, box, ctl);
+    function paint(){
+      var url = getUrl(), rc = RATIO_CSS[getRatio()];
+      var ok = !!url && !!rc;
+      box.hidden = !ok; ctl.hidden = !ok; msg.hidden = ok;
+      if (!url) msg.textContent = "Ajoute d'abord une image.";
+      else if (!rc) msg.textContent = "Choisis un format (carré, portrait…) pour pouvoir zoomer et recadrer l'image.";
+      if (!ok) return;
+      box.style.aspectRatio = rc;
+      if (im.getAttribute('src') !== url) im.setAttribute('src', url);
+      im.setAttribute('style', D.frameCss(f));
+      zoom.value = Math.round(f.zoom * 100); lbl.textContent = '× ' + f.zoom.toFixed(2);
+    }
+    zoom.addEventListener('input', function(){ f.zoom = +zoom.value / 100; paint(); touch(); if (onChange) onChange(); });
+    var drag = null;
+    box.addEventListener('pointerdown', function(e){ drag = { x:e.clientX, y:e.clientY, fx:f.fx, fy:f.fy }; box.setPointerCapture(e.pointerId); e.preventDefault(); });
+    box.addEventListener('pointermove', function(e){
+      if (!drag) return;
+      var r = box.getBoundingClientRect();
+      f.fx = Math.round(Math.max(0, Math.min(100, drag.fx - (e.clientX - drag.x) / r.width * 100)));
+      f.fy = Math.round(Math.max(0, Math.min(100, drag.fy - (e.clientY - drag.y) / r.height * 100)));
+      paint(); touch(); if (onChange) onChange();
+    });
+    box.addEventListener('pointerup', function(){ drag = null; });
+    box.addEventListener('pointercancel', function(){ drag = null; });
+    paint();
+    wrap._paint = paint;
+    return wrap;
+  }
+
   /* rendu générique d'une liste de définitions de champs */
   function fieldsNode(defs, obj, afterChange){
-    var frag = document.createDocumentFragment();
+    var frag = h('div', { class:'fg' });
     defs.forEach(function(d){
       if (d.type === 'text') frag.appendChild(field(d.label, textIn(obj, d.k)));
       else if (d.type === 'textarea') frag.appendChild(field(d.label, areaIn(obj, d.k, d.rows)));
       else if (d.type === 'select') frag.appendChild(field(d.label, selectIn(obj, d.k, d.options)));
       else if (d.type === 'color') frag.appendChild(field(d.label, colorIn(obj, d.k, '#189CD8')));
       else if (d.type === 'bool') frag.appendChild(boolIn(obj, d.k, d.label));
+      else if (d.type === 'boolInv'){
+        var cb = h('input', { type:'checkbox', checked:!obj[d.flag], style:'width:auto', onchange:function(){ obj[d.flag] = !cb.checked; touch(); } });
+        frag.appendChild(h('label', { class:'radio' }, cb, h('span', { text:d.label })));
+      }
       else if (d.type === 'image') frag.appendChild(imageField(obj, d.k, d.label));
       else if (d.type === 'video') frag.appendChild(videoField(obj, d.k, d.label));
+      else if (d.type === 'frame'){
+        obj[d.k] = obj[d.k] || { zoom:1, fx:50, fy:50 };
+        var fe = frameNode(obj[d.k], function(){ return obj.url; }, function(){ return obj.ratio; });
+        frag.appendChild(field(d.label, fe));
+        frag.addEventListener('change', function(){ fe._paint(); });
+      }
       else if (d.type === 'group'){
         obj[d.k] = obj[d.k] || {};
         var g = h('div', { class:'grp' }, h('span', { class:'l', text:d.label }));
@@ -463,6 +686,7 @@
     return h('section', { class:'sec' }, h('h3', { text:'Infos du projet' }),
       field('Titre', title, 'Mets un mot entre *étoiles* pour le colorer sur la page (ex. Ri*ch*ol).'),
       h('div', { class:'row' }, field('Catégorie', cat), field('Date', h('div', { class:'row', style:'gap:8px' }, month, year))),
+      field('Dossier des fichiers', h('input', { type:'text', id:'folderInfo', disabled:true, value: p.meta.folder ? 'Stockage : projects/' + p.meta.folder + '/' : 'Créé automatiquement au premier envoi' }), "Chaque projet a son propre dossier : toutes ses images et vidéos y sont rangées sans que tu aies à faire quoi que ce soit."),
       p.slug ? field('Adresse de la page', h('input', { type:'text', value:'projet.html?p=' + p.slug, disabled:true }), 'Fixée après le premier enregistrement pour ne jamais casser un lien.') : null,
       field('Introduction (sous le titre)', areaIn(p.meta, 'lede', 3)),
       imageField(p.meta, 'hero_image', 'Image d\'en-tête de la page (à droite du titre)'),
@@ -479,8 +703,10 @@
     var date = h('div', { class:'mono', style:'font-size:.62rem;letter-spacing:.06em;color:var(--faint);text-transform:uppercase;margin-top:4px' });
     function paint(){
       if (p.cover_url) cov.setAttribute('src', p.cover_url); else cov.removeAttribute('src');
+      cov.setAttribute('style', D.frameCss(p.meta.cover_frame));
       cov.style.display = p.cover_url ? '' : 'none';
       if (p.hover_url) pk.setAttribute('src', p.hover_url); else pk.removeAttribute('src');
+      pk.setAttribute('style', D.frameCss(p.meta.hover_frame));
       pk.style.display = p.hover_url ? '' : 'none';
       em.style.display = p.cover_url ? 'none' : '';
       mini.style.setProperty('--mc', catColor(p.category));
@@ -492,9 +718,14 @@
       h('p', { class:'hint', style:'margin:0 0 14px', text:'La cover est l\'image de la carte du projet. L\'image « au survol » apparaît quand on passe dessus (comme sur la page principale).' }),
       wrap);
     wrap.appendChild(h('div', {}, mini, name, date, h('p', { class:'hint', text:'Passe la souris pour voir l\'effet.' })));
-    wrap.appendChild(h('div', { style:'flex:1 1 220px;min-width:0' },
-      imageField(p, 'cover_url', 'Image de cover', paint),
-      imageField(p, 'hover_url', 'Image au survol', paint)));
+    p.meta.cover_frame = p.meta.cover_frame || {}; p.meta.hover_frame = p.meta.hover_frame || {};
+    var cfr = frameNode(p.meta.cover_frame, function(){ return p.cover_url; }, function(){ return '4:5'; }, paint);
+    var hfr = frameNode(p.meta.hover_frame, function(){ return p.hover_url; }, function(){ return '4:5'; }, paint);
+    var chost = h('div', { class:'fg' }, imageField(p, 'cover_url', 'Image de cover', paint), field('Zoom et cadrage de la cover', cfr));
+    var hhost = h('div', { class:'fg' }, imageField(p, 'hover_url', 'Image au survol', paint), field("Zoom et cadrage de l'image au survol", hfr));
+    chost.addEventListener('change', function(){ cfr._paint(); paint(); });
+    hhost.addEventListener('change', function(){ hfr._paint(); paint(); });
+    wrap.appendChild(h('div', { style:'flex:1 1 240px;min-width:0' }, chost, hhost));
     state.coverPaint = paint; /* la carte se met à jour quand le titre, la date ou la catégorie changent */
     return sec;
   }
@@ -623,9 +854,21 @@
   function loadCatalog(){
     return sb.from('projects').select('id,slug,title,category,date_label,cover_url,published').then(function(res){
       if (res.error) throw res.error;
-      var map = {}, list = [];
-      D.legacy.forEach(function(p){ var o = { slug:p.slug, cat:p.cat, name:D.plain(p.name), date:p.date, img:p.img, legacy:true, published:true }; map[o.slug] = o; list.push(o); });
-      (res.data || []).forEach(function(r){ var o = { slug:r.slug, cat:r.category, name:String(r.title).replace(/\*/g, ''), date:r.date_label, img:r.cover_url, legacy:false, published:!!r.published, id:r.id }; map[o.slug] = o; list.push(o); });
+      var map = {}, list = [], rows = {};
+      (res.data || []).forEach(function(r){ rows[r.slug] = r; });
+      D.legacy.forEach(function(p){
+        var r = rows[p.slug];
+        /* une version "mode créateur" PUBLIÉE remplace la page d'origine ; un brouillon n'y change rien */
+        var o = (r && r.published)
+          ? { slug:r.slug, cat:r.category, name:String(r.title).replace(/\*/g, ''), date:r.date_label, img:r.cover_url, legacy:false, published:true, id:r.id }
+          : { slug:p.slug, cat:p.cat, name:D.plain(p.name), date:p.date, img:p.img, legacy:true, published:true };
+        map[o.slug] = o; list.push(o);
+      });
+      (res.data || []).forEach(function(r){
+        if (map[r.slug]) return;
+        var o = { slug:r.slug, cat:r.category, name:String(r.title).replace(/\*/g, ''), date:r.date_label, img:r.cover_url, legacy:false, published:!!r.published, id:r.id };
+        map[o.slug] = o; list.push(o);
+      });
       return { map:map, list:list };
     });
   }

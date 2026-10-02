@@ -1351,9 +1351,9 @@ var TRAVAUX_FAMILIES = [
          autres projets s'affiche par-dessus. */
       var mainMedia = isVideo
         ? '<video class="tv-card-vid" src="' + p.video + '" poster="' + p.peek + '"' + (reducedMotion ? '' : ' autoplay loop') + ' muted playsinline></video>'
-        : '<img class="tv-card-img" src="' + p.img + '" alt="' + altText + '" loading="lazy" draggable="false">';
+        : '<img class="tv-card-img" src="' + p.img + '" alt="' + altText + '" loading="lazy" draggable="false"' + (p.imgStyle ? ' style="' + p.imgStyle + '"' : '') + '>';
       var peek = p.peek
-        ? '<img class="tv-card-peek" src="' + p.peek + '" alt="" aria-hidden="true" loading="lazy" draggable="false">'
+        ? '<img class="tv-card-peek" src="' + p.peek + '" alt="" aria-hidden="true" loading="lazy" draggable="false"' + (p.peekStyle ? ' style="' + p.peekStyle + '"' : '') + '>'
         : '';
       var veilCta = '<span class="tv-card-veil"></span><span class="tv-card-cta"><span>Voir plus</span></span>';
       /* id = le nom de fichier du projet (ex. "richol" pour richol.html) : c'est

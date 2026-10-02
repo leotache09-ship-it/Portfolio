@@ -250,6 +250,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Mode créateur : (1) session en `sessionStorage` (il faut se reconnecter à chaque nouvelle visite/onglet) ; (2) recadrage/zoom des images (`frame` {zoom,fx,fy}, appliqué via `D.frameCss`, nécessite un ratio fixe ; option « Agrandir au clic » = `noZoom`) y compris sur les couvertures/survols (`meta.cover_frame/hover_frame` -> `imgStyle/peekStyle`) ; (3) dossier automatique par projet dans le stockage Supabase (`projects/<meta.folder>/`, pas dans le dossier `assets/` du dépôt) ; (4) sélecteur de couleur multicolore (carré SV + teinte + hex + pipette sur image) ; (5) import des 11 projets existants : `assets/legacy-projects.json` (généré par un convertisseur BeautifulSoup depuis les pages HTML) -> bouton « Importer » dans l'admin, arrivent en brouillons, les pages d'origine restent en ligne ; une fois publié, le projet DB remplace l'entrée legacy (dédoublonnage par slug dans `LT_DATA.loadAll`). Limite : Meublon/Flow State perdent la vidéo de carte d'accueil une fois publiés (carte = image de couverture). Vérifié avec un Supabase simulé (jamais testé avec le vrai).
+
 - 2026-10-02 — Supabase branché : projet `ljwgtguirnatdbgxfyuh`, clé
   publique (publishable) dans `assets/config.js`, tables et stockage créés
   via `supabase/setup.sql` (exécuté en 3 blocs depuis un téléphone).

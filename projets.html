@@ -130,7 +130,7 @@
       counts[cat.id] = (counts[cat.id] || 0) + 1;
       var alt = D.plain(p.name);
       html += '<a class="card" href="' + p.href + '" data-cat="' + cat.id + '" data-ts="' + D.dateKey(D.plain(p.date)) + '" data-name="' + D.esc(alt) + '" data-i="' + i + '" style="--c:' + cat.color + '">' +
-        '<span class="media">' + (p.img ? '<img src="' + D.esc(p.img) + '" alt="' + D.esc(alt) + '" loading="lazy">' : '') + '<span class="veil"><span>Voir plus</span></span></span>' +
+        '<span class="media">' + (p.img ? '<img src="' + D.esc(p.img) + '" alt="' + D.esc(alt) + '" loading="lazy"' + (p.imgStyle ? ' style="' + D.esc(p.imgStyle) + '"' : '') + '>' : '') + '<span class="veil"><span>Voir plus</span></span></span>' +
         '<span class="info"><span class="name">' + p.name + '</span>' +
         '<span class="meta"><i class="dot"></i>' + D.esc(cat.title) + ' · ' + p.date + '</span></span></a>';
     });

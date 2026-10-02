@@ -1,0 +1,1768 @@
+[
+ {
+  "slug": "chearn",
+  "title": "*C*hearn",
+  "category": "clients",
+  "date_label": "Avril 2026",
+  "cover_url": "assets/chearn/cover.jpg",
+  "hover_url": "assets/chearn/flatlay.jpg",
+  "meta": {
+   "lede": "Chearn est un **centre de formation IT & IA en Suisse**, spécialisé dans le développement web, l'intelligence artificielle et la programmation Python. Sami, son fondateur, m'a contacté grâce au bouche-à-oreille après avoir découvert mon Instagram. Il avait déjà son nom, une contraction de learn et earn, ainsi qu'une idée précise de son public cible. Tout le reste était à construire.",
+   "hero_image": "assets/chearn/logo-full.png",
+   "imported_from": "chearn.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#e7000e",
+   "paper": "#f2e8e8"
+  },
+  "blocks": [
+   {
+    "t": "image",
+    "url": "assets/chearn/flatlay.jpg",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le point de départ",
+    "text": "Une identité *hors des codes*."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Client",
+      "v": "Chearn, Sami fondateur"
+     },
+     {
+      "k": "Secteur",
+      "v": "Formation IT & IA en ligne, Suisse"
+     },
+     {
+      "k": "Livrables",
+      "v": "Logo, mini charte graphique, affiche + slogans, carte de visite"
+     },
+     {
+      "k": "Cible",
+      "v": "Futurs apprentis, employés en quête d'évolution, reconversion professionnelle"
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "On a commencé par un appel, sans références ni maquettes, pour comprendre sa vision. Deux orientations s'en sont dégagées : s'adresser à un public jeune et s'éloigner des codes visuels du secteur. Pour le reste, carte blanche, à une exception près, arrêtée ensemble dès le départ : **le rouge**, en référence à l'identité suisse et à l'ancrage local de Chearn.\n\nOr le secteur communique tellement de la même façon, avec son bleu, ses dégradés et ses circuits imprimés, qu'on repère une école de code sans lire son nom. Et la cible de Chearn, ce ne sont pas des ingénieurs : ce sont des gens qui hésitent, qui se reconvertissent, qui **ont peur de se faire dépasser**. D'où la question qui a tenu tout le projet : comment faire l'identité d'une école d'informatique qui ne dise pas « informatique » ?"
+   },
+   {
+    "t": "title",
+    "eyebrow": "La recherche",
+    "text": "Trente « C », puis un seul"
+   },
+   {
+    "t": "text",
+    "text": "Toutes les pistes posées côte à côte sur un même plan de travail : une trentaine de monogrammes, entre étoiles, fusées et formes découpées, et plusieurs familles de rouges testées les unes contre les autres. **Les pistes les plus « tech » ont sauté les premières**, trop froides et trop attendues. Ce qui restait tirait toujours vers le rond, le plein, le chaleureux.\n\nLe monogramme retenu est construit sur une grille de cercles. Le « C » n'est pas une lettre géométrique redessinée : c'est un caractère script, gras, avec une attaque en boucle, le même geste que le logotype. Il est posé dans un carré aux angles très arrondis, format d'icône d'application, **dont le coin inférieur droit se déforme et s'échappe**. C'est ce détail qui empêche le logo d'être un bouton de plus."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/chearn/process.jpg",
+     "caption": "Plan de travail, recherches"
+    },
+    "b": {
+     "url": "assets/chearn/logo-construction.jpg",
+     "caption": "Construction sur grille de cercles"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le système",
+    "text": ""
+   },
+   {
+    "t": "gallery",
+    "cols": "4",
+    "items": [
+     {
+      "url": "assets/chearn/logo-mono-red.png",
+      "caption": "Monogramme, couleur"
+     },
+     {
+      "url": "assets/chearn/logo-mono-dark.png",
+      "caption": "Monogramme, encre"
+     },
+     {
+      "url": "assets/chearn/logo-mono-white.png",
+      "caption": "Monogramme, négatif"
+     },
+     {
+      "url": "assets/chearn/logo-lockup.png",
+      "caption": "Monogramme + logotype"
+     }
+    ]
+   },
+   {
+    "t": "image",
+    "url": "assets/chearn/logo-wordmark.png",
+    "caption": "Logotype seul, pour les formats larges",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "title",
+    "eyebrow": "La signature",
+    "text": "De « Learn. Earn. Repeat. » à quelque chose qu'on comprend"
+   },
+   {
+    "t": "image",
+    "url": "assets/chearn/logo-baseline.png",
+    "caption": "Signature retenue",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "text",
+    "text": "Première piste : **« Learn. Earn. Repeat. »**, un jeu de mots autour du nom que Sami m'a demandé de revoir.\n\nAprès plusieurs échanges, on a trouvé la formule juste : **« Apprends aujourd'hui. Gagne demain. »** Une promesse claire, en français et au tutoiement, pensée pour un public jeune et fidèle à l'esprit de Chearn."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Les couleurs",
+    "text": "Un rouge qui parle suisse, pas tech"
+   },
+   {
+    "t": "text",
+    "text": "Le rouge n'a pas été choisi pour trancher avec le bleu du secteur : on l'a arrêté avec Sami pour **rappeler le local, le suisse**. La conséquence est arrivée toute seule, il ne ressemble à rien de ce que font les autres écoles. Il est adouci par un rose brume très pâle qui fait respirer les aplats et empêche l'ensemble de virer agressif."
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "Vermillon",
+      "hex": "#e7000e",
+      "extra": ""
+     },
+     {
+      "name": "Rose brume",
+      "hex": "#f2e8e8",
+      "extra": ""
+     },
+     {
+      "name": "Encre",
+      "hex": "#1d1d1b",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "title",
+    "eyebrow": "Les applications",
+    "text": "L'identité sur le terrain"
+   },
+   {
+    "t": "statement",
+    "text": "L'affiche"
+   },
+   {
+    "t": "text",
+    "text": "« Ne vous faites pas remplacer par l'IA. » L'accroche détourne la peur actuelle de l'IA en argument d'inscription. Les formations, la cible et le QR code complètent le message, mais c'est la phrase qui capte l'attention."
+   },
+   {
+    "t": "image",
+    "url": "assets/chearn/poster.jpg",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "statement",
+    "text": "La carte de visite"
+   },
+   {
+    "t": "text",
+    "text": "Le recto est réservé à la signature seule, sans autre information : le logo a la place de s'imposer. Le verso porte l'essentiel, avec « Formation IT & IA en Suisse », l'adresse de contact et le QR code qui renvoie au site."
+   },
+   {
+    "t": "image",
+    "url": "assets/chearn/cards.jpg",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": "Ce que le projet a donné"
+   },
+   {
+    "t": "text",
+    "text": "**Le logo a demandé plusieurs rendez-vous** avant qu'on tombe d'accord. C'est de loin la partie qui a pris le plus de temps, et c'est normal : c'est la pièce dont tout le reste découle. L'affiche et la carte de visite, elles, sont passées presque du premier coup. C'est le meilleur signe que le système tenait."
+   },
+   {
+    "t": "cards",
+    "items": [
+     {
+      "k": "Retour client",
+      "v": "Sami est très satisfait du résultat. Son retour est épinglé en story à la une sur l'Instagram de LT Design."
+     },
+     {
+      "k": "Statut",
+      "v": "Le projet continue : l'identité est posée, les déclinaisons se construisent au fil du lancement de Chearn."
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "afmbb",
+  "title": "AFMBB",
+  "category": "clients",
+  "date_label": "Avril 2026",
+  "cover_url": "assets/afmbb/logo.jpg",
+  "hover_url": "assets/afmbb/flyer.jpg",
+  "meta": {
+   "lede": "L'**Amicale Fribourgeoise des Maîtrises & Brevets du Bois** réunit depuis 1983 les professionnels fribourgeois du bois titulaires d'une formation supérieure : bûcherons, charpentiers, menuisiers et bien d'autres corps de métier. Après quarante ans, leur communication avait vieilli et ne leur ressemblait plus. Ils cherchaient un rebranding, quelqu'un de chez eux me connaissait.",
+   "hero_image": "assets/afmbb/logo-noir.png",
+   "imported_from": "afmbb.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#5e0a0a",
+   "paper": "#efefef"
+  },
+  "blocks": [
+   {
+    "t": "image",
+    "url": "assets/afmbb/flyer.jpg",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le point de départ",
+    "text": "Un logo, *tous* les métiers."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Client",
+      "v": "AFMBB, association fribourgeoise"
+     },
+     {
+      "k": "Depuis",
+      "v": "1983, plus de 40 ans"
+     },
+     {
+      "k": "Réunit",
+      "v": "Tous les métiers du bois, du bûcheron au menuisier"
+     },
+     {
+      "k": "Livrables",
+      "v": "Logo, charte, flyer de recrutement"
+     },
+     {
+      "k": "Durée",
+      "v": "Février à avril 2026"
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "J'avais carte blanche, avec une seule demande : que le logo rappelle **tous** les métiers du bois. C'est là que ça se complique. Un logo doit choisir une image, et chaque image du bois appartient déjà à quelqu'un : la hache au bûcheron, la charpente au charpentier, l'établi au menuisier. Choisir, c'était mettre les autres derrière.\n\nLeur communication d'alors racontait le même problème autrement : du texte blanc posé directement sur une photographie d'atelier, illisible dès que le fond s'éclaircit, et un logo au trait si fin qu'il s'efface en petit. Rien là-dedans ne disait une association de métiers suisses installée depuis 1983."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/afmbb/ancien-flyer-1.jpg",
+     "caption": ""
+    },
+    "b": {
+     "url": "assets/afmbb/ancien-logo.jpg",
+     "caption": ""
+    }
+   },
+   {
+    "t": "text",
+    "text": "Un compas ouvert formant le « A », posé sur un rabot, avec FMBB au centre. La construction est maligne, mais elle nomme deux métiers et laisse tous les autres dehors. Et le tracé en filet fin disparaît dès qu'on réduit."
+   },
+   {
+    "t": "title",
+    "eyebrow": "La recherche",
+    "text": "Chaque piste choisissait un métier"
+   },
+   {
+    "t": "image",
+    "url": "assets/afmbb/recherches.jpg",
+    "caption": "Pistes explorées, avant le rondin",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "text",
+    "text": "Des toits et des charpentes, des sapins, des montagnes, un homme qui scie un tronc. Chaque proposition tenait debout toute seule, et chaque proposition racontait **un** métier en laissant les autres dehors. C'est exactement ce que l'amicale ne voulait pas.\n\nLe déclic est venu en arrêtant de chercher un symbole et en cherchant un trajet : la matière part de l'arbre et finit en objet, et **tous les métiers sont quelque part sur ce trajet**. Un rondin, si on le regarde dans le sens de la longueur, contient déjà le début et la fin de cette histoire."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le logo",
+    "text": "Un rondin qui se lit de gauche à droite"
+   },
+   {
+    "t": "image",
+    "url": "assets/afmbb/logo-construction.jpg",
+    "caption": "Construction, trois cercles et deux axes",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "text",
+    "text": "À gauche, les cernes de croissance : l'arbre sur pied, la forêt, le geste du bûcheron. Au milieu, les lignes du fil du bois : la grume qui se débite, la planche. À droite, la même silhouette devient une étagère : l'objet fini, le charpentier et le menuisier. Une seule forme continue, et personne devant les autres.\n\nLe détail qui ferme le récit : **l'étagère est remplie de livres**. L'amicale ne réunit pas tous les professionnels du bois, seulement les titulaires d'une maîtrise ou d'un brevet. Les livres disent ça, la qualification, le savoir qui se range et se transmet.\n\nLa silhouette est posée sur trois cercles qui se recouvrent et deux axes. C'est ce qui lui donne sa régularité et ce qui lui permet de rester lisible une fois réduite, là où l'ancien logo se perdait.\n\nC'est la pièce qui a demandé **le plus d'allers-retours** de tout le projet. Le flyer, ensuite, est passé presque du premier coup."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le système",
+    "text": "Trois couleurs, quatre verrouillages"
+   },
+   {
+    "t": "image",
+    "url": "assets/afmbb/charte.jpg",
+    "caption": "Planche de déclinaisons",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "text",
+    "text": "Le logo existe en symbole seul, en verrouillage avec le wordmark sérif, en version manuscrite et en pastille ronde portant le nom complet en circulaire, pour les formats où le rectangle ne passe pas.\n\nLe sérif à fort contraste du wordmark n'est pas un hasard : il donne à une association de 1983 l'autorité qu'un sans-serif lui aurait retirée. Et trois couleurs suffisent : le bordeaux qui signe, le noir qui lit, le blanc cassé qui fait respirer."
+   },
+   {
+    "t": "image",
+    "url": "assets/afmbb/logo-blanc.png",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "Bordeaux",
+      "hex": "#5e0a0a",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "image",
+    "url": "assets/afmbb/logo-noir.png",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "Blanc cassé",
+      "hex": "#efefef",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "image",
+    "url": "assets/afmbb/logo-blanc.png",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "Noir",
+      "hex": "#1d1d1b",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le flyer",
+    "text": "Le même contenu, enfin lisible"
+   },
+   {
+    "t": "text",
+    "text": "Les textes viennent d'eux, je les ai gardés. Ce que j'ai changé, c'est l'endroit où ils se posent : un bandeau bordeaux plein à gauche, qui tient toute l'information, et la photographie à droite qui montre le bois sans jamais passer sous le texte. **L'appel à l'action, « Rejoins l'aventure ! », est de moi**, posé sur une planche comme une enseigne d'atelier."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/afmbb/ancien-flyer-1.jpg",
+     "caption": ""
+    },
+    "b": {
+     "url": "assets/afmbb/flyer.jpg",
+     "caption": ""
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": "Ce que le projet a donné"
+   },
+   {
+    "t": "cards",
+    "items": [
+     {
+      "k": "Retour client",
+      "v": "L'amicale est très satisfaite du travail, et utilise le logo aujourd'hui."
+     },
+     {
+      "k": "Pour moi",
+      "v": "Ma première expérience professionnelle avec une entreprise, du premier contact à la livraison. Elle s'est bien passée."
+     },
+     {
+      "k": "Ce que j'y ai appris",
+      "v": "Qu'un logo qui doit représenter tout le monde ne se règle pas en cherchant un symbole de plus, mais en changeant la question qu'on se pose."
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "partie-ailleurs",
+  "title": "La Partie *d'Ailleurs*",
+  "category": "clients",
+  "date_label": "Mars 2026",
+  "cover_url": "assets/partie-ailleurs/thumb.jpg",
+  "hover_url": "assets/partie-ailleurs/rollup-parmi.jpg",
+  "meta": {
+   "lede": "La Partie d'Ailleurs est un week-end jeux de société organisé à la **Maison d'Ailleurs**, le musée de la science-fiction d'Yverdon-les-Bains. Le musée a mandaté mon école pour la campagne, et le travail est revenu aux élèves de deuxième année pendant les CIE 2. Deux semaines, un brief au départ, un débrief à l'arrivée, quatre livrables à rendre.",
+   "hero_image": "assets/partie-ailleurs/affiche.jpg",
+   "imported_from": "partie-ailleurs.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#41bcda",
+   "paper": "#eff4f6"
+  },
+  "blocks": [
+   {
+    "t": "title",
+    "eyebrow": "Le point de départ",
+    "text": "Attirer l'attention *autrement*."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Client",
+      "v": "Maison d'Ailleurs, Yverdon-les-Bains"
+     },
+     {
+      "k": "Cadre",
+      "v": "Mandat confié à l'école, CIE 2, deuxième année"
+     },
+     {
+      "k": "Public",
+      "v": "Les familles"
+     },
+     {
+      "k": "Livrables",
+      "v": "Affiche A3, gabarits réseaux sociaux, deux roll-up"
+     },
+     {
+      "k": "Durée",
+      "v": "Deux semaines"
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "Le musée mandate l'école, et ce sont les élèves qui traitent le dossier. L'entreprise change chaque année, cette fois c'était la Maison d'Ailleurs. Le premier jour, deux personnes sont venues briefer et débriefer avec nous, ensuite j'ai pu les relancer au fil du travail, et tout leur a été rendu au bout des deux semaines.\n\nTrois contraintes sont tombées avec le brief. Le logo de l'événement existait déjà et ne bougeait pas. Le texte du roll-up des règles était fourni, **interdiction d'en changer une ligne**. Et surtout : ils voulaient que l'affiche ne ressemble pas aux roll-up, parce que les roll-up devaient pouvoir **resservir à d'autres événements**. Autrement dit, une commande qui interdisait la campagne cohérente qu'on apprend à faire. Il ne fallait pas une identité qui se décline, mais trois objets calés sur trois durées de vie différentes : une affiche jetable, deux panneaux faits pour durer."
+   },
+   {
+    "t": "title",
+    "eyebrow": "L'affiche",
+    "text": "Le musée envahi par les pions"
+   },
+   {
+    "t": "image",
+    "url": "assets/partie-ailleurs/poster.jpg",
+    "caption": "Affiche A3, 300 dpi CMJN",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "text",
+    "text": "J'ai détouré la vraie façade de la Maison d'Ailleurs, je l'ai passée en gris, et j'ai installé des pions aux fenêtres et sur le toit. **Chaque pion renvoie à un jeu connu** : le haut-de-forme et les billets du Monopoly sur le toit, le détective du Cluedo derrière les barreaux, le mouton des Colons de Catane et le jeton W du Scrabble.\n\nLe résultat dit qu'il s'agit de jeux de société sans qu'un seul mot le dise, et il annonce le lieu de l'événement en montrant le lieu lui-même. Le gris de la façade laisse toute la couleur aux pions, et le bleu tient le reste."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Les roll-up",
+    "text": "Deux panneaux faits pour resservir"
+   },
+   {
+    "t": "text",
+    "text": "Aucune date, aucun élément de l'affiche. Les deux roll-up sont construits pour être ressortis à n'importe quelle édition, et c'est précisément ce que le musée demandait. Le premier explique le fonctionnement du bar à jeux, le second porte les règles d'un jeu grandeur nature inspiré d'Among Us. **Sur celui-là, tout le texte était fourni et intouchable** : le travail était donc entièrement une affaire de mise en page, hiérarchiser trois niveaux d'information et faire tenir des règles complètes sur un mètre de large sans que le panneau devienne un mur de texte."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/partie-ailleurs/rollup-bar.jpg",
+     "caption": "Roll-up « Bar à jeux », 50 × 100 cm"
+    },
+    "b": {
+     "url": "assets/partie-ailleurs/rollup-parmi.jpg",
+     "caption": "Roll-up « Règles du jeu », 50 × 100 cm"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Les réseaux sociaux",
+    "text": "Des gabarits à remplir"
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/partie-ailleurs/rs-story.jpg",
+     "caption": "Story"
+    },
+    "b": {
+     "url": "assets/partie-ailleurs/rs-post.jpg",
+     "caption": "Post"
+    }
+   },
+   {
+    "t": "text",
+    "text": "Deux formats livrés comme des gabarits plutôt que comme des visuels finis : la grande zone du haut reste libre pour la photo du moment, le bandeau du bas porte les informations pratiques, et le meeple du Monopoly fait le lien avec l'affiche. Le musée peut republier toute l'année sans redemander un fichier."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le rendu",
+    "text": "La planche remise au client"
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Logiciels",
+      "v": "Photoshop et InDesign pour l'affiche, Illustrator pour les roll-up"
+     }
+    ]
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/partie-ailleurs/planche-1.jpg",
+     "caption": ""
+    },
+    "b": {
+     "url": "assets/partie-ailleurs/planche-2.jpg",
+     "caption": ""
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": "Ce que j'en retiens"
+   },
+   {
+    "t": "text",
+    "text": "L'affiche tient : l'idée des pions qui habitent la façade fonctionne, et c'est la pièce dont je suis content. **Les deux roll-up, moins. Ils ne parlent pas assez, on ne ressent pas le côté jeu.** La contrainte de réutilisation les a poussés vers quelque chose de neutre, et je suis allé trop loin dans cette direction."
+   },
+   {
+    "t": "cards",
+    "items": [
+     {
+      "k": "Ce que le cadre m'a appris",
+      "v": "Travailler avec un texte imposé qu'on n'a pas le droit de toucher, et avec un logo qui n'est pas le sien. Toute la marge est alors dans la mise en page."
+     },
+     {
+      "k": "Ce que je referais",
+      "v": "Chercher un registre qui reste réutilisable sans devenir tiède, pour que les roll-up aient autant de présence que l'affiche."
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "richol",
+  "title": "Ri*ch*ol",
+  "category": "fictives",
+  "date_label": "Avril 2026",
+  "cover_url": "assets/richol/fraise-can.jpg",
+  "hover_url": "assets/richol/limoncello-photo.jpg",
+  "meta": {
+   "lede": "Richol est une marque d'alcools suisses que j'ai inventée. **La charte a été faite en cours**, puis j'ai créé le limoncello et le vin de mon côté, jusqu'à trois gammes de produits sous la même marque.",
+   "hero_image": "assets/richol/cover.jpg",
+   "imported_from": "richol.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#db6661",
+   "paper": "#fdeeec"
+  },
+  "blocks": [
+   {
+    "t": "title",
+    "eyebrow": "Le point de départ",
+    "text": "Pas comme *tout le monde*."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Marque",
+      "v": "Richol, marque fictive d'alcools suisses"
+     },
+     {
+      "k": "Le nom",
+      "v": "Le début du nom de mon père, Richard, et la fin d'alcool"
+     },
+     {
+      "k": "Livrables",
+      "v": "1 logo, une charte graphique et 3 goodies"
+     },
+     {
+      "k": "Rendu",
+      "v": "Imprimé et monté à la main"
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "L'exercice demandait trois choses : un logo, une charte graphique, et un goodies à créer autour de la marque. Pour la boisson, la classe est partie sur du thé froid, du soda, du jus de fruits. **J'ai pris l'alcool**, simplement pour sortir de ce que tout le monde faisait.\n\nLe goodies, c'était la canette. C'est en la dessinant que j'ai accroché, et une fois le cours terminé j'ai continué de mon côté, pour le plaisir : un limoncello, puis un vin. Rien ne m'obligeait à aller jusque-là, et **c'est exactement pour ça que c'est le projet le plus abouti du portfolio**."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le système",
+    "text": "Le nom reste, le fruit change"
+   },
+   {
+    "t": "image",
+    "url": "assets/richol/logo-grid-clean.png",
+    "caption": "Construction sur grille",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "text",
+    "text": "Le logo n'est pas la fraise, **c'est le mot Richol**. La fraise n'est que le fruit du premier produit : sur le limoncello elle devient un citron, sur le vin une grappe. Le fruit annonce le produit, le wordmark annonce la marque, et la même signature manuscrite relie les trois.\n\nLe monogramme est posé sur une grille. La charte assume qu'il n'est pas parfaitement symétrique mais qu'il est perçu comme tel, et elle fixe les usages : le symbole seul en dessous de 5 cm, le verrouillage complet au-dessus, et une version définie pour chaque couleur de fond."
+   },
+   {
+    "t": "gallery",
+    "cols": "4",
+    "items": [
+     {
+      "url": "assets/richol/logo-mono-coral.png",
+      "caption": "Corail"
+     },
+     {
+      "url": "assets/richol/logo-mono-deep.png",
+      "caption": "Rouge profond"
+     },
+     {
+      "url": "assets/richol/logo-mono-ink.png",
+      "caption": "Gris charbon"
+     },
+     {
+      "url": "assets/richol/logo-mono-white.png",
+      "caption": "Blanc, en négatif"
+     }
+    ]
+   },
+   {
+    "t": "image",
+    "url": "assets/richol/logo-variations-clean.png",
+    "caption": "Logo principal et logo secondaire, quatre déclinaisons",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "title",
+    "eyebrow": "Les trois gammes",
+    "text": "Une marque, trois fruits"
+   },
+   {
+    "t": "statement",
+    "text": "Richol Fraise"
+   },
+   {
+    "t": "text",
+    "text": "Le point de départ : noir mat, aplats corail, fraise en contour et lettrage manuscrit. Un dessin pensé pour rester lisible sur un format étroit et en mouvement."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/richol/can-mockup.jpg",
+     "caption": ""
+    },
+    "b": {
+     "url": "assets/richol/can-label.jpg",
+     "caption": "L'étiquette à plat"
+    }
+   },
+   {
+    "t": "statement",
+    "text": "Limoncello"
+   },
+   {
+    "t": "text",
+    "text": "L'étiquette adopte un style plus artisanal, avec un citron dessiné à la main sur une photo d'agrume, inspiré des produits italiens."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/richol/limoncello-photo.jpg",
+     "caption": ""
+    },
+    "b": {
+     "url": "assets/richol/limoncello-label.jpg",
+     "caption": "L'étiquette à plat"
+    }
+   },
+   {
+    "t": "statement",
+    "text": "Grape Wine"
+   },
+   {
+    "t": "text",
+    "text": "Bouteille noire mate, capsule violette Richol et grappe en contour blanc sur un motif ton sur ton. Une identité sobre et élégante."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/richol/wine-bottle.jpg",
+     "caption": ""
+    },
+    "b": {
+     "url": "assets/richol/wine-label.jpg",
+     "caption": "L'étiquette à plat"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Stationery",
+    "text": "Écrite comme si la marque existait"
+   },
+   {
+    "t": "text",
+    "text": "Carte de visite, papier à en-tête, enveloppe. Le recto de la carte porte le logo sur un motif de fraises en ton sur ton, le verso donne les coordonnées et un QR code."
+   },
+   {
+    "t": "image",
+    "url": "assets/richol/stationery.jpg",
+    "caption": "Mise en situation",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "gallery",
+    "cols": "3",
+    "items": [
+     {
+      "url": "assets/richol/card-back.jpg",
+      "caption": "Carte, recto"
+     },
+     {
+      "url": "assets/richol/card-front.jpg",
+      "caption": "Carte, verso"
+     },
+     {
+      "url": "assets/richol/envelope-front.jpg",
+      "caption": "Enveloppe, recto"
+     },
+     {
+      "url": "assets/richol/envelope.jpg",
+      "caption": "Enveloppe, verso"
+     },
+     {
+      "url": "assets/richol/letterhead.jpg",
+      "caption": "Papier à en-tête"
+     }
+    ]
+   },
+   {
+    "t": "title",
+    "eyebrow": "La charte",
+    "text": "Dix-neuf pages, montées à la main"
+   },
+   {
+    "t": "text",
+    "text": "La charte a été imprimée et montée en livret, réunissant couleurs, logo, typographies, branding et packaging."
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "Rouge profond",
+      "hex": "#590300",
+      "extra": "Pantone 7624 C"
+     },
+     {
+      "name": "Gris charbon",
+      "hex": "#262121",
+      "extra": "Pantone 419 C"
+     },
+     {
+      "name": "Corail chaud",
+      "hex": "#db6661",
+      "extra": "Pantone 179 C"
+     }
+    ]
+   },
+   {
+    "t": "gallery",
+    "cols": "4",
+    "items": [
+     {
+      "url": "assets/richol/charte-1.jpg",
+      "caption": "Couverture, sommaire, couleurs"
+     },
+     {
+      "url": "assets/richol/charte-2.jpg",
+      "caption": "Logo, règles d'utilisation, typographie"
+     },
+     {
+      "url": "assets/richol/charte-3.jpg",
+      "caption": "Branding, packaging"
+     },
+     {
+      "url": "assets/richol/charte-4.jpg",
+      "caption": "Planche de recherche, dos"
+     }
+    ]
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": "Ce que j'en retiens"
+   },
+   {
+    "t": "text",
+    "text": "C'est un projet que j'ai particulièrement aimé, autant pour sa liberté créative que pour les défis rencontrés. Il m'a permis d'apprendre beaucoup et de faire évoluer ma pratique du design."
+   },
+   {
+    "t": "cards",
+    "items": [
+     {
+      "k": "Ce qu'il m'a appris",
+      "v": "Tenir un système sur dix-neuf pages et trois produits. Écrire les règles d'une marque, et pas seulement la dessiner."
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "meublon",
+  "title": "Meublon木組み",
+  "category": "fictives",
+  "date_label": "Sept. 2026",
+  "cover_url": "assets/meublon/hover.jpg",
+  "hover_url": "assets/meublon/hover.jpg",
+  "meta": {
+   "lede": "Une marque japonaise de mobilier en carton, inventée et bouclée en deux jours. Le nom dit déjà tout : meuble plus carton, Meublon. Le reste vient du kigumi, l'assemblage japonais qui tient sans vis ni colle.",
+   "hero_image": "",
+   "imported_from": "meublon.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#e0231a",
+   "paper": "#f2f2f2"
+  },
+  "blocks": [
+   {
+    "t": "statement",
+    "text": "Le kigumi d'abord, *la marque ensuite*"
+   },
+   {
+    "t": "text",
+    "text": "Le kigumi (木組み) est une technique d'assemblage japonaise où les pièces de bois s'emboîtent les unes dans les autres, sans clou ni colle. C'est elle qui a lancé le projet, pas l'inverse : j'ai trouvé le principe beau, j'ai voulu une marque autour. Transposé au carton, ça donne des meubles légers et recyclables, qui tiennent par leur seule découpe.\n\nLes deux produits, l'étagère murale et la chaise d'architecte, sont inspirés de meubles en carton qui existent vraiment. Le brief, je me le suis donné tout seul : deux jours. Un pour créer tous les visuels, un pour filmer, monter et publier."
+   },
+   {
+    "t": "video",
+    "url": "assets/meublon/meublon.mp4",
+    "poster": "assets/meublon/poster.jpg",
+    "caption": "",
+    "loop": true
+   },
+   {
+    "t": "text",
+    "text": "Ce projet a été pensé pour être présenté en vidéo. J'ai réalisé une identité complète comprenant le logo, la carte de visite, le livret d'instructions, le dépliant de la chaise et le packaging."
+   },
+   {
+    "t": "statement",
+    "text": "Comment allier le carton *et le Japon* ?"
+   },
+   {
+    "t": "text",
+    "text": "Le carton est le matériau le moins noble qui soit, et le Japon appelle tout de suite des images de raffinement. Les deux ne vont pas ensemble.\n\nLa réponse a été de traiter les meubles en carton comme un dessin à l'encre : un trait de pinceau brut, écorché, presque sale. À partir de là le matériau cesse d'être un handicap, il devient le sujet."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le logotype",
+    "text": "Un mot tracé au pinceau"
+   },
+   {
+    "t": "text",
+    "text": "Le logotype part d'une police de base, puis un gros travail de typographie sur Illustrator : chaque lettre reprise, cassée, effilée, jusqu'à obtenir ce tracé au pinceau."
+   },
+   {
+    "t": "image",
+    "url": "assets/meublon/logo-lockup.png",
+    "caption": "",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "gallery",
+    "cols": "4",
+    "items": [
+     {
+      "url": "assets/meublon/logo-bicolore.png",
+      "caption": ""
+     },
+     {
+      "url": "assets/meublon/logo-noir.png",
+      "caption": ""
+     },
+     {
+      "url": "assets/meublon/logo-rouge.png",
+      "caption": ""
+     },
+     {
+      "url": "assets/meublon/logo-blanc.png",
+      "caption": ""
+     }
+    ]
+   },
+   {
+    "t": "title",
+    "eyebrow": "Les pièces",
+    "text": "Branding"
+   },
+   {
+    "t": "gallery",
+    "cols": "3",
+    "items": [
+     {
+      "url": "assets/meublon/stationery.jpg",
+      "caption": "Carte de visite et livret Instructions"
+     },
+     {
+      "url": "assets/meublon/depliant.jpg",
+      "caption": "Dépliant de la chaise d'architecte"
+     },
+     {
+      "url": "assets/meublon/packaging.jpg",
+      "caption": "Sachet de l'étagère murale"
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "Le sachet porte un QR code « Scan d'authentifications ». Rien d'anti-contrefaçon là-dedans, c'est un détail purement graphique, et il renvoie sur mon Instagram."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le système",
+    "text": ""
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Signature",
+      "v": "木組み (kigumi)"
+     },
+     {
+      "k": "Baseline",
+      "v": "Le mobilier en carton qui a du caractère"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#111111",
+      "hex": "#111111",
+      "extra": ""
+     },
+     {
+      "name": "#ffffff",
+      "hex": "#ffffff",
+      "extra": ""
+     },
+     {
+      "name": "#e0231a",
+      "hex": "#e0231a",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Avec peu, *on peut faire beaucoup*."
+   },
+   {
+    "t": "text",
+    "text": "Deux jours, trois couleurs, un logotype et un plan de travail filmé. C'est ce que je retiens du projet : la contrainte de temps a forcé des décisions rapides, et le résultat tient debout.\n\nCe que je referais autrement : poser la musique directement dans Premiere Pro. Je l'ai ajoutée au moment de publier sur Instagram, donc le fichier d'origine est muet."
+   },
+   {
+    "t": "image",
+    "url": "assets/meublon/planche.jpg",
+    "caption": "Le plan de travail complet, celui que la vidéo parcourt",
+    "ratio": "",
+    "fit": "cover"
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "cervin",
+  "title": "Flow *State*",
+  "category": "affiches",
+  "date_label": "Juin 2026",
+  "cover_url": "assets/cervin/poster.jpg",
+  "hover_url": "assets/cervin/poster.jpg",
+  "meta": {
+   "lede": "Une affiche construite entièrement à l'écran, de la photo brute du Cervin au rendu final, et filmée du début à la fin.",
+   "hero_image": "",
+   "imported_from": "cervin.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#b7260e",
+   "paper": "#ececed"
+  },
+  "blocks": [
+   {
+    "t": "statement",
+    "text": "Le but, *c'était la vidéo*."
+   },
+   {
+    "t": "text",
+    "text": "Je voulais me lancer dans le montage. Plutôt que de m'entraîner à vide, je me suis donné une contrainte : réaliser une affiche complète et enregistrer mon écran, avec OBS, du premier clic au rendu final. Tout s'est fait en une seule session de quatre heures, c'était mes débuts, j'étais lent.\n\nFilmer pendant qu'on travaille ajoute un stress, mais un stress positif : on s'applique plus."
+   },
+   {
+    "t": "video",
+    "url": "assets/cervin/cervin.mp4",
+    "poster": "assets/cervin/video-poster.jpg",
+    "caption": "",
+    "loop": false
+   },
+   {
+    "t": "title",
+    "eyebrow": "De la photo brute à l'affiche",
+    "text": ""
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/cervin/photo-source.jpg",
+     "caption": "La photo de départ, libre de droits"
+    },
+    "b": {
+     "url": "assets/cervin/poster.jpg",
+     "caption": "L'affiche finale"
+    }
+   },
+   {
+    "t": "text",
+    "text": "La photo vient de [Pixabay](https://pixabay.com/fr/photos/cervin-montagne-zermatt-suisse-1510431/), libre de droits. Le détourage du massif a été fait entièrement à la main, et c'est de loin ce qui a pris le plus de temps.\n\nLe tracé rouge représente la montée vers le sommet. Le nuancier posé en bas à gauche est un élément purement graphique, il affiche les quatre couleurs de l'affiche à même l'affiche."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "J'ai gagné *des automatismes*."
+   },
+   {
+    "t": "text",
+    "text": "Le dérush a été la vraie leçon : plusieurs heures de rush ramenées à quarante-neuf secondes, en ne gardant que les moments où quelque chose change à l'écran. La musique vient d'Instagram, simple, mais elle porte bien l'ambiance.\n\nL'affiche n'est pas la meilleure que j'aie faite. Ce n'était pas la question : le projet était un exercice de vidéo, et de ce côté-là j'ai progressé et je me suis créé des réflexes qui me servent depuis."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Durée",
+      "v": "4 h d'affilée"
+     },
+     {
+      "k": "Capture",
+      "v": "OBS Studio"
+     },
+     {
+      "k": "Montage",
+      "v": "49 s, musique Instagram"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#b7260e",
+      "hex": "#b7260e",
+      "extra": ""
+     },
+     {
+      "name": "#0d1b2a",
+      "hex": "#0d1b2a",
+      "extra": ""
+     },
+     {
+      "name": "#a8cfe4",
+      "hex": "#a8cfe4",
+      "extra": ""
+     },
+     {
+      "name": "#ffffff",
+      "hex": "#ffffff",
+      "extra": ""
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "fragments",
+  "title": "Fragments *of Silence*",
+  "category": "affiches",
+  "date_label": "Mars 2026",
+  "cover_url": "assets/fragments/mockup.jpg",
+  "hover_url": "assets/fragments/construction.jpg",
+  "meta": {
+   "lede": "",
+   "hero_image": "assets/fragments/affiche-fr.jpg",
+   "imported_from": "fragments.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#ca0a54",
+   "paper": "#eeecea"
+  },
+  "blocks": [
+   {
+    "t": "text",
+    "text": "C'était au tout début, quand je me lançais dans le design et que je voulais poster quelque chose sur mes réseaux. Je me suis donné un objectif simple : faire une affiche entièrement dans Illustrator, sans photo, sans texture importée, rien que des formes et de la couleur.\n\nUne heure de travail. C'est aussi une des premières fois où j'ai assumé un vrai parti pris graphique au lieu de jouer la sécurité."
+   },
+   {
+    "t": "title",
+    "eyebrow": "La construction",
+    "text": ""
+   },
+   {
+    "t": "image",
+    "url": "assets/fragments/construction.jpg",
+    "caption": "Les tracés, sous la couleur",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "statement",
+    "text": "La grille d'abord, *la couleur ensuite*."
+   },
+   {
+    "t": "text",
+    "text": "Tout part de cercles concentriques et d'un triangle, posés sur une grille de repères. Une construction rigide, très Swiss Style, entièrement vectorielle. Le dégradé est venu après : je l'ai essayé par-dessus la structure, et ça a matché du premier coup.\n\nC'est ce qui rend l'affiche intéressante à mes yeux : une couleur qui bouge en permanence, tenue par une géométrie qui ne bouge pas du tout."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Ce qu'on voit",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Un visage, *si on regarde bien*."
+   },
+   {
+    "t": "text",
+    "text": "La composition n'est pas abstraite. Le dégradé dessine une silhouette : le triangle blanc joue le rôle des yeux, et le grand pan jaune indique la direction du regard. Une fois qu'on l'a vu, on ne voit plus que ça."
+   },
+   {
+    "t": "image",
+    "url": "assets/fragments/mockup.jpg",
+    "caption": "En situation",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "text",
+    "text": "C'est une affiche que j'aime toujours, et c'est assez rare pour le dire. Elle date d'une époque où je ne savais pas encore grand-chose, mais le parti pris est net et il tient encore aujourd'hui."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Durée",
+      "v": "1 h"
+     },
+     {
+      "k": "Outil",
+      "v": "Illustrator, 100 % vectoriel"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#f01030",
+      "hex": "#f01030",
+      "extra": ""
+     },
+     {
+      "name": "#c00050",
+      "hex": "#c00050",
+      "extra": ""
+     },
+     {
+      "name": "#f0f040",
+      "hex": "#f0f040",
+      "extra": ""
+     },
+     {
+      "name": "#10f000",
+      "hex": "#10f000",
+      "extra": ""
+     },
+     {
+      "name": "#1000c0",
+      "hex": "#1000c0",
+      "extra": ""
+     },
+     {
+      "name": "#f0b050",
+      "hex": "#f0b050",
+      "extra": ""
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "riat",
+  "title": "Damien *Riat*",
+  "category": "sport",
+  "date_label": "Sept. 2026",
+  "cover_url": "assets/riat/poster.jpg",
+  "hover_url": "assets/riat/poster-brut.jpg",
+  "meta": {
+   "lede": "",
+   "hero_image": "assets/riat/poster.jpg",
+   "imported_from": "riat.html"
+  },
+  "theme": {
+   "mode": "dark",
+   "accent": "#e02222",
+   "paper": "#0d0d0f"
+  },
+  "blocks": [
+   {
+    "t": "statement",
+    "text": "Le hockey, *pas le foot*."
+   },
+   {
+    "t": "text",
+    "text": "J'avais envie d'une affiche de sport design qui sorte du football. Un des meilleurs clubs de hockey du pays joue dans ma ville, je n'ai pas hésité longtemps. Damien Riat évolue au Lausanne HC en National League, dont il est le capitaine.\n\nL'affiche est un bilan de saison : les chiffres en haut, le joueur au centre, la patinoire et les couleurs du club autour. Trois heures de travail, seul, et c'est à ce jour celle dont je suis le plus content."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le vrai travail",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Le détourage, c'est bien. *La retouche, c'est mieux*."
+   },
+   {
+    "t": "text",
+    "text": "Découper quatre plans du joueur, ce n'est pas là que le temps part. Le temps part après : faire tenir ensemble quatre photos prises à des matchs différents, sous des lumières différentes, avec des maillots différents, et obtenir une image qui semble avoir été prise le même soir."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/riat/poster-brut.jpg",
+     "caption": "Avant"
+    },
+    "b": {
+     "url": "assets/riat/poster.jpg",
+     "caption": "Après"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Approuvé *par Damien Riat*."
+   },
+   {
+    "t": "text",
+    "text": "Je l'ai postée sur Instagram, et Damien Riat l'a likée. Pour une affiche faite sans commande, sans contact et sans autre motivation que l'envie, c'est le meilleur retour possible.\n\nCe qui me gêne encore : le palet en bas à droite. Il devait apporter de la profondeur, un avant-plan qui casse le plat de l'image. Il fait le travail, mais il n'est pas assez bien traité. C'est la première chose que je reprendrais."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Découpe",
+      "v": "4 plans du joueur"
+     },
+     {
+      "k": "Profondeur",
+      "v": "Le palet en avant-plan"
+     },
+     {
+      "k": "Signature du lieu",
+      "v": "46.5285855° N, 6.5999957° E"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#e02222",
+      "hex": "#e02222",
+      "extra": ""
+     },
+     {
+      "name": "#0d0d0f",
+      "hex": "#0d0d0f",
+      "extra": ""
+     },
+     {
+      "name": "#f2f2f2",
+      "hex": "#f2f2f2",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "Exercice personnel non commercial, réalisé à partir de photographies de presse retouchées. Aucune affiliation avec le Lausanne HC, la National League ou les marques visibles sur l'équipement."
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "rogers",
+  "title": "Morgan *Rogers*",
+  "category": "sport",
+  "date_label": "Sept. 2026",
+  "cover_url": "assets/rogers/poster.jpg",
+  "hover_url": "assets/rogers/poster-brut.jpg",
+  "meta": {
+   "lede": "",
+   "hero_image": "assets/rogers/poster.jpg",
+   "imported_from": "rogers.html"
+  },
+  "theme": {
+   "mode": "dark",
+   "accent": "#2f6fd0",
+   "paper": "#081221"
+  },
+  "blocks": [
+   {
+    "t": "statement",
+    "text": "Ma *première*."
+   },
+   {
+    "t": "text",
+    "text": "C'est l'affiche par laquelle j'ai commencé à publier mon sport design sur Instagram. Quatre heures de travail, seul, en apprenant au fur et à mesure. Je suis fan de Chelsea, et pour une première sortie publique je voulais des conditions faciles : du football, un grand club, un joueur dont les photos se trouvent sans difficulté.\n\nLes chiffres affichés, deux matchs, un but, une passe décisive, sont ceux de Rogers en début de saison au moment où j'ai posté. Ce n'est pas un bilan, c'est un instantané."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le montage",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Du haut vers le bas, *trois plans*."
+   },
+   {
+    "t": "text",
+    "text": "J'ai commencé par le grand joueur, celui qui occupe tout le haut, puis j'ai construit autour. Le fond est Stamford Bridge, avec un mur de glace ajouté par dessus pour casser la platitude de la photo d'origine. Les brins d'herbe du premier plan sont une photo détourée, posée devant tout le reste pour donner une profondeur de champ."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/rogers/poster-brut.jpg",
+     "caption": "Sans effet"
+    },
+    "b": {
+     "url": "assets/rogers/poster.jpg",
+     "caption": "Final"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Un *bon début*."
+   },
+   {
+    "t": "text",
+    "text": "Ce que j'aime le plus, c'est le traitement du nom : « Morgan » en très grand, en contour blanc derrière les joueurs, et « Rogers » en script jaune par dessus. C'est un style que j'avais vu ailleurs, que j'ai aimé, et que je me suis approprié depuis.\n\nCe qui me gêne : le ballon en haut à gauche. J'ai essayé plusieurs flous, aucun ne rendait bien, et j'ai fini par garder celui-là faute de mieux. Je le referais autrement aujourd'hui."
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Durée",
+      "v": "4 h, en apprenant"
+     },
+     {
+      "k": "Plans",
+      "v": "Stade, lettrage, joueurs, herbe"
+     },
+     {
+      "k": "Format",
+      "v": "4/5, pour les réseaux"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#2f6fd0",
+      "hex": "#2f6fd0",
+      "extra": ""
+     },
+     {
+      "name": "#081221",
+      "hex": "#081221",
+      "extra": ""
+     },
+     {
+      "name": "#f0e04a",
+      "hex": "#f0e04a",
+      "extra": ""
+     }
+    ]
+   },
+   {
+    "t": "text",
+    "text": "Exercice personnel non commercial, réalisé à partir de photographies de presse retouchées. Aucune affiliation avec le Chelsea FC, la Premier League ou les marques visibles sur l'équipement."
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "serigraphie",
+  "title": "Sérigraphie *& Tampographie*",
+  "category": "edition",
+  "date_label": "Juin 2026",
+  "cover_url": "assets/serigraphie/cover-mockup.jpg",
+  "hover_url": "assets/serigraphie/dos-mockup.jpg",
+  "meta": {
+   "lede": "",
+   "hero_image": "assets/serigraphie/cover-mockup.jpg",
+   "imported_from": "serigraphie.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#e2963e",
+   "paper": "#f3efe6"
+  },
+  "blocks": [
+   {
+    "t": "statement",
+    "text": "Deux techniques, *un seul cahier*."
+   },
+   {
+    "t": "text",
+    "text": "Le brief tenait en une phrase : choisir deux techniques d'imprimerie et en faire un cahier d'explication. J'ai pris la sérigraphie, que j'avais déjà pratiquée moi-même, et la tampographie, que je ne connaissais pas et que je trouvais intéressante.\n\nCinq heures de travail, seul, pour un cahier A5 de douze pages, imprimé et relié. Les informations techniques, je suis allé les chercher."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le système",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "La page *imite la technique*."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/serigraphie/spread-bleu.jpg",
+     "caption": "La sérigraphie"
+    },
+    "b": {
+     "url": "assets/serigraphie/spread-vert.jpg",
+     "caption": "Presse et encres"
+    }
+   },
+   {
+    "t": "text",
+    "text": "Le fond noir piqué de points gris n'est pas une texture décorative. C'est l'écran de sérigraphie : la trame percée qui laisse passer l'encre uniquement aux endroits ouverts. La couleur posée par dessus, c'est l'encre qu'on étale à la racle pour révéler le motif. La mise en page rejoue donc le procédé qu'elle explique, page après page."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/serigraphie/spread-jaune.jpg",
+     "caption": "La tampographie"
+    },
+    "b": {
+     "url": "assets/serigraphie/spread-rose.jpg",
+     "caption": "La machine"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Un projet *réussi*."
+   },
+   {
+    "t": "text",
+    "text": "Ce dont je suis le plus content, c'est l'usage des couleurs : cinq teintes franches tenues sur douze pages sans que l'ensemble se disperse.\n\nCe que j'aime moins, c'est le motif du dos de couverture. Je n'avais pas d'idée pour cette page, j'ai dessiné un motif pour ne pas la laisser vide. Ça se voit."
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/serigraphie/dos-mockup.jpg",
+     "caption": "Le dos de couverture, et son motif"
+    },
+    "b": {
+     "url": "assets/serigraphie/grid.jpg",
+     "caption": "Les douze pages"
+    }
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Durée",
+      "v": "5 h, seul"
+     },
+     {
+      "k": "Objet",
+      "v": "Cahier A5, 12 pages, imprimé"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#e2963e",
+      "hex": "#e2963e",
+      "extra": ""
+     },
+     {
+      "name": "#2e8fd4",
+      "hex": "#2e8fd4",
+      "extra": ""
+     },
+     {
+      "name": "#6cb33f",
+      "hex": "#6cb33f",
+      "extra": ""
+     },
+     {
+      "name": "#f0c419",
+      "hex": "#f0c419",
+      "extra": ""
+     },
+     {
+      "name": "#e0399e",
+      "hex": "#e0399e",
+      "extra": ""
+     },
+     {
+      "name": "#e5302a",
+      "hex": "#e5302a",
+      "extra": ""
+     }
+    ]
+   }
+  ],
+  "published": false
+ },
+ {
+  "slug": "losangeles",
+  "title": "Los *Angeles*",
+  "category": "edition",
+  "date_label": "Mars 2026",
+  "cover_url": "assets/losangeles/mockup-histoire.jpg",
+  "hover_url": "assets/losangeles/mockup-sommaire.jpg",
+  "meta": {
+   "lede": "",
+   "hero_image": "assets/losangeles/cover.jpg",
+   "imported_from": "losangeles.html"
+  },
+  "theme": {
+   "mode": "light",
+   "accent": "#189cd8",
+   "paper": "#eef6fa"
+  },
+  "blocks": [
+   {
+    "t": "statement",
+    "text": "Mon *premier livre*."
+   },
+   {
+    "t": "text",
+    "text": "Un guide touristique de seize pages, imprimé, avec ses transports, ses hôtels, son histoire, ses lieux d'intérêt et culturels, ses adresses pour manger et ses incontournables. Toute la classe travaillait sur la collection « Ville du Monde », chacun avec sa ville. J'ai pris Los Angeles, parce que c'est une ville où j'ai toujours voulu aller.\n\nSept heures de travail, seul. C'était la première fois que je devais tenir une mise en page cohérente sur autant de pages, avec une vraie hiérarchie de contenu et pas un visuel unique."
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le bleu",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Trouvé ici, *gardé depuis*."
+   },
+   {
+    "t": "text",
+    "text": "Le bleu que vous voyez partout sur ce portfolio vient de ce projet. Je l'ai trouvé totalement par hasard, en cherchant simplement une couleur pour le magazine.\n\nJuste après, j'ai voulu me lancer sous mon propre nom, et il me fallait une direction artistique. J'ai repris ce bleu. C'est devenu la couleur de LT Design, et elle n'a pas bougé depuis."
+   },
+   {
+    "t": "title",
+    "eyebrow": "La grille",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Un bandeau bleu, *une rubrique*."
+   },
+   {
+    "t": "text",
+    "text": "La grille était posée dès le départ : chaque double-page porte en haut son bandeau bleu avec le nom de la rubrique, et son numéro de page en bas dans un carré de la même couleur. Huit rubriques, seize pages, et le repère ne change jamais. C'est ce qui tient le livre debout."
+   },
+   {
+    "t": "gallery",
+    "cols": "3",
+    "items": [
+     {
+      "url": "assets/losangeles/sommaire.jpg",
+      "caption": "Sommaire et transport"
+     },
+     {
+      "url": "assets/losangeles/hotels.jpg",
+      "caption": "Hôtels"
+     },
+     {
+      "url": "assets/losangeles/histoire.jpg",
+      "caption": "Histoire"
+     },
+     {
+      "url": "assets/losangeles/interet.jpg",
+      "caption": "Lieu d'intérêt"
+     },
+     {
+      "url": "assets/losangeles/manger.jpg",
+      "caption": "Manger et boire"
+     },
+     {
+      "url": "assets/losangeles/sources.jpg",
+      "caption": "Liens et sources"
+     }
+    ]
+   },
+   {
+    "t": "images2",
+    "a": {
+     "url": "assets/losangeles/mockup-sommaire.jpg",
+     "caption": "Le sommaire, et son HOLLYWOOD"
+    },
+    "b": {
+     "url": "assets/losangeles/mockup-histoire.jpg",
+     "caption": "Le livre imprimé"
+    }
+   },
+   {
+    "t": "title",
+    "eyebrow": "Le résultat",
+    "text": ""
+   },
+   {
+    "t": "statement",
+    "text": "Le point *de départ*."
+   },
+   {
+    "t": "text",
+    "text": "Le guide a été imprimé et relié. Ce que j'en garde, c'est la couleur, et le fait que c'est le projet qui a lancé tout le reste.\n\nCe qui me gêne quand je le revois : certaines photos, et le positionnement des textes, qui n'est pas toujours propre. Sur seize pages, tenir chaque bloc au millimètre était au-dessus de mon niveau à l'époque. C'est exactement ce que j'ai travaillé ensuite.\n\nLe contenu rédactionnel a été rassemblé à partir de sources en ligne, listées en dernière page du guide."
+   },
+   {
+    "t": "image",
+    "url": "assets/losangeles/grid.jpg",
+    "caption": "Les seize pages",
+    "ratio": "",
+    "fit": "cover"
+   },
+   {
+    "t": "facts",
+    "items": [
+     {
+      "k": "Durée",
+      "v": "7 h"
+     },
+     {
+      "k": "Objet",
+      "v": "Livret paysage, 16 pages, imprimé"
+     },
+     {
+      "k": "Structure",
+      "v": "Sommaire et 8 rubriques"
+     }
+    ]
+   },
+   {
+    "t": "palette",
+    "colors": [
+     {
+      "name": "#189cd8",
+      "hex": "#189cd8",
+      "extra": ""
+     },
+     {
+      "name": "#0e2230",
+      "hex": "#0e2230",
+      "extra": ""
+     },
+     {
+      "name": "#ffffff",
+      "hex": "#ffffff",
+      "extra": ""
+     }
+    ]
+   }
+  ],
+  "published": false
+ }
+]

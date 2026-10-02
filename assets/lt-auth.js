@@ -31,7 +31,11 @@
     if (!clientPromise){
       clientPromise = loadLib().then(function(){
         return window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
-          auth: { persistSession: true, autoRefreshToken: true }
+          /* sessionStorage : la session ne survit que dans l'onglet en cours
+             (elle disparaît à la fermeture de l'onglet/du navigateur) —
+             il faut donc se reconnecter à chaque nouvelle visite du mode
+             créateur, voulu par le propriétaire. */
+          auth: { persistSession: true, autoRefreshToken: true, storage: window.sessionStorage }
         });
       }).catch(function(e){ clientPromise = null; throw e; });
     }
@@ -55,14 +59,14 @@
   function session(){ return client().then(function(c){ return c.auth.getSession(); }).then(function(r){ return r.data && r.data.session || null; }); }
 
   /* Détection rapide, sans bibliothèque : une session Supabase est stockée
-     par supabase-js sous la clé sb-<ref>-auth-token. Sert seulement à
+     par supabase-js (ici dans sessionStorage) sous la clé sb-<ref>-auth-token. Sert seulement à
      adapter l'interface (étoile qui mène directement au mode créateur,
      bouton "Modifier") ; la vraie vérification reste celle de Supabase. */
   function looksLoggedIn(){
     if (!configured()) return false;
     try {
       var ref = new URL(CFG.SUPABASE_URL).hostname.split('.')[0];
-      return !!localStorage.getItem('sb-' + ref + '-auth-token');
+      return !!sessionStorage.getItem('sb-' + ref + '-auth-token');
     } catch (e) { return false; }
   }
 

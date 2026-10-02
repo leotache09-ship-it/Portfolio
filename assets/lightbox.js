@@ -7,7 +7,7 @@
 (function () {
   function init() {
     var imgs = Array.prototype.slice.call(document.querySelectorAll('main img'));
-    imgs = imgs.filter(function (im) { return !im.closest('a'); });
+    imgs = imgs.filter(function (im) { return !im.closest('a') && !im.hasAttribute('data-nozoom'); });
     if (!imgs.length) return;
 
     var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

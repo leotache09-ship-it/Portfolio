@@ -8,13 +8,18 @@
 (function(){
   var RATIOS = [ ['', 'Taille d\'origine'], ['1:1', 'Carré 1:1'], ['4:5', 'Portrait 4:5'], ['3:4', 'Portrait 3:4'], ['3:2', 'Paysage 3:2'], ['16:9', 'Large 16:9'] ];
   var FIT = [ ['cover', 'Remplir (recadrer)'], ['contain', 'Tout afficher'] ];
+  /* Une image "complète" : fichier, légende, format, cadrage (zoom + point
+     de focus, utile seulement quand un format est choisi) et agrandissement
+     au clic. IMG et IMG_LIGHT sont identiques : plus de variante allégée. */
   var IMG = [
     { k:'url', type:'image', label:'Image' },
     { k:'caption', type:'text', label:'Légende (facultatif)' },
     { k:'ratio', type:'select', label:'Format', options:RATIOS },
-    { k:'fit', type:'select', label:'Cadrage (si format choisi)', options:FIT }
+    { k:'fit', type:'select', label:'Cadrage (si format choisi)', options:FIT },
+    { k:'frame', type:'frame', label:'Zoom et cadrage' },
+    { k:'zoomClick', type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
   ];
-  var IMG_LIGHT = [ { k:'url', type:'image', label:'Image' }, { k:'caption', type:'text', label:'Légende (facultatif)' } ];
+  var IMG_LIGHT = IMG;
 
   /* définition des blocs : champs éditables + valeur par défaut */
   var BLOCKS = {

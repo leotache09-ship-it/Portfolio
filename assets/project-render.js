@@ -65,14 +65,14 @@
   }
 
   /* ---------- images ---------- */
-  function img(url, alt){ return url ? '<img src="' + esc(url) + '" alt="' + esc(alt || '') + '" loading="lazy">' : ''; }
+  function img(url, alt, style, noZoom){ return url ? '<img src="' + esc(url) + '" alt="' + esc(alt || '') + '" loading="lazy"' + (style ? ' style="' + esc(style) + '"' : '') + (noZoom ? ' data-nozoom' : '') + '>' : ''; }
   function ratioCss(r){ return { '1:1':'1/1', '4:5':'4/5', '3:4':'3/4', '3:2':'3/2', '16:9':'16/9' }[r] || ''; }
   function frame(o){
     o = o || {};
     if (!o.url) return '<div class="frame" style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Image à ajouter</div>';
     var rc = ratioCss(o.ratio);
     var cls = 'frame' + (rc ? ' fixed' : '') + (rc && o.fit === 'contain' ? ' contain' : '');
-    return '<div class="' + cls + '"' + (rc ? ' style="aspect-ratio:' + rc + '"' : '') + '>' + img(o.url, o.caption) + '</div>';
+    return '<div class="' + cls + '"' + (rc ? ' style="aspect-ratio:' + rc + '"' : '') + '>' + img(o.url, o.caption, rc && D.frameCss ? D.frameCss(o.frame) : '', o.noZoom) + '</div>';
   }
   function figure(o){
     o = o || {};
@@ -151,7 +151,7 @@
     /* autres projets */
     if (others && others.length){
       out += '<section class="block"><div class="more-grid">' + others.map(function(p){
-        return '<a class="more-card" href="' + esc(p.href) + '"><span class="more-media">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(D.plain(p.name)) + '" loading="lazy">' : '') +
+        return '<a class="more-card" href="' + esc(p.href) + '"><span class="more-media">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(D.plain(p.name)) + '" loading="lazy"' + (p.imgStyle ? ' style="' + esc(p.imgStyle) + '"' : '') + '>' : '') +
           '<span class="more-veil"></span><span class="more-cta"><span>Voir plus</span></span></span><span class="more-name">' + p.name + '</span></a>';
       }).join('') + '</div></section>';
     }
