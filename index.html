@@ -342,8 +342,12 @@
   .tv-title-card{
     flex:0 0 auto; max-width:min(78vw,560px);
     display:flex; align-items:center;
+    /* le texte se colle côté flèche : sur les titres à 2 lignes la boîte est
+       plus large que le texte (max-width), ce qui laissait un grand vide
+       entre le titre et la flèche, qui elle ne doit pas bouger. */
+    justify-content:flex-end; text-align:right;
   }
-  .tv-strip-row--rev .tv-title-card{ justify-content:flex-end; text-align:right; }
+  .tv-strip-row--rev .tv-title-card{ justify-content:flex-start; text-align:left; }
   .tv-cat-title{
     font-family:"Archivo Black"; text-transform:uppercase; margin:0;
     font-size: clamp(2.3rem,6.6vw,4.2rem); line-height:1;
