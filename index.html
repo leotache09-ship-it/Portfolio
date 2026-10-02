@@ -1451,6 +1451,23 @@ var TRAVAUX_FAMILIES = [
 
   /* en mouvement normal, c'est le fond de la page qui dégrade en continu
      (ci-dessous) : les bandes elles-mêmes redeviennent transparentes. */
+  /* mobile : pas de dégradé piloté au scroll, mais un dégradé STATIQUE (CSS) :
+     chaque bande a sa couleur au centre et se fond vers le milieu de la
+     couleur voisine en haut/en bas (noir de la page avant la première et
+     après la dernière). Aucun script au scroll. */
+  if (mobileLayout && !reducedMotion){
+    var mix = function(a, b){
+      var pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16), out = [];
+      [16, 8, 0].forEach(function(sh){ out.push(Math.round((((pa >> sh) & 255) + ((pb >> sh) & 255)) / 2)); });
+      return 'rgb(' + out.join(',') + ')';
+    };
+    bands.forEach(function(band, i){
+      var prev = i ? bands[i - 1].color : '#0D0D0F';
+      var next = i < bands.length - 1 ? bands[i + 1].color : '#0D0D0F';
+      band.el.style.background = 'linear-gradient(to bottom, ' + mix(prev, band.color) + ' 0%, ' + band.color + ' 30%, ' + band.color + ' 70%, ' + mix(band.color, next) + ' 100%)';
+      band.el.style.borderTop = 'none';
+    });
+  }
   if (!reducedMotion && !mobileLayout) bands.forEach(function(band){ band.el.style.background = 'transparent'; });
   }
 

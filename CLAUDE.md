@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Mobile : dégradé STATIQUE entre les bandes de travaux (le plat unie « faisait bizarre »). Dans `build()` (si `mobileLayout`), chaque `.tv-cat` reçoit un `linear-gradient` CSS : moitié de mélange avec la couleur voisine en haut (0%), sa couleur de 30% à 70%, mélange avec la suivante en bas (100%) ; noir de la page avant la 1re et après la dernière ; plus de trait blanc entre bandes. Aucun script au scroll (la leçon « pas de dégradé piloté au scroll sur mobile » reste valable). Les deux moitiés d'une jonction sont le même mélange 50/50 → pas de couture.
+
 - 2026-10-02 — La flèche `.cover-point` passe à DROITE du portrait (miroir `scaleX(-1)`, oscillation vers lui) : `right:-9%` sur desktop, `left:73%;top:20.5%` sur mobile (espace libre à droite du cou, sous « TÂCHE »).
 
 - 2026-10-02 — (1) Mobile : la page se laissait glisser en horizontal dans le noir (mon `touch-action: pan-x pan-y` sur `body` + le portrait/lueur du hero qui débordent de l'écran) → `body{touch-action:pan-y}` rétabli (seules les `.tv-strip` ont `pan-x pan-y`) et `html{overflow-x:hidden}` sous 760px. (2) Petite flèche blanche (`.cover-point`, SVG) qui pointe le portrait pour montrer qu'il est cliquable (oscillation douce, coupée en mouvement réduit) ; sur mobile elle est dans l'espace libre à gauche du cou (le portrait déborde l'écran). (3) « Mon parcours » : nouvelle étape « Lancement en freelance — Dès mars 2026 » (LT Design) ajoutée en `data-reach="4"` comme CPNV, donc le point/le tracé de la carte ne bougent pas (vérifié : marqueur toujours en 270,143, timeline tient dans l'écran).
