@@ -33,7 +33,7 @@
   h1{ font-family:"Archivo Black"; text-transform:uppercase; font-weight:400; font-size:clamp(2.2rem,8vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.5); }
   h1 em{ font-style:normal; color:var(--accent); }
 
-  .filters{ display:flex; flex-wrap:wrap; gap:8px; margin: 0 0 calc(var(--unit)*2); }
+  .filters{ display:flex; flex-wrap:wrap; gap:8px; }
   .filters button{
     font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
     color:var(--ink-soft); background:var(--card); border:1px solid var(--line); border-radius:999px; padding:9px 16px;
@@ -43,6 +43,18 @@
   .filters button:hover{ border-color:var(--ink-soft); color:var(--ink); }
   .filters button[aria-pressed="true"]{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
 
+  .toolbar{ display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap: var(--unit); margin: 0 0 calc(var(--unit)*2); }
+  .toolbar .filters{ margin:0; flex:1 1 420px; }
+  .sort{ display:flex; align-items:center; gap:10px; font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); }
+  .sort select{
+    font:inherit; letter-spacing:inherit; text-transform:inherit; color:var(--ink); background:var(--card);
+    border:1px solid var(--line); border-radius:999px; padding:9px 34px 9px 16px; cursor:pointer;
+    appearance:none; -webkit-appearance:none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23f2f2f2' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position: right 14px center;
+  }
+  .sort select:hover{ border-color:var(--ink-soft); }
+  .sort select:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
   .grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); gap: calc(var(--unit)*1.5) var(--unit); }
   .card{ display:block; text-decoration:none; color:inherit; }
   .card[hidden]{ display:none; }
@@ -76,7 +88,18 @@
 
 <main>
   <h1>Tous les <em>projets</em>.</h1>
-  <div class="filters" id="filters" role="group" aria-label="Filtrer par catégorie"></div>
+  <div class="toolbar">
+    <div class="filters" id="filters" role="group" aria-label="Filtrer par catégorie"></div>
+    <label class="sort">Trier
+      <select id="sort">
+        <option value="default">Ordre du portfolio</option>
+        <option value="date-desc">Date : du plus récent</option>
+        <option value="date-asc">Date : du plus ancien</option>
+        <option value="az">Alphabétique : A → Z</option>
+        <option value="za">Alphabétique : Z → A</option>
+      </select>
+    </label>
+  </div>
   <div class="grid" id="grid"></div>
 </main>
 
@@ -107,6 +130,12 @@ var FAMILIES = [
     { name:'Magazine<br>Los Angeles', href:'losangeles.html', img:'assets/losangeles/mockup-histoire.jpg', date:'Mars 2026' } ] }
 ];
 
+var MONTHS = { 'janv.':1, 'févr.':2, 'mars':3, 'avril':4, 'mai':5, 'juin':6, 'juil.':7, 'août':8, 'sept.':9, 'oct.':10, 'nov.':11, 'déc.':12 };
+function dateKey(label){ /* "Sept. 2026" -> 2026*12+9 */
+  var m = label.toLowerCase().split(/\s+/);
+  return (parseInt(m[1], 10) || 0) * 12 + (MONTHS[m[0]] || 0);
+}
+
 (function(){
   var grid = document.getElementById('grid');
   var filters = document.getElementById('filters');
@@ -115,7 +144,7 @@ var FAMILIES = [
     f.projects.forEach(function(p){
       total++;
       var alt = p.name.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
-      html += '<a class="card" href="' + p.href + '" data-cat="' + f.id + '" style="--c:' + f.color + '">' +
+      html += '<a class="card" href="' + p.href + '" data-cat="' + f.id + '" data-ts="' + dateKey(p.date) + '" data-name="' + alt.replace(/"/g, '') + '" data-i="' + total + '" style="--c:' + f.color + '">' +
         '<span class="media"><img src="' + p.img + '" alt="' + alt + '" loading="lazy"><span class="veil"><span>Voir plus</span></span></span>' +
         '<span class="info"><span class="name">' + p.name + '</span>' +
         '<span class="meta"><i class="dot"></i>' + f.title + ' · ' + p.date + '</span></span></a>';
@@ -138,6 +167,18 @@ var FAMILIES = [
     });
     try { history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); } catch(e){}
   }
+  var sortSel = document.getElementById('sort');
+  function sortCards(mode){
+    var cards = Array.prototype.slice.call(grid.children);
+    var byName = function(a, b){ return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'), 'fr', { sensitivity:'base' }); };
+    var byIdx = function(a, b){ return a.getAttribute('data-i') - b.getAttribute('data-i'); };
+    var byTs = function(dir){ return function(a, b){ return (dir * (a.getAttribute('data-ts') - b.getAttribute('data-ts'))) || byIdx(a, b); }; };
+    var cmp = { 'default': byIdx, 'date-desc': byTs(-1), 'date-asc': byTs(1),
+                'az': byName, 'za': function(a, b){ return byName(b, a); } }[mode] || byIdx;
+    cards.sort(cmp).forEach(function(c){ grid.appendChild(c); });
+  }
+  sortSel.addEventListener('change', function(){ sortCards(sortSel.value); });
+
   filters.addEventListener('click', function(e){
     var b = e.target.closest('button'); if (b) apply(b.getAttribute('data-cat'));
   });

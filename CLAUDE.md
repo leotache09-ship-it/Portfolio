@@ -208,6 +208,11 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — `projets.html` : menu "Trier" (ordre du portfolio, date du
+  plus récent / du plus ancien, alphabétique A→Z / Z→A), combinable avec
+  le filtre par catégorie. La date des projets ("Sept. 2026") est
+  convertie en clé numérique par `dateKey()` (table `MONTHS`) : tout
+  nouveau mois abrégé utilisé dans une date doit y figurer.
 - 2026-10-02 — "Plus de travaux" (section travaux de `index.html`) ne mène
   plus à Instagram (le lien Instagram du bas de la section Contact reste) :
   il ouvre la nouvelle page `projets.html`, un répertoire en grille des
