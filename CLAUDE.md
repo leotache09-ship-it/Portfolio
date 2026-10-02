@@ -208,6 +208,18 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — `apropos.html` mise à jour depuis le CV du client
+  (`cv.pdf`) : accroche et bio réécrites (médiamaticien en formation et
+  graphiste freelance LT Design), tag "Graphiste freelance", nouvelle
+  section **Expérience** (LT Design depuis mars 2026, AFMBB, Chearn — les
+  deux derniers liés à leurs études de cas), CFC détaillé (2024 — 2028),
+  nouvelle section **Compétences** (design, logiciels, web, bureautique,
+  langues, loisirs). **Volontairement NON publié** (données personnelles
+  du CV) : adresse, téléphone, date de naissance, email de la personne de
+  référence (tiers, sans son accord), email `@lt-design.ch` (le formulaire
+  de contact envoie vers `leo.tache.09@gmail.com`, non modifié), et les
+  champs encore vides du CV (`[nom de l'établissement]`, `[années]`,
+  `[lien]`).
 - 2026-10-02 — **Vraie cause du "tout se casse après plusieurs allers-
   retours"** (cartes qui ne défilent plus, dégradé qui n'apparaît plus) :
   les scripts de scroll (dégradé/cartes des travaux, croissance du carré
