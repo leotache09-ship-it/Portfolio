@@ -458,19 +458,15 @@
        sur desktop, le bandeau au-dessus (z-index:3 contre 2), pour que le
        bord du bandeau coupe net le bas du corps). */
     h1.cover-name{ font-size: clamp(5.4rem, 20vw, 8.5rem); line-height:1.08; }
-    /* demande client : sur téléphone, le portrait est petit et se place à
-       droite du prénom "Léo" (première ligne du nom), à la même hauteur
-       que cette ligne — plus grand ni centré, plus coupé par le bandeau.
-       Hauteur = hauteur d'une ligne du nom (même expression que le
-       font-size/line-height ci-dessus) pour ne jamais déborder sur
-       "Tâche" en dessous. Ratio réel du fichier (667×788) fixé sur le lien
-       (voir CLAUDE.md : `width:auto` + `max-width:100%` rendait l'image
-       trop étroite dans un conteneur absolu sans largeur propre). */
     .cover-portrait-link{
-      top: clamp(112px, 24vh, 320px); bottom:auto; left:auto;
-      right: var(--gutter); transform:none;
-      height: calc(clamp(5.4rem, 20vw, 8.5rem) * 1.08);
+      height: clamp(340px, 60vh, 520px);
+      /* ratio réel du fichier portrait (667×788) : fixé explicitement sur
+         le lien, sinon `width:auto` sur l'image (combiné au `max-width:100%`
+         global des <img>) se résout mal sur un conteneur en position
+         absolue sans largeur propre, et l'image rendait deux fois trop
+         étroite — le bas du corps n'atteignait jamais le bandeau. */
       aspect-ratio: 667 / 788; width:auto;
+      left:50%; right:auto; bottom:0; transform: translateX(-50%);
     }
     .cover-portrait{ width:100%; }
     .cover-hint{
@@ -516,6 +512,8 @@
   .cf-submit .arrow{ flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color: var(--blue); transition: background .4s, color .4s, transform .4s cubic-bezier(.2,.7,.2,1); }
   .cf-submit:hover .arrow{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); transform: translateX(4px); }
   .cf-submit .arrow svg{ width:15px; height:15px; }
+  .cf-note{ margin:0; font-size:.78rem; line-height:1.5; color: var(--ink-faint); }
+  .cf-note a{ color: var(--ink-soft); text-underline-offset:3px; }
   .cf-status{ margin:0; font-size:.92rem; line-height:1.5; color: var(--ink-soft); }
   .cf-status.is-ok{ color: var(--blue); }
   .cf-status.is-err{ color: #ff7a59; }
@@ -852,6 +850,7 @@
           <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </span>
       </button>
+      <p class="cf-note">Vos données ne servent qu'à répondre à votre message. <a href="confidentialite.html">Protection des données</a></p>
       <p class="cf-status" id="cfStatus" role="status" aria-live="polite" hidden></p>
     </form>
 
@@ -868,7 +867,7 @@
     </div>
   </section>
 
-  <footer><img src="assets/logo-black.png" alt="" style="height:16px;width:auto;margin:0 auto 8px;opacity:.7"> Léo Tâche</footer>
+  <footer><img src="assets/logo-black.png" alt="" style="height:16px;width:auto;margin:0 auto 8px;opacity:.7"> Léo Tâche · <a href="confidentialite.html">Confidentialité</a></footer>
 </main>
 
 <script>

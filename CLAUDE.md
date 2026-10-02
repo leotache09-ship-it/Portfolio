@@ -208,6 +208,18 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — (1) **Annule** le petit portrait à droite de "Léo" sur
+  mobile (malentendu client) : retour exact au portrait grand, centré et
+  coupé par le bandeau — la demande réelle ("petit à droite de mon prénom")
+  reste à clarifier avec le client avant de retoucher. (2) Ajoute
+  `confidentialite.html` : déclaration de protection des données (LPD
+  suisse : responsable, données traitées, FormSubmit, Google Fonts,
+  communication à l'étranger, conservation, droits, PFPDT, droit d'auteur,
+  exclusion de responsabilité), liée depuis le pied de page de TOUTES les
+  pages et sous le formulaire de contact. Aucun cookie/traceur sur le site
+  (vérifié) ; si un outil de stats, une police locale ou un nouvel
+  hébergeur change, mettre cette page à jour. Texte rédigé comme modèle,
+  pas un avis juridique ; l'hébergeur n'y est pas nommé.
 - 2026-10-02 — (1) Mobile : le portrait devient petit et se place à droite
   du prénom "Léo" (même hauteur qu'une ligne du nom, ratio 667/788 fixé sur
   le lien) — plus grand, centré ni coupé par le bandeau. (2) `apropos.html`
