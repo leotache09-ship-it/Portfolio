@@ -1464,7 +1464,9 @@ var TRAVAUX_FAMILIES = [
     bands.forEach(function(band, i){
       var prev = i ? bands[i - 1].color : '#0D0D0F';
       var next = i < bands.length - 1 ? bands[i + 1].color : '#0D0D0F';
-      band.el.style.background = 'linear-gradient(to bottom, ' + mix(prev, band.color) + ' 0%, ' + band.color + ' 30%, ' + band.color + ' 70%, ' + mix(band.color, next) + ' 100%)';
+      /* 1re bande : le bleu du bandeau « Ma vitrine. » du hero se prolonge jusqu'au milieu de la bande (pas de fondu depuis le noir) */
+      var from = i ? mix(prev, band.color) + ' 0%, ' + band.color + ' 30%' : band.color + ' 0%, ' + band.color + ' 50%';
+      band.el.style.background = 'linear-gradient(to bottom, ' + from + ', ' + band.color + ' 70%, ' + mix(band.color, next) + ' 100%)';
       band.el.style.borderTop = 'none';
     });
   }

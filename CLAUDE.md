@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Mobile : le bleu du bandeau « Ma vitrine. » se prolonge jusqu'au MILIEU de la 1re bande « Des vrais clients. » (la 1re bande est bleu uni de 0 à 50 % au lieu de fondre depuis le noir), puis le dégradé continue vers la suivante. Mesuré : bas du bandeau = haut de la bande (1172px), pas d'écart.
+
 - 2026-10-02 — Mobile : dégradé STATIQUE entre les bandes de travaux (le plat unie « faisait bizarre »). Dans `build()` (si `mobileLayout`), chaque `.tv-cat` reçoit un `linear-gradient` CSS : moitié de mélange avec la couleur voisine en haut (0%), sa couleur de 30% à 70%, mélange avec la suivante en bas (100%) ; noir de la page avant la 1re et après la dernière ; plus de trait blanc entre bandes. Aucun script au scroll (la leçon « pas de dégradé piloté au scroll sur mobile » reste valable). Les deux moitiés d'une jonction sont le même mélange 50/50 → pas de couture.
 
 - 2026-10-02 — La flèche `.cover-point` passe à DROITE du portrait (miroir `scaleX(-1)`, oscillation vers lui) : `right:-9%` sur desktop, `left:73%;top:20.5%` sur mobile (espace libre à droite du cou, sous « TÂCHE »).
