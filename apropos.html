@@ -56,7 +56,8 @@
   header.nav a.back svg{ width:13px; height:13px; transition: transform .3s cubic-bezier(.2,.7,.2,1); }
   header.nav a.back:hover{ color: var(--accent); }
   header.nav a.back:hover svg{ transform:translateX(-4px); }
-  header.nav .mark{ font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color: var(--ink-faint); }
+  header.nav .mark{ display:flex; align-items:center; }
+  header.nav .mark img{ height:22px; width:auto; display:block; filter: invert(1); }
 
   section{ position:relative; }
   .grid-pattern{
@@ -95,15 +96,15 @@
   .portrait-frame{ position:relative; border-radius:3px; overflow:hidden; background: var(--card); border:1px solid var(--line); aspect-ratio: 3/4; }
   .portrait-frame img{ width:100%; height:100%; object-fit:cover; object-position:top center; }
 
-  .timeline-list{ display:flex; flex-direction:column; }
-  .tl-row{ display:grid; grid-template-columns: var(--tile) 1fr auto; gap: var(--unit); align-items:baseline; padding: calc(var(--unit)*1.1) 0; border-top:1px solid var(--line); }
-  .tl-row:first-child{ border-top:none; }
-  .tl-row .idx{ font-family:"Roboto Mono"; font-size:.85rem; color: var(--ink-faint); }
-  .tl-row .body h3{ font-weight:700; font-size:1.02rem; margin-bottom:4px; }
-  .tl-row .body p{ margin:0; color: var(--ink-soft); font-size:.9rem; line-height:1.5; }
-  .tl-row .date{ font-family:"Roboto Mono"; font-size:.72rem; color: var(--ink-faint); white-space:nowrap; text-align:right; }
-  .tl-row .body h3 a{ text-decoration:none; }
-  .tl-row .body h3 a:hover{ color: var(--accent); }
+  .skill-rows{ display:flex; flex-direction:column; }
+  .skill-row{ display:grid; grid-template-columns: calc(var(--tile)*2) 1fr; gap: var(--unit); align-items:start; padding: calc(var(--unit)*1.25) 0; border-top:1px solid var(--line); }
+  .skill-row:first-child{ border-top:none; padding-top:0; }
+  .skill-row .k{ font-family:"Roboto Mono"; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color: var(--accent); padding-top:9px; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-size:.9rem; padding:8px 14px; border-radius:999px; border:1px solid var(--line); background: var(--card); color: var(--ink); }
+  .chip em{ font-style:normal; font-family:"Roboto Mono"; font-size:.7rem; letter-spacing:.04em; color: var(--ink-faint); margin-left:6px; }
+  a.link-in{ color: var(--ink); text-decoration-color: var(--accent); text-underline-offset:3px; }
+  a.link-in:hover{ color: var(--accent); }
 
   .skills{ display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap: var(--unit); }
   .skill{ padding: calc(var(--unit)*1.5); border:1px solid var(--line); border-radius:3px; background: var(--card); }
@@ -133,8 +134,8 @@
     #hero{ padding-top: calc(var(--unit)*7); }
     .hero-split{ grid-template-columns: 1fr; }
     .hero-split .portrait-frame{ max-width:280px; margin:0 auto; }
-    .tl-row{ grid-template-columns: 1fr; }
-    .tl-row .date{ text-align:left; }
+    .skill-row{ grid-template-columns: 1fr; gap:10px; }
+    .skill-row .k{ padding-top:0; }
   }
 </style>
 
@@ -173,8 +174,8 @@
 
 <a id="top" href="#top" tabindex="-1" aria-hidden="true"></a>
 <header class="nav">
+  <a class="mark" href="index.html" aria-label="LT Design, retour au portfolio"><img src="assets/logo-black.png" alt="LT Design"></a>
   <a class="back" href="index.html"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portfolio</a>
-  <span class="mark">Léo Tâche</span>
 </header>
 
 <main>
@@ -195,9 +196,7 @@
           Le design graphique, la vidéo et la communication digitale me passionnent. Ce qui
           m'intéresse, c'est faire tenir une idée en une image : une identité de marque qui se
           reconnaît d'un coup d'œil, une affiche qui arrête le regard, une mise en page qui donne envie
-          de tourner la page. Je cherche à évoluer dans un environnement créatif et marketing. Une
-          partie des projets de ce site sont des exercices personnels, que je fais parce que j'en ai
-          envie.
+          de tourner la page. Je cherche à évoluer dans un environnement créatif et marketing.
         </p>
       </div>
 
@@ -209,70 +208,48 @@
 
   <section class="block grid-pattern">
     <p class="eyebrow"><span class="num">01</span> Expérience</p>
-    <h2 class="section-title balance">Graphiste freelance, LT Design.</h2>
+    <h2 class="section-title balance">Freelance, à côté des cours.</h2>
+    <p class="body-text">
+      Je me suis lancé en freelance sous le nom LT Design en parallèle de mes cours, pour élargir mes
+      connaissances et me confronter à de vrais mandats, du premier échange avec le client jusqu'à la
+      livraison. J'y ai notamment réalisé le rebranding de l'<a class="link-in" href="afmbb.html">AFMBB</a>,
+      une association active depuis 1983, et l'identité visuelle de <a class="link-in" href="chearn.html">Chearn</a>,
+      un nouveau centre de formation IT &amp; IA.
+    </p>
+  </section>
 
-    <div class="timeline-list">
-      <div class="tl-row">
-        <span class="idx mono">01</span>
-        <div class="body"><h3>Graphiste freelance, LT Design</h3><p>Identités visuelles pour des clients, du premier échange à la livraison</p></div>
-        <span class="date mono">Mars 2026 — aujourd'hui</span>
+  <section class="block grid-pattern">
+    <p class="eyebrow"><span class="num">02</span> Compétences</p>
+    <h2 class="section-title balance">Ce que je maîtrise.</h2>
+    <div class="skill-rows">
+      <div class="skill-row">
+        <span class="k">Design</span>
+        <div class="chips"><span class="chip">Identité visuelle</span><span class="chip">Charte graphique</span><span class="chip">Affiches</span><span class="chip">Print</span><span class="chip">Réseaux sociaux</span></div>
       </div>
-      <div class="tl-row">
-        <span class="idx mono">02</span>
-        <div class="body"><h3><a href="afmbb.html">AFMBB</a></h3><p>Amicale Fribourgeoise des Maîtrises &amp; Brevets du Bois · rebranding complet d'une association active depuis 1983</p></div>
-        <span class="date mono">Févr. — avr. 2026</span>
+      <div class="skill-row">
+        <span class="k">Logiciels</span>
+        <div class="chips"><span class="chip">Illustrator</span><span class="chip">Photoshop</span><span class="chip">InDesign</span><span class="chip">Figma</span><span class="chip">Premiere Pro</span><span class="chip">Audacity</span></div>
       </div>
-      <div class="tl-row">
-        <span class="idx mono">03</span>
-        <div class="body"><h3><a href="chearn.html">Chearn</a></h3><p>Centre de formation IT &amp; IA · création de l'identité visuelle d'une nouvelle école</p></div>
-        <span class="date mono">Mars — avr. 2026</span>
+      <div class="skill-row">
+        <span class="k">Web</span>
+        <div class="chips"><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Bases de JavaScript</span></div>
+      </div>
+      <div class="skill-row">
+        <span class="k">Bureautique</span>
+        <div class="chips"><span class="chip">Word</span><span class="chip">Excel</span><span class="chip">PowerPoint</span></div>
+      </div>
+      <div class="skill-row">
+        <span class="k">Langues</span>
+        <div class="chips"><span class="chip">Français <em>langue maternelle</em></span><span class="chip">Allemand <em>B1</em></span><span class="chip">Anglais <em>B1</em></span></div>
       </div>
     </div>
   </section>
 
   <section class="block grid-pattern">
-    <p class="eyebrow"><span class="num">02</span> Parcours</p>
-    <h2 class="section-title balance">De Mézières à Sainte-Croix.</h2>
-
-    <div class="timeline-list">
-      <div class="tl-row">
-        <span class="idx mono">—</span>
-        <div class="body"><h3>École obligatoire</h3><p>Collège du Raffort, Mézières</p></div>
-        <span class="date mono">—</span>
-      </div>
-      <div class="tl-row">
-        <span class="idx mono">01</span>
-        <div class="body"><h3>Stage 23bis</h3><p>Lausanne · réalisation d'un mini-projet vidéo en équipe</p></div>
-        <span class="date mono">Juin 2023</span>
-      </div>
-      <div class="tl-row">
-        <span class="idx mono">02</span>
-        <div class="body"><h3>Stage DGNSI</h3><p>État de Vaud · projets de transformation numérique</p></div>
-        <span class="date mono">Juil. 2023</span>
-      </div>
-      <div class="tl-row">
-        <span class="idx mono">03</span>
-        <div class="body"><h3>Stage DGEP</h3><p>État de Vaud · gestion des écoles professionnelles et des gymnases</p></div>
-        <span class="date mono">Févr. 2024</span>
-      </div>
-      <div class="tl-row">
-        <span class="idx mono">04</span>
-        <div class="body"><h3>CFC de médiamaticien</h3><p>CPNV, Sainte-Croix · design graphique, montage vidéo et audio, développement web, marketing digital, support informatique</p></div>
-        <span class="date mono">2024 — 2028</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="block grid-pattern">
-    <p class="eyebrow"><span class="num">03</span> Compétences</p>
-    <h2 class="section-title balance">Outils, langues, loisirs.</h2>
-    <div class="skills">
-      <div class="skill"><span class="k">Design</span><p>Identité visuelle, charte graphique, affiches, print et réseaux sociaux.</p></div>
-      <div class="skill"><span class="k">Logiciels</span><p>Illustrator, Photoshop, InDesign, Figma, Premiere Pro, Audacity.</p></div>
-      <div class="skill"><span class="k">Web</span><p>HTML, CSS, bases de JavaScript.</p></div>
-      <div class="skill"><span class="k">Bureautique</span><p>Word, Excel, PowerPoint.</p></div>
-      <div class="skill"><span class="k">Langues</span><p>Français : langue maternelle. Allemand : B1. Anglais : B1.</p></div>
-      <div class="skill"><span class="k">Loisirs</span><p>Fitness (5 fois par semaine), football (fan de Chelsea).</p></div>
+    <p class="eyebrow"><span class="num">03</span> Loisirs</p>
+    <div class="chips">
+      <span class="chip">Fitness <em>5 fois par semaine</em></span>
+      <span class="chip">Football <em>fan de Chelsea</em></span>
     </div>
   </section>
 

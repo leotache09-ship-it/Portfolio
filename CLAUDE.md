@@ -208,6 +208,16 @@ dynamiquement avec un `?fresh=<timestamp>`.
 
 ## Changelog
 
+- 2026-10-02 — `apropos.html`, retours client : logo (`logo-black.png`,
+  inversé) en haut à gauche du header (lien vers `index.html`), le lien
+  "← Portfolio" passe à droite ; Expérience = un court texte ("lancé en
+  freelance en parallèle des cours pour élargir mes connaissances…", avec
+  liens AFMBB/Chearn) à la place de la liste datée ; section Parcours
+  retirée (déjà dans la one-page) ; Compétences refaite en lignes
+  "étiquette + pastilles" (`.skill-rows`/`.chip`) ; phrase "exercices
+  personnels" retirée ; Loisirs (fitness 5×/semaine, football fan de
+  Chelsea) en petite section à part. Numérotation : 01 Expérience, 02
+  Compétences, 03 Loisirs, 04 Ce que je fais.
 - 2026-10-02 — `apropos.html` mise à jour depuis le CV du client
   (`cv.pdf`) : accroche et bio réécrites (médiamaticien en formation et
   graphiste freelance LT Design), tag "Graphiste freelance", nouvelle
