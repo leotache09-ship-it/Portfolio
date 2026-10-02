@@ -60,7 +60,11 @@
     var ctrl = window.AbortController ? new AbortController() : null;
     var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, timeoutMs || 6000) : null;
     return fetch(CFG.SUPABASE_URL.replace(/\/+$/, '') + '/rest/v1/' + path, {
-      headers: { apikey: CFG.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + CFG.SUPABASE_ANON_KEY },
+      /* l'ancienne clé "anon" est un JWT (eyJ…) et s'envoie aussi en Bearer ;
+         la nouvelle clé "publishable" (sb_publishable_…) ne doit PAS l'être. */
+      headers: /^eyJ/.test(CFG.SUPABASE_ANON_KEY)
+        ? { apikey: CFG.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + CFG.SUPABASE_ANON_KEY }
+        : { apikey: CFG.SUPABASE_ANON_KEY },
       signal: ctrl ? ctrl.signal : undefined
     }).then(function(r){
       if (timer) clearTimeout(timer);
