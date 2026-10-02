@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Le bouton « Retour » des pages projet revient à la page précédente (`history.back()`, via `assets/back.js`) si on vient d'une page du même site ; sinon (lien direct, nouvel onglet) il garde son lien de repli `index.html#<slug>`. Les clics avec Ctrl/Cmd/Maj (nouvel onglet) ne sont pas interceptés.
+
 - 2026-10-02 — En-tête de TOUTES les pages projet (11 d'origine + `projet.html`) : à gauche « Retour » (au lieu de « Portfolio », même lien `index.html#<slug>`), à droite le LOGO (`assets/logo-black.png`, 20px) cliquable vers `index.html`. Les 7 pages qui avaient du texte « LT Design » à droite ont maintenant l'image ; `riat` et `rogers` (thèmes sombres) l'inversent en blanc (`filter:invert(1)`), `projet.html` le fait selon `theme.mode`. Corrige au passage un `'` parasite dans l'aria-label du lien du logo (ajouté au commit précédent).
 
 - 2026-10-02 — Bouton "Plus de travaux" remis en BAS de la section travaux (après la dernière catégorie), centré, style pilule (le placer en haut n'était pas voulu).
