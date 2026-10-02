@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — En-tête de TOUTES les pages projet (11 d'origine + `projet.html`) : à gauche « Retour » (au lieu de « Portfolio », même lien `index.html#<slug>`), à droite le LOGO (`assets/logo-black.png`, 20px) cliquable vers `index.html`. Les 7 pages qui avaient du texte « LT Design » à droite ont maintenant l'image ; `riat` et `rogers` (thèmes sombres) l'inversent en blanc (`filter:invert(1)`), `projet.html` le fait selon `theme.mode`. Corrige au passage un `'` parasite dans l'aria-label du lien du logo (ajouté au commit précédent).
+
 - 2026-10-02 — Bouton "Plus de travaux" remis en BAS de la section travaux (après la dernière catégorie), centré, style pilule (le placer en haut n'était pas voulu).
 
 - 2026-10-02 — "Mon parcours" : le trait de la carte va maintenant simplement Mézières → Lausanne → Sainte-Croix (plus d'aller-retour dans Lausanne). Le chemin garde 4 segments pour rester synchronisé avec les 5 étapes de la timeline : les deux segments du milieu sont de longueur nulle (`C356,417 356,417 356,417`), le marqueur reste donc à Lausanne pendant ces étapes. Bouton "Plus de travaux" : déplacé EN HAUT et centré dans la section travaux, au même style pilule que "Tous les projets" des pages projet (icône grille seule, sans flèche).
