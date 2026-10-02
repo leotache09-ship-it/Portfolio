@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — "Autres projets" : les 2 suggestions sont maintenant tirées au hasard à chaque chargement (jamais le projet affiché) et un bouton "Tous les projets" (→ `projets.html`) est ajouté dessous. Pages d'origine : nouveau `assets/more-projects.js` (+ `config.js`/`lt-data.js` inclus avant `lightbox.js`) remplace les 2 cartes statiques, qui restent le repli sans JS ; il pioche dans `LT_DATA.loadAll()` (donc aussi les projets créés). Pages générées : `pickOthers` de `project-render.js` + style du bouton dans `project-page.css`. L'ancienne règle "les deux suivants dans l'ordre canonique" est abandonnée.
+
 - 2026-10-02 — Hero : interligne "Léo / Tâche" augmenté (desktop `.86`→`1.04`, mobile `1.08`→`1.2`). Le lien "Travaux" du header de `index.html` mène désormais à `projets.html` (répertoire de tous les projets) au lieu de scroller vers `#travaux`. Site publié via Netlify (auto-déploiement à chaque push sur `main`) sur leotache.ch.
 
 - 2026-10-02 — Retire l'étoile bleue : le mode créateur s'ouvre en ajoutant `_mode-createur` au lien (`index.html#_mode-createur` ouvre la fenêtre de connexion ; `/_mode-createur/` redirige vers `admin.html`). Docs et page de confidentialité mises à jour.

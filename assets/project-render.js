@@ -153,21 +153,18 @@
       out += '<section class="block"><div class="more-grid">' + others.map(function(p){
         return '<a class="more-card" href="' + esc(p.href) + '"><span class="more-media">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(D.plain(p.name)) + '" loading="lazy"' + (p.imgStyle ? ' style="' + esc(p.imgStyle) + '"' : '') + '>' : '') +
           '<span class="more-veil"></span><span class="more-cta"><span>Voir plus</span></span></span><span class="more-name">' + p.name + '</span></a>';
-      }).join('') + '</div></section>';
+      }).join('') + '</div><div class="more-all"><a href="projets.html">Tous les projets</a></div></section>';
     }
     return out;
   }
 
-  /* deux autres projets : les suivants dans l'ordre du portfolio */
+  /* deux autres projets tirés au hasard (jamais celui affiché) */
   function pickOthers(all, slug){
-    var i = -1, k;
-    for (k = 0; k < all.length; k++) if (all[k].slug === slug){ i = k; break; }
-    var res = [];
-    for (k = 1; k <= all.length && res.length < 2; k++){
-      var p = all[((i < 0 ? -1 : i) + k + all.length) % all.length];
-      if (p && p.slug !== slug && res.indexOf(p) < 0) res.push(p);
+    var pool = all.filter(function(p){ return p && p.slug !== slug; });
+    for (var i = pool.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1)), t = pool[i]; pool[i] = pool[j]; pool[j] = t;
     }
-    return res;
+    return pool.slice(0, 2);
   }
 
   window.LT_RENDER = { applyTheme: applyTheme, themeVars: themeVars, renderBody: renderBody, pickOthers: pickOthers, inline: inline, hexOk: hexOk };

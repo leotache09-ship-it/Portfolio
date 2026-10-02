@@ -123,3 +123,7 @@ footer a:hover{ text-decoration:underline; }
   .more-name{ font-size:clamp(.82rem,3.6vw,1rem); }
 }
 @media (prefers-reduced-motion: reduce){ .more-media img, .more-veil, .more-cta{ transition-duration:.01ms; } }
+
+.more-all{ margin-top:calc(var(--unit)*2); display:flex; justify-content:center; }
+.more-all a{ display:inline-block; font-family:"Roboto Mono",monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; color:var(--ink); border:1px solid currentColor; border-radius:999px; padding:13px 26px; transition:background .25s,color .25s; }
+.more-all a:hover{ background:var(--ink); color:var(--paper); }
