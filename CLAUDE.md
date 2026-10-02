@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Palette de couleurs du mode créateur : retire le bouton `EyeDropper` natif du navigateur (il grisait tout l'écran, non stylable) ; la pipette est maintenant le panneau « prendre dans une image », compact (image max 300px, vignettes 44px) et placé AU-DESSUS du carré de couleur. Non testé en navigateur après coup (le test exige le faux Supabase) : syntaxe vérifiée seulement.
+
 - 2026-10-02 — Le bouton "Tous les projets" reprend l'icône grille de "Plus de travaux" (même SVG) sur les pages d'origine et générées.
 
 - 2026-10-02 — "Autres projets" : les 2 suggestions sont maintenant tirées au hasard à chaque chargement (jamais le projet affiché) et un bouton "Tous les projets" (→ `projets.html`) est ajouté dessous. Pages d'origine : nouveau `assets/more-projects.js` (+ `config.js`/`lt-data.js` inclus avant `lightbox.js`) remplace les 2 cartes statiques, qui restent le repli sans JS ; il pioche dans `LT_DATA.loadAll()` (donc aussi les projets créés). Pages générées : `pickOthers` de `project-render.js` + style du bouton dans `project-page.css`. L'ancienne règle "les deux suivants dans l'ordre canonique" est abandonnée.

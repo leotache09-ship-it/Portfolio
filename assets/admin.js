@@ -411,13 +411,8 @@
       presets.appendChild(h('button', { type:'button', class:'cp-pre', style:'background:' + c, title:c, 'aria-label':c, onclick:function(){ setHex(c); } }));
     });
 
-    /* pipette sur l'écran (navigateurs qui la proposent) */
+    /* pas de pipette native du navigateur (elle grise tout l'écran) : on prélève dans une image du projet */
     var tools = h('div', { style:'display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0' });
-    if (window.EyeDropper){
-      tools.appendChild(h('button', { class:'btn sm', type:'button', text:"Pipette (cliquer n'importe où)", onclick:function(){
-        new window.EyeDropper().open().then(function(r){ setHex(r.sRGBHex); }).catch(function(){});
-      } }));
-    }
 
     /* prendre la couleur dans une image du projet : clic à un endroit = cette couleur */
     var imgSec = h('div', { class:'cp-img', hidden:true });
@@ -431,7 +426,7 @@
       var im = new Image(); im.crossOrigin = 'anonymous';
       im.onload = function(){
         clear(cvHost);
-        var maxW = Math.min(520, cvHost.clientWidth || 360), k = Math.min(1, maxW / im.naturalWidth);
+        var maxW = Math.min(300, cvHost.clientWidth || 300), k = Math.min(1, maxW / im.naturalWidth);
         var cv = h('canvas', { width:Math.round(im.naturalWidth * k), height:Math.round(im.naturalHeight * k), class:'cp-canvas' });
         var ctx = cv.getContext('2d', { willReadFrequently:true }); ctx.drawImage(im, 0, 0, cv.width, cv.height);
         var dot = h('div', { class:'cp-dot', hidden:true });
@@ -458,13 +453,13 @@
         Array.prototype.forEach.call(thumbs.children, function(t){ t.classList.remove('on'); }); this.classList.add('on'); loadSample(u);
       } }));
     });
-    tools.appendChild(h('button', { class:'btn sm', type:'button', text:'Prendre dans une image', onclick:function(){ imgSec.hidden = !imgSec.hidden; if (!imgSec.hidden && imgs.length && !cvHost.firstChild){ thumbs.firstChild.click(); } } }));
+    tools.appendChild(h('button', { class:'btn sm', type:'button', text:'Pipette (prendre dans une image)', onclick:function(){ imgSec.hidden = !imgSec.hidden; if (!imgSec.hidden && imgs.length && !cvHost.firstChild){ thumbs.firstChild.click(); } } }));
 
     function close(){ back.remove(); }
     var modal = h('div', { class:'modal', style:'max-width:440px', role:'dialog', 'aria-modal':'true', 'aria-label':'Palette de couleurs' },
       h('h2', { text:'Choisis une couleur' }),
       h('div', { style:'display:flex;gap:12px;align-items:center;margin:0 0 12px' }, prev, hexIn),
-      sv, h('div', { style:'height:10px' }), hue, presets, tools, imgSec,
+      imgSec, sv, h('div', { style:'height:10px' }), hue, presets, tools,
       h('div', { style:'display:flex;gap:8px;margin-top:18px' },
         h('button', { class:'btn primary', type:'button', text:'Utiliser cette couleur', onclick:function(){ var hx = cur(); close(); onApply(hx); } }),
         h('button', { class:'btn ghost', type:'button', text:'Annuler', onclick:close })));
