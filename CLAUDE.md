@@ -213,8 +213,7 @@ dynamiques vivent dans **Supabase** (guide : `supabase/INSTALLATION.md`,
 SQL : `supabase/setup.sql`, clés publiques dans `assets/config.js`, vide
 tant que non configuré → le site se comporte exactement comme avant).
 
-- **Étoile bleue** en haut à droite (`assets/star.js`, sur index, projets et
-  pages projet générées) → fenêtre nom + mot de passe → `admin.html`.
+- **Accès caché** (`assets/star.js`, plus d'étoile visible) : ajouter `_mode-createur` à la fin du lien (`#_mode-createur`, `?_mode-createur` ou dossier `_mode-createur/` qui redirige vers `admin.html`) → fenêtre nom + mot de passe → `admin.html`.
   Le "nom" devient `<nom>@admin.leotache.ch` (compte créé à la main dans
   Supabase, inscriptions désactivées). Auth via `assets/lt-auth.js`
   (supabase-js chargé à la demande depuis jsdelivr, jamais pour un visiteur).
@@ -249,6 +248,8 @@ tant que non configuré → le site se comporte exactement comme avant).
   valider après l'installation.
 
 ## Changelog
+
+- 2026-10-02 — Retire l'étoile bleue : le mode créateur s'ouvre en ajoutant `_mode-createur` au lien (`index.html#_mode-createur` ouvre la fenêtre de connexion ; `/_mode-createur/` redirige vers `admin.html`). Docs et page de confidentialité mises à jour.
 
 - 2026-10-02 — Mode créateur : (1) session en `sessionStorage` (il faut se reconnecter à chaque nouvelle visite/onglet) ; (2) recadrage/zoom des images (`frame` {zoom,fx,fy}, appliqué via `D.frameCss`, nécessite un ratio fixe ; option « Agrandir au clic » = `noZoom`) y compris sur les couvertures/survols (`meta.cover_frame/hover_frame` -> `imgStyle/peekStyle`) ; (3) dossier automatique par projet dans le stockage Supabase (`projects/<meta.folder>/`, pas dans le dossier `assets/` du dépôt) ; (4) sélecteur de couleur multicolore (carré SV + teinte + hex + pipette sur image) ; (5) import des 11 projets existants : `assets/legacy-projects.json` (généré par un convertisseur BeautifulSoup depuis les pages HTML) -> bouton « Importer » dans l'admin, arrivent en brouillons, les pages d'origine restent en ligne ; une fois publié, le projet DB remplace l'entrée legacy (dédoublonnage par slug dans `LT_DATA.loadAll`). Limite : Meublon/Flow State perdent la vidéo de carte d'accueil une fois publiés (carte = image de couverture). Vérifié avec un Supabase simulé (jamais testé avec le vrai).
 

@@ -60,7 +60,7 @@ chez Supabase.
 
 ## 5. Utiliser le mode administrateur
 
-- Clique sur l'**étoile bleue** en haut à droite du site → entre ton **nom**
+- Ajoute `_mode-createur` à la fin du lien du site (ex. `leotache.ch/_mode-createur`) → entre ton **nom**
   (`leo`) et ton **mot de passe**.
 - **Projets** : créer / modifier / publier / supprimer des pages projet
   (modèles prêts à l'emploi, zones de texte, images, titres, image de

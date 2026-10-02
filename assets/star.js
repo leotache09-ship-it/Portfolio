@@ -1,20 +1,17 @@
 /*
- * LT Design — étoile bleue du mode administrateur (en haut à droite).
- * Clic : fenêtre "nom + mot de passe" ; une fois connecté on est envoyé
- * vers admin.html. Si une session existe déjà, l'étoile mène directement
- * au mode administrateur.
+ * LT Design — accès caché au mode créateur (plus d'étoile visible).
+ * Il suffit d'ajouter _mode-createur à la fin du lien (index.html#_mode-createur,
+ * ?_mode-createur, ou le dossier /_mode-createur/) : fenêtre "nom + mot de
+ * passe", puis redirection vers admin.html.
  * Dépend de assets/config.js et assets/lt-auth.js (inclus avant).
  */
 (function(){
-  var header = document.querySelector('header.nav') || document.querySelector('header');
-  if (!header || !window.LT_AUTH) return;
+  if (!window.LT_AUTH) return;
+  var KEY = '_mode-createur';
+  function wanted(){ return (location.hash + location.search + location.pathname).indexOf(KEY) !== -1; }
 
   var css = document.createElement('style');
   css.textContent =
-    '.admin-star{ flex:none; width:30px; height:30px; border:none; border-radius:4px; background:#189CD8; color:#fff; cursor:pointer; padding:0; display:flex; align-items:center; justify-content:center; margin-left:14px; position:relative; z-index:501; transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s; }' +
-    '.admin-star:hover{ transform: rotate(12deg) scale(1.08); box-shadow:0 0 18px rgba(24,156,216,.6); }' +
-    '.admin-star:focus-visible{ outline:2px solid #fff; outline-offset:2px; }' +
-    '.admin-star svg{ width:16px; height:16px; display:block; }' +
     '.lt-login-back{ position:fixed; inset:0; z-index:10000; background:rgba(5,5,7,.72); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:16px; }' +
     '.lt-login-back[hidden]{ display:none; }' +
     '.lt-login{ width:100%; max-width:380px; background:#18181b; color:#f2f2f2; border:1px solid rgba(242,242,242,.16); border-radius:6px; padding:28px 24px 24px; font-family:Roboto,-apple-system,"Segoe UI",sans-serif; position:relative; }' +
@@ -30,14 +27,6 @@
     '.lt-login .x:hover{ color:#fff; }' +
     '.lt-login .err{ min-height:1.2em; margin:12px 0 0; font-size:.86rem; color:#ff7a59; }';
   document.head.appendChild(css);
-
-  var star = document.createElement('button');
-  star.type = 'button';
-  star.className = 'admin-star';
-  star.setAttribute('aria-label', 'Mode administrateur');
-  star.title = 'Mode administrateur';
-  star.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2l2.9 6.5 7.1.7-5.3 4.8 1.5 7-6.2-3.6-6.2 3.6 1.5-7L2 9.4l7.1-.7z"/></svg>';
-  (header.querySelector('.right') || header).appendChild(star);
 
   var back = null, form, errEl, btn, nameEl, passEl, lastFocus;
 
@@ -84,8 +73,11 @@
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
-  star.addEventListener('click', function(){
+  function check(){
+    if (!wanted()) return;
     if (window.LT_AUTH.looksLoggedIn()) { location.href = 'admin.html'; return; }
     open();
-  });
+  }
+  window.addEventListener('hashchange', check);
+  check();
 })();
