@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-02 — Hero : au survol (même variable `--glow` que la lueur bleue), trois icônes Ps / Ai / Id sortent de derrière le portrait en s'éloignant, floues au début (blur qui diminue) avec chacune un halo flou coloré (`.cover-apps` / `.cover-app--ps|ai|id`, CSS pur piloté par `--glow` ; invisibles au repos, donc aussi sur tactile et avec `prefers-reduced-motion`). Ce sont des pastilles stylisées (texte + couleurs Adobe), pas les logos officiels. Pour tester sans souris : forcer `.cover-portrait-link{--glow:1 !important}`.
+
 - 2026-10-02 — Palette de couleurs du mode créateur : retire le bouton `EyeDropper` natif du navigateur (il grisait tout l'écran, non stylable) ; la pipette est maintenant le panneau « prendre dans une image », compact (image max 300px, vignettes 44px) et placé AU-DESSUS du carré de couleur. Non testé en navigateur après coup (le test exige le faux Supabase) : syntaxe vérifiée seulement.
 
 - 2026-10-02 — Le bouton "Tous les projets" reprend l'icône grille de "Plus de travaux" (même SVG) sur les pages d'origine et générées.

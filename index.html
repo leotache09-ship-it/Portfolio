@@ -152,6 +152,25 @@
     transition: opacity .2s ease;
     pointer-events:none;
   }
+  /* icônes Photoshop / Illustrator / InDesign : sortent de derrière le
+     portrait en s'éloignant, floues au début, au même rythme que la lueur
+     bleue (--glow, 0 → 1, posée sur .cover-portrait-link). Chaque icône a
+     son propre halo flou coloré. Masquées au repos (--glow = 0). */
+  .cover-apps{ position:absolute; left:50%; top:36%; width:0; height:0; z-index:0; pointer-events:none; font-size: clamp(48px, 6.4vw, 92px); }
+  .cover-app{
+    position:absolute; left:-.5em; top:-.5em; width:1em; height:1em; border-radius:.22em;
+    display:flex; align-items:center; justify-content:center;
+    font-family:Roboto,sans-serif; font-weight:700; line-height:1; letter-spacing:-.02em;
+    border:.06em solid var(--c); color:var(--c); background:var(--bg);
+    transform: translate(calc(var(--tx) * var(--glow, 0) * 1em), calc(var(--ty) * var(--glow, 0) * 1em)) rotate(calc((1 - var(--glow, 0)) * var(--rot))) scale(calc(.3 + var(--glow, 0) * .7));
+    opacity: calc(var(--glow, 0) * 1.25);
+    filter: blur(calc((1 - var(--glow, 0)) * 7px));
+  }
+  .cover-app::before{ content:""; position:absolute; inset:-30%; z-index:-1; border-radius:50%; background:var(--c); filter:blur(.55em); opacity:.55; }
+  .cover-app span{ font-size:.46em; }
+  .cover-app--ps{ --c:#31A8FF; --bg:#001E36; --tx:-3.4; --ty:-5.2; --rot:-35deg; }
+  .cover-app--ai{ --c:#FF9A00; --bg:#330000; --tx:-5.8; --ty:-1.2; --rot:30deg; }
+  .cover-app--id{ --c:#FF3366; --bg:#49021F; --tx:-4.6; --ty:2.6; --rot:-25deg; }
   .cover-portrait{
     position:relative; z-index:1; display:block; margin:0 auto;
     height:100%; width:auto; object-fit:contain;
@@ -698,6 +717,7 @@
     </div>
     <a class="cover-portrait-link" href="apropos.html" aria-label="À propos de Léo Tâche">
       <span class="cover-portrait-glow" aria-hidden="true"></span>
+      <span class="cover-apps" aria-hidden="true"><span class="cover-app cover-app--ps"><span>Ps</span></span><span class="cover-app cover-app--ai"><span>Ai</span></span><span class="cover-app cover-app--id"><span>Id</span></span></span>
       <img class="cover-portrait" src="assets/leo-portrait.webp" alt="Léo Tâche" onerror="this.closest('.cover-portrait-link').style.display='none'">
       <span class="cover-portrait-cta" aria-hidden="true"><span>À propos</span></span>
     </a>
