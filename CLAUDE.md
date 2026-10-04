@@ -249,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-05 — Préparation Google Search Console : `sitemap.xml` (15 pages publiques, domaine `https://leotache.ch/`), `robots.txt` (bloque `/admin.html` et `/_mode-createur/`, pointe vers le sitemap) et `<meta name="description">` sur `index.html`, `projets.html`, `apropos.html`. Les projets créés dans le mode créateur (`projet.html?p=…`) ne sont PAS dans le sitemap (il est statique) ; un sitemap dynamique demanderait un script/une fonction.
+
 - 2026-10-02 — Mobile : la dernière bande (« Édition & print », vert) se fond jusqu'au NOIR PUR en bas (plus de saut brutal) et le bouton « Plus de travaux » est remonté dessus (`margin-top:-3.5 unités`, `.tv-cat:last-child` avec plus de `padding-bottom` pour ne pas chevaucher le titre). Vérifié sur capture en émulation.
 
 - 2026-10-02 — Mobile : le bleu du bandeau « Ma vitrine. » se prolonge jusqu'au MILIEU de la 1re bande « Des vrais clients. » (la 1re bande est bleu uni de 0 à 50 % au lieu de fondre depuis le noir), puis le dégradé continue vers la suivante. Mesuré : bas du bandeau = haut de la bande (1172px), pas d'écart.

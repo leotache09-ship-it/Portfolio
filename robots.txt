@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /_mode-createur/
+Allow: /
+
+Sitemap: https://leotache.ch/sitemap.xml
