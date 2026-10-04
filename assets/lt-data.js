@@ -15,11 +15,11 @@
   var CFG = window.LT_CONFIG || {};
 
   var CATS = [
-    { id:'clients',  title:'Des vrais clients', homeTitle:'Des vrais clients.',  color:'#189CD8' },
-    { id:'fictives', title:'Projets fictifs',  homeTitle:'Projets fictifs.',   color:'#A855F7' },
-    { id:'affiches', title:'Affiches',          homeTitle:'Affiches.',           color:'#E5B800' },
-    { id:'sport',    title:'Sport design',      homeTitle:'Sport design.',       color:'#FF5A1F' },
-    { id:'edition',  title:'Édition & print',   homeTitle:'Édition &amp; print.', color:'#16A085' }
+    { id:'clients',  title:'Des vrais clients', homeTitle:'Des vrais clients',  color:'#189CD8' },
+    { id:'fictives', title:'Projets fictifs',  homeTitle:'Projets fictifs',   color:'#A855F7' },
+    { id:'affiches', title:'Affiches',          homeTitle:'Affiches',           color:'#E5B800' },
+    { id:'sport',    title:'Sport design',      homeTitle:'Sport design',       color:'#FF5A1F' },
+    { id:'edition',  title:'Édition & print',   homeTitle:'Édition &amp; print', color:'#16A085' }
   ];
 
   /* projets d'origine, dans l'ordre d'affichage par défaut */

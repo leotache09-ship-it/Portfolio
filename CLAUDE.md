@@ -250,6 +250,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-05 — Galerie des travaux : plus de point final dans les noms de catégorie (« Des vrais clients », « Projets fictifs », « Affiches », « Sport design », « Édition & print ») dans `TRAVAUX_FAMILIES` (`index.html`) et `homeTitle` de `assets/lt-data.js` (utilisé quand la composition vient de Supabase). Le titre « Ma vitrine. » du hero garde son point.
+
 - 2026-10-05 — **Supprime l'écran de chargement (logo qui s'assemble + compteur %)** sur les 13 pages qui l'avaient (index, apropos, 11 projets) : bloc CSS `#lt-loader`, markup et `<script src="assets/loader.js">` retirés, `assets/loader.js` supprimé. Raison : mauvais pour le référencement (contenu masqué derrière un écran plein page, chargement ralenti). Les autres animations (hero, travaux, etc.) sont conservées. Les mentions « Écran de chargement » plus haut dans ce fichier sont désormais historiques.
 
 - 2026-10-05 — Nouveau mode de publication : commits locaux, push uniquement sur demande de Léo (économie de crédits Netlify).
