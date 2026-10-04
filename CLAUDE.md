@@ -28,8 +28,7 @@ Site portfolio statique (HTML/CSS/JS vanilla, sans build) pour Léo Tâche,
   `riat.html`, `rogers.html`, `serigraphie.html`, `losangeles.html`) —
   chacune une étude de cas, structure similaire (header + hero + sections
   `.row`/`.shots`/`.plate` + footer), CSS inline propre à chaque page.
-- `assets/loader.js` — écran de chargement partagé (logo qui s'assemble +
-  compteur %), inclus sur les 12 pages.
+- ~~`assets/loader.js`~~ — écran de chargement, SUPPRIMÉ le 2026-10-05.
 - `assets/lightbox.js` — visionneuse plein écran au clic sur une image,
   incluse seulement sur les 11 pages projet (pas sur `index.html`).
 - `assets/<projet>/` — images/vidéos de chaque étude de cas.
@@ -250,6 +249,8 @@ tant que non configuré → le site se comporte exactement comme avant).
   valider après l'installation.
 
 ## Changelog
+
+- 2026-10-05 — **Supprime l'écran de chargement (logo qui s'assemble + compteur %)** sur les 13 pages qui l'avaient (index, apropos, 11 projets) : bloc CSS `#lt-loader`, markup et `<script src="assets/loader.js">` retirés, `assets/loader.js` supprimé. Raison : mauvais pour le référencement (contenu masqué derrière un écran plein page, chargement ralenti). Les autres animations (hero, travaux, etc.) sont conservées. Les mentions « Écran de chargement » plus haut dans ce fichier sont désormais historiques.
 
 - 2026-10-05 — Nouveau mode de publication : commits locaux, push uniquement sur demande de Léo (économie de crédits Netlify).
 
