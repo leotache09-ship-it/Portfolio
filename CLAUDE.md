@@ -12,8 +12,10 @@ Site portfolio statique (HTML/CSS/JS vanilla, sans build) pour Léo Tâche,
   modification, toujours recharger avec un paramètre anti-cache
   (`?cb=xxx`) ou un rechargement forcé (Ctrl+Maj+R), sinon on teste une
   version obsolète sans s'en rendre compte (piège rencontré plusieurs fois).
-- À chaque changement validé : commit + push direct sur `main` (pas de
-  branche, pas de PR — le propriétaire du repo travaille seul avec Claude).
+- À chaque changement validé : **commit en local seulement**. Le `git push`
+  sur `main` (pas de branche, pas de PR) ne se fait QUE quand Léo dit de
+  publier : chaque push déclenche un déploiement Netlify qui consomme des
+  crédits. Un seul push regroupe alors tous les commits en attente.
 - **Ce fichier (`CLAUDE.md`) doit être mis à jour à chaque commit** : ajouter
   une ligne au Changelog ci-dessous résumant le changement.
 
@@ -248,6 +250,8 @@ tant que non configuré → le site se comporte exactement comme avant).
   valider après l'installation.
 
 ## Changelog
+
+- 2026-10-05 — Nouveau mode de publication : commits locaux, push uniquement sur demande de Léo (économie de crédits Netlify).
 
 - 2026-10-05 — Préparation Google Search Console : `sitemap.xml` (15 pages publiques, domaine `https://leotache.ch/`), `robots.txt` (bloque `/admin.html` et `/_mode-createur/`, pointe vers le sitemap) et `<meta name="description">` sur `index.html`, `projets.html`, `apropos.html`. Les projets créés dans le mode créateur (`projet.html?p=…`) ne sont PAS dans le sitemap (il est statique) ; un sitemap dynamique demanderait un script/une fonction.
 
