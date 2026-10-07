@@ -656,6 +656,27 @@
     return wrap;
   }
 
+  /* ----- copier / coller les réglages d'une image vers une autre ----- */
+  function styleBar(defs, obj, rebuild){
+    var ks = defs.filter(function(d){ return d.adv; }).map(function(d){ return d.type === 'boolInv' ? d.flag : d.k; });
+    function norm(k){ return k.replace(/^hero_/, ''); } /* l'image d'en-tête et les images de blocs partagent les mêmes réglages */
+    var copy = h('button', { class:'btn sm ghost', type:'button', text:'Copier les réglages', onclick:function(){
+      var o = {};
+      ks.forEach(function(k){ if (obj[k] !== undefined && obj[k] !== '') o[norm(k)] = clone(obj[k]); });
+      state.styleClip = o;
+      toast("Réglages copiés. Va sur une autre image et clique sur « Coller les réglages ».", 'ok');
+    } });
+    var paste = h('button', { class:'btn sm ghost', type:'button', text:'Coller les réglages', onclick:function(){
+      if (!state.styleClip){ toast("Rien à coller : copie d'abord les réglages d'une image.", 'err'); return; }
+      ks.forEach(function(k){
+        var nk = norm(k);
+        if (Object.prototype.hasOwnProperty.call(state.styleClip, nk)) obj[k] = clone(state.styleClip[nk]); else delete obj[k];
+      });
+      touch(); toast('Réglages collés.', 'ok'); rebuild();
+    } });
+    return h('div', { style:'display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px' }, copy, paste);
+  }
+
   /* rendu générique d'une liste de définitions de champs */
   function fieldsNode(defs, obj, afterChange){
     var top = h('div', { class:'fg' });
@@ -669,6 +690,11 @@
           det.open = !!openAdv.get(obj);
           det.addEventListener('toggle', function(){ openAdv.set(obj, det.open); });
           adv = h('div', { class:'fg' }); det.appendChild(adv); top.appendChild(det);
+          adv.appendChild(styleBar(defs, obj, function(){
+            openAdv.set(obj, true);
+            var fresh = fieldsNode(defs, obj, afterChange), par = top.parentNode;
+            if (par) keepScroll(par, function(){ par.replaceChild(fresh, top); });
+          }));
         }
         frag = adv;
       } else adv = null;
