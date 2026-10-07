@@ -614,11 +614,19 @@
   /* rendu générique d'une liste de définitions de champs */
   function fieldsNode(defs, obj, afterChange){
     var frag = h('div', { class:'fg' });
+    var watch = {}; /* champs affichés seulement si un autre champ (select) a une valeur donnée : d.showIf = { k, v } */
     defs.forEach(function(d){
       if (d.type === 'text') frag.appendChild(field(d.label, textIn(obj, d.k)));
       else if (d.type === 'textarea') frag.appendChild(field(d.label, areaIn(obj, d.k, d.rows)));
-      else if (d.type === 'select') frag.appendChild(field(d.label, selectIn(obj, d.k, d.options)));
-      else if (d.type === 'color') frag.appendChild(field(d.label, colorIn(obj, d.k, '#189CD8')));
+      else if (d.type === 'select') frag.appendChild(field(d.label, selectIn(obj, d.k, d.options, function(v){ (watch[d.k] || []).forEach(function(fn){ fn(v); }); })));
+      else if (d.type === 'color'){
+        var cf = field(d.label, colorIn(obj, d.k, d.def || '#189CD8'));
+        if (d.showIf){
+          cf.style.display = String(obj[d.showIf.k] || '') === d.showIf.v ? '' : 'none';
+          (watch[d.showIf.k] = watch[d.showIf.k] || []).push(function(v){ cf.style.display = v === d.showIf.v ? '' : 'none'; });
+        }
+        frag.appendChild(cf);
+      }
       else if (d.type === 'bool') frag.appendChild(boolIn(obj, d.k, d.label));
       else if (d.type === 'boolInv'){
         var cb = h('input', { type:'checkbox', checked:!obj[d.flag], style:'width:auto', onchange:function(){ obj[d.flag] = !cb.checked; touch(); } });

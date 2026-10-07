@@ -72,11 +72,22 @@
     if (!o.url) return '<div class="frame" style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Image à ajouter</div>';
     var rc = ratioCss(o.ratio);
     var cls = 'frame' + (rc ? ' fixed' : '') + (rc && o.fit === 'contain' ? ' contain' : '');
-    return '<div class="' + cls + '"' + (rc ? ' style="aspect-ratio:' + rc + '"' : '') + '>' + img(o.url, o.caption, rc && D.frameCss ? D.frameCss(o.frame) : '', o.noZoom) + '</div>';
+    /* fond : transparent sans cadre (PNG détourés) ou couleur choisie */
+    var st = rc ? 'aspect-ratio:' + rc + ';' : '';
+    if (o.bgMode === 'none') st += 'background:transparent;border-color:transparent;';
+    else if (o.bgMode === 'color' && hexOk(o.bg)) st += 'background:' + o.bg + ';';
+    return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + img(o.url, o.caption, rc && D.frameCss ? D.frameCss(o.frame) : '', o.noZoom) + '</div>';
+  }
+  /* taille (largeur en %) et alignement de l'image sur la page */
+  function figStyle(o){
+    var w = +o.size;
+    if (!(w > 0 && w < 100)) return '';
+    var a = o.align === 'left' ? 'margin-right:auto;' : o.align === 'right' ? 'margin-left:auto;' : 'margin-left:auto;margin-right:auto;';
+    return ' style="width:' + w + '%;' + a + '"';
   }
   function figure(o){
     o = o || {};
-    return '<figure>' + frame(o) + (o.caption ? '<figcaption>' + esc(o.caption) + '</figcaption>' : '') + '</figure>';
+    return '<figure' + figStyle(o) + '>' + frame(o) + (o.caption ? '<figcaption>' + esc(o.caption) + '</figcaption>' : '') + '</figure>';
   }
 
   /* ---------- blocs ---------- */

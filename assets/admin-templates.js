@@ -7,6 +7,9 @@
  */
 (function(){
   var RATIOS = [ ['', 'Taille d\'origine'], ['1:1', 'Carré 1:1'], ['4:5', 'Portrait 4:5'], ['3:4', 'Portrait 3:4'], ['3:2', 'Paysage 3:2'], ['16:9', 'Large 16:9'] ];
+  var SIZES = [ ['', 'Pleine largeur'], ['75', 'Grande (75 %)'], ['60', 'Moyenne (60 %)'], ['50', 'Moitié (50 %)'], ['33', 'Petite (33 %)'], ['25', 'Mini (25 %)'] ];
+  var ALIGNS = [ ['center', 'Centré'], ['left', 'À gauche'], ['right', 'À droite'] ];
+  var BGS = [ ['', 'Par défaut (carte du thème)'], ['none', 'Transparent, sans cadre (PNG détouré)'], ['color', 'Couleur personnalisée'] ];
   var FIT = [ ['cover', 'Remplir (recadrer)'], ['contain', 'Tout afficher'] ];
   /* Une image "complète" : fichier, légende, format, cadrage (zoom + point
      de focus, utile seulement quand un format est choisi) et agrandissement
@@ -17,6 +20,10 @@
     { k:'ratio', type:'select', label:'Format', options:RATIOS },
     { k:'fit', type:'select', label:'Cadrage (si format choisi)', options:FIT },
     { k:'frame', type:'frame', label:'Zoom et cadrage' },
+    { k:'size', type:'select', label:'Taille sur le site', options:SIZES },
+    { k:'align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
+    { k:'bgMode', type:'select', label:"Fond de l'image (visible sur les PNG transparents)", options:BGS },
+    { k:'bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'bgMode', v:'color' } },
     { k:'zoomClick', type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
   ];
   var IMG_LIGHT = IMG;
