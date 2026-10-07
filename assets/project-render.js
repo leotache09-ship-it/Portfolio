@@ -76,6 +76,9 @@
     var st = rc ? 'aspect-ratio:' + rc + ';' : '';
     if (o.bgMode === 'none') st += 'background:transparent;border-color:transparent;';
     else if (o.bgMode === 'color' && hexOk(o.bg)) st += 'background:' + o.bg + ';';
+    /* contour : aucun, ou épaisseur + couleur choisies */
+    if (o.bd === 'none') st += 'border:none;';
+    else if (+o.bd > 0) st += 'border:' + (+o.bd) + 'px solid ' + (hexOk(o.bdColor) ? o.bdColor : '#262121') + ';';
     /* taille de l'image DANS le cadre (logos PNG) : image réduite et centrée */
     var inner = +o.inner, imgStyle = rc && D.frameCss ? D.frameCss(o.frame) : '';
     if (inner > 0 && inner < 100){
@@ -106,6 +109,8 @@
     }
     if (+m.hero_h > 0) st += 'height:' + (+m.hero_h) + 'px;max-height:80vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
     if (+m.hero_inner > 0 && +m.hero_inner < 100) st += 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
+    if (m.hero_bd === 'none') st += 'border:none;';
+    else if (+m.hero_bd > 0) st += 'border:' + (+m.hero_bd) + 'px solid ' + (hexOk(m.hero_bdColor) ? m.hero_bdColor : '#262121') + ';';
     if (m.hero_bgMode === 'none') st += 'background:transparent;border-color:transparent;box-shadow:none;';
     else if (m.hero_bgMode === 'color' && hexOk(m.hero_bg)) st += 'background:' + m.hero_bg + ';';
     return st ? ' style="' + st + '"' : '';

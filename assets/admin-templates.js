@@ -11,6 +11,7 @@
   var ALIGNS = [ ['center', 'Centré'], ['left', 'À gauche'], ['right', 'À droite'] ];
   var INNER = [ ['', 'Remplir le cadre'], ['85', '85 %'], ['70', '70 %'], ['55', '55 %'], ['40', '40 %'], ['30', '30 %'] ];
   var HEIGHTS = [ ['', 'Automatique'], ['120', 'Très basse (120 px)'], ['180', 'Basse (180 px)'], ['260', 'Moyenne (260 px)'], ['360', 'Haute (360 px)'], ['480', 'Très haute (480 px)'], ['600', 'Grande (600 px)'] ];
+  var BORDERS = [ ['', 'Par défaut'], ['none', 'Aucun contour'], ['1', 'Fin (1 px)'], ['3', 'Moyen (3 px)'], ['6', 'Épais (6 px)'], ['10', 'Très épais (10 px)'] ];
   var BGS = [ ['', 'Par défaut (carte du thème)'], ['none', 'Transparent, sans cadre (PNG détouré)'], ['color', 'Couleur personnalisée'] ];
   var FIT = [ ['cover', 'Remplir (recadrer)'], ['contain', 'Tout afficher'] ];
   /* Une image "complète" : fichier, légende, format, cadrage (zoom + point
@@ -27,6 +28,8 @@
     { k:'inner', type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
     { k:'h', type:'select', label:'Hauteur du cadre (logos PNG)', options:HEIGHTS },
     { k:'bgMode', type:'select', label:"Fond de l'image (visible sur les PNG transparents)", options:BGS },
+    { k:'bd', type:'select', label:'Contour', options:BORDERS },
+    { k:'bdColor', type:'color', label:'Couleur du contour', def:'#262121', showIf:{ k:'bd', v:['1', '3', '6', '10'] } },
     { k:'bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'bgMode', v:'color' } },
     { k:'zoomClick', type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
   ];
@@ -37,6 +40,8 @@
     { k:'hero_align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
     { k:'hero_inner', type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
     { k:'hero_h', type:'select', label:"Hauteur du cadre de l'image d'en-tête", options:HEIGHTS },
+    { k:'hero_bd', type:'select', label:"Contour de l'image d'en-tête", options:BORDERS },
+    { k:'hero_bdColor', type:'color', label:'Couleur du contour', def:'#262121', showIf:{ k:'hero_bd', v:['1', '3', '6', '10'] } },
     { k:'hero_bgMode', type:'select', label:"Fond de l'image d'en-tête (visible sur les PNG transparents)", options:BGS },
     { k:'hero_bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'hero_bgMode', v:'color' } }
   ];

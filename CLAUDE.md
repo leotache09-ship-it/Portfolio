@@ -250,6 +250,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-07 — Mode créateur : option **Contour** sur les images (`bd` : défaut / aucun / 1-3-6-10 px, + `bdColor` palette, visible seulement si une épaisseur est choisie) et sur l'image d'en-tête (`hero_bd`, `hero_bdColor`). `showIf.v` de `fieldsNode` accepte maintenant une LISTE de valeurs. Appliqué APRÈS le fond (donc « Aucun contour » l'emporte sur le contour transparent du fond « sans cadre »). **Pas publié (commit local).**
+
 - 2026-10-07 — Aperçu de l'éditeur : plus de lueur bleue sur l'élément cliqué dans l'aperçu (demande de Léo) ; le clic envoie toujours `lt-select` et seul le bloc côté ÉDITEUR (`.glow`) s'illumine. La classe `.lt-sel` reste posée mais sans style.
 
 - 2026-10-07 — Mode créateur : **hauteur du cadre** des images (`h` : 120→600 px, `hero_h` pour l'en-tête). Elle remplace le format (`aspect-ratio` retiré) ; l'image est centrée, jamais déformée ni coupée (`object-fit:contain`, `max-width/max-height`), combinable avec « taille dans le cadre » (`inner`) et le fond ; plafonnée à `80vh` pour ne pas dépasser un écran de téléphone. **Pas publié (commit local).**

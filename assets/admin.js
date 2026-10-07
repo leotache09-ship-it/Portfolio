@@ -666,8 +666,9 @@
       else if (d.type === 'color'){
         var cf = field(d.label, colorIn(obj, d.k, d.def || '#189CD8'));
         if (d.showIf){
-          cf.style.display = String(obj[d.showIf.k] || '') === d.showIf.v ? '' : 'none';
-          (watch[d.showIf.k] = watch[d.showIf.k] || []).push(function(v){ cf.style.display = v === d.showIf.v ? '' : 'none'; });
+          var okVal = function(v){ return Array.isArray(d.showIf.v) ? d.showIf.v.indexOf(v) > -1 : v === d.showIf.v; };
+          cf.style.display = okVal(String(obj[d.showIf.k] || '')) ? '' : 'none';
+          (watch[d.showIf.k] = watch[d.showIf.k] || []).push(function(v){ cf.style.display = okVal(v) ? '' : 'none'; });
         }
         frag.appendChild(cf);
       }
