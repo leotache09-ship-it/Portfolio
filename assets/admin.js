@@ -248,7 +248,9 @@
   /* ---------- éditeur ---------- */
   function viewEditor(id){
     if (id === 'new'){ shell('projets'); return pickTemplate(); }
-    if (state.project && state.project.id === id){ return openEditor(state.project, false); }
+    /* on ne réutilise la copie en mémoire QUE s'il reste des modifications non enregistrées ici ; sinon on relit la base
+       (une copie ancienne ne doit jamais être republiée par-dessus une version plus récente) */
+    if (state.project && state.project.id === id && state.dirty){ return openEditor(state.project, false); }
     state.dirty = false;
     var main = shell('projets');
     main.appendChild(h('main', {}, h('p', { class:'hint', text:'Chargement du projet…' })));
@@ -256,6 +258,7 @@
       if (res.error || !res.data) throw (res.error || new Error('Projet introuvable.'));
       var p = res.data;
       p.meta = p.meta || {}; p.theme = p.theme || {}; p.blocks = p.blocks || [];
+      p._updatedAt = p.updated_at;
       state.project = p; state.dirty = false;
       openEditor(p, false);
     }).catch(function(e){ toast('Projet introuvable : ' + errMsg(e), 'err'); location.hash = '#/projets'; });
@@ -896,11 +899,20 @@
       p.slug = slug;
       var row = { slug:p.slug, title:p.title, category:p.category, date_label:p.date_label, cover_url:p.cover_url || null, hover_url:p.hover_url || null,
         meta:p.meta, theme:p.theme, blocks:p.blocks, published:p.published, updated_at:new Date().toISOString() };
-      return p.id ? sb.from('projects').update(row).eq('id', p.id).select().single() : sb.from('projects').insert(row).select().single();
+      if (!p.id) return sb.from('projects').insert(row).select().single();
+      var doUpdate = function(){ return sb.from('projects').update(row).eq('id', p.id).select().single(); };
+      /* la version en ligne a-t-elle été modifiée ailleurs (autre onglet, téléphone…) depuis l'ouverture ? */
+      return sb.from('projects').select('updated_at').eq('id', p.id).maybeSingle().then(function(chk){
+        var cur = chk && chk.data && chk.data.updated_at;
+        if (cur && p._updatedAt && cur !== p._updatedAt && !confirm("Ce projet a été modifié ailleurs (autre onglet ou appareil) depuis que tu l'as ouvert. Enregistrer quand même ? Cela écrasera ces modifications plus récentes.")){
+          throw new Error('CANCEL');
+        }
+        return doUpdate();
+      }, doUpdate);
     }).then(function(res){
       if (res.error) throw res.error;
       var wasNew = !p.id;
-      p.id = res.data.id;
+      p.id = res.data.id; p._updatedAt = res.data.updated_at;
       state.dirty = false;
       var d = document.getElementById('dirty'); if (d){ d.textContent = 'Enregistré'; d.className = 'dirty'; }
       var v = document.getElementById('viewlive'); if (v){ v.hidden = !p.published; v.href = 'projet.html?p=' + encodeURIComponent(p.slug); }
@@ -909,6 +921,7 @@
       toast(p.published ? 'Enregistré et publié.' : 'Brouillon enregistré (invisible sur le site : clique sur Publier pour le mettre en ligne).', 'ok');
       return true;
     }).catch(function(e){
+      if (e && e.message === 'CANCEL'){ toast('Enregistrement annulé : recharge le projet pour voir la version la plus récente.', 'err'); return false; }
       toast('Enregistrement impossible : ' + errMsg(e), 'err'); return false;
     }).then(function(ok){
       if (btn){ btn.disabled = false; btn.textContent = 'Enregistrer'; }
