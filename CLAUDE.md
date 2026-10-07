@@ -250,6 +250,8 @@ tant que non configuré → le site se comporte exactement comme avant).
 
 ## Changelog
 
+- 2026-10-07 — Mode créateur : les options des images sont rangées dans un menu déroulant « Options de l'image » (flèche ▸, fermé par défaut ; idem « Options de l'image d'en-tête »). Mécanisme générique : tout champ d'une définition avec `adv:true` est regroupé par `fieldsNode` dans un `<details class="adv">` (`advLabel` sur le 1er champ = titre) ; l'état ouvert/fermé est mémorisé par objet édité (`WeakMap openAdv`) pour survivre aux repaints. Restent visibles : image et légende. **Pas publié (commit local).**
+
 - 2026-10-07 — Mode créateur : option **Contour** sur les images (`bd` : défaut / aucun / 1-3-6-10 px, + `bdColor` palette, visible seulement si une épaisseur est choisie) et sur l'image d'en-tête (`hero_bd`, `hero_bdColor`). `showIf.v` de `fieldsNode` accepte maintenant une LISTE de valeurs. Appliqué APRÈS le fond (donc « Aucun contour » l'emporte sur le contour transparent du fond « sans cadre »). **Pas publié (commit local).**
 
 - 2026-10-07 — Aperçu de l'éditeur : plus de lueur bleue sur l'élément cliqué dans l'aperçu (demande de Léo) ; le clic envoie toujours `lt-select` et seul le bloc côté ÉDITEUR (`.glow`) s'illumine. La classe `.lt-sel` reste posée mais sans style.

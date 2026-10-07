@@ -12,6 +12,7 @@
   var MONTHS = ['Janv.','Févr.','Mars','Avril','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'];
   var state = { project:null, dirty:false, previewReady:false, others:[], sideTab:'left' };
   var previewTimer = null;
+  var openAdv = new WeakMap(); /* état ouvert/fermé des menus « Options » (par objet édité) */
 
   /* ---------- utilitaires DOM ---------- */
   function h(tag, attrs){
@@ -657,9 +658,20 @@
 
   /* rendu générique d'une liste de définitions de champs */
   function fieldsNode(defs, obj, afterChange){
-    var frag = h('div', { class:'fg' });
+    var top = h('div', { class:'fg' });
+    var adv = null; /* menu déroulant « Options » : regroupe les champs marqués adv:true */
     var watch = {}; /* champs affichés seulement si un autre champ (select) a une valeur donnée : d.showIf = { k, v } */
     defs.forEach(function(d){
+      var frag = top;
+      if (d.adv){
+        if (!adv){
+          var det = h('details', { class:'adv' }, h('summary', { text:d.advLabel || 'Options' }));
+          det.open = !!openAdv.get(obj);
+          det.addEventListener('toggle', function(){ openAdv.set(obj, det.open); });
+          adv = h('div', { class:'fg' }); det.appendChild(adv); top.appendChild(det);
+        }
+        frag = adv;
+      } else adv = null;
       if (d.type === 'text') frag.appendChild(field(d.label, textIn(obj, d.k)));
       else if (d.type === 'textarea') frag.appendChild(field(d.label, areaIn(obj, d.k, d.rows)));
       else if (d.type === 'select') frag.appendChild(field(d.label, selectIn(obj, d.k, d.options, function(v){ (watch[d.k] || []).forEach(function(fn){ fn(v); }); })));
@@ -695,7 +707,7 @@
         frag.appendChild(listNode(d, obj[d.k]));
       }
     });
-    return frag;
+    return top;
   }
   function listNode(d, arr){
     var box = h('div', { class:'grp' }, h('span', { class:'l', text:d.label }));

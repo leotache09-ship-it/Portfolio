@@ -20,30 +20,30 @@
   var IMG = [
     { k:'url', type:'image', label:'Image' },
     { k:'caption', type:'text', label:'Légende (facultatif)' },
-    { k:'ratio', type:'select', label:'Format', options:RATIOS },
-    { k:'fit', type:'select', label:'Cadrage (si format choisi)', options:FIT },
-    { k:'frame', type:'frame', label:'Zoom et cadrage' },
-    { k:'size', type:'select', label:'Taille sur le site', options:SIZES },
-    { k:'align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
-    { k:'inner', type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
-    { k:'h', type:'select', label:'Hauteur du cadre (logos PNG)', options:HEIGHTS },
-    { k:'bgMode', type:'select', label:"Fond de l'image (visible sur les PNG transparents)", options:BGS },
-    { k:'bd', type:'select', label:'Contour', options:BORDERS },
-    { k:'bdColor', type:'color', label:'Couleur du contour', def:'#262121', showIf:{ k:'bd', v:['1', '3', '6', '10'] } },
-    { k:'bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'bgMode', v:'color' } },
-    { k:'zoomClick', type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
+    { k:'ratio', adv:true, advLabel:"Options de l'image", type:'select', label:'Format', options:RATIOS },
+    { k:'fit', adv:true, type:'select', label:'Cadrage (si format choisi)', options:FIT },
+    { k:'frame', adv:true, type:'frame', label:'Zoom et cadrage' },
+    { k:'size', adv:true, type:'select', label:'Taille sur le site', options:SIZES },
+    { k:'align', adv:true, type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
+    { k:'inner', adv:true, type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
+    { k:'h', adv:true, type:'select', label:'Hauteur du cadre (logos PNG)', options:HEIGHTS },
+    { k:'bgMode', adv:true, type:'select', label:"Fond de l'image (visible sur les PNG transparents)", options:BGS },
+    { k:'bd', adv:true, type:'select', label:'Contour', options:BORDERS },
+    { k:'bdColor', adv:true, type:'color', label:'Couleur du contour', def:'#262121', showIf:{ k:'bd', v:['1', '3', '6', '10'] } },
+    { k:'bg', adv:true, type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'bgMode', v:'color' } },
+    { k:'zoomClick', adv:true, type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
   ];
   var IMG_LIGHT = IMG;
   /* réglages de l'image d'en-tête (stockés dans meta.hero_*) */
   var HERO_STYLE = [
-    { k:'hero_size', type:'select', label:"Taille de l'image d'en-tête", options:SIZES },
-    { k:'hero_align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
-    { k:'hero_inner', type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
-    { k:'hero_h', type:'select', label:"Hauteur du cadre de l'image d'en-tête", options:HEIGHTS },
-    { k:'hero_bd', type:'select', label:"Contour de l'image d'en-tête", options:BORDERS },
-    { k:'hero_bdColor', type:'color', label:'Couleur du contour', def:'#262121', showIf:{ k:'hero_bd', v:['1', '3', '6', '10'] } },
-    { k:'hero_bgMode', type:'select', label:"Fond de l'image d'en-tête (visible sur les PNG transparents)", options:BGS },
-    { k:'hero_bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'hero_bgMode', v:'color' } }
+    { k:'hero_size', adv:true, advLabel:"Options de l'image d'en-tête", type:'select', label:"Taille de l'image d'en-tête", options:SIZES },
+    { k:'hero_align', adv:true, type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
+    { k:'hero_inner', adv:true, type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
+    { k:'hero_h', adv:true, type:'select', label:"Hauteur du cadre de l'image d'en-tête", options:HEIGHTS },
+    { k:'hero_bd', adv:true, type:'select', label:"Contour de l'image d'en-tête", options:BORDERS },
+    { k:'hero_bdColor', adv:true, type:'color', label:'Couleur du contour', def:'#262121', showIf:{ k:'hero_bd', v:['1', '3', '6', '10'] } },
+    { k:'hero_bgMode', adv:true, type:'select', label:"Fond de l'image d'en-tête (visible sur les PNG transparents)", options:BGS },
+    { k:'hero_bg', adv:true, type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'hero_bgMode', v:'color' } }
   ];
 
   /* définition des blocs : champs éditables + valeur par défaut */
