@@ -37,6 +37,15 @@
     else el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
   }
   function clear(el){ while (el.firstChild) el.removeChild(el.firstChild); }
+  /* repeint une zone SANS que la page remonte tout en haut : la hauteur est figée
+     pendant la reconstruction (sinon le vide momentané fait sauter le scroll). */
+  function keepScroll(el, fn){
+    var x = window.scrollX, y = window.scrollY;
+    el.style.minHeight = el.offsetHeight + 'px';
+    fn();
+    window.scrollTo(x, y);
+    setTimeout(function(){ el.style.minHeight = ''; }, 400);
+  }
   function toast(msg, kind){
     var t = h('div', { class:'toast ' + (kind || ''), text:msg });
     document.getElementById('toasts').appendChild(t);
@@ -276,11 +285,20 @@
       h('span', { class:'sp' }),
       h('a', { class:'btn sm', id:'viewlive', href:'projet.html?p=' + encodeURIComponent(p.slug || ''), target:'_blank', rel:'noopener', text:'Voir la page', hidden:!(p.id && p.published) }),
       h('button', { class:'btn sm', type:'button', text:'Sur la page principale…', onclick:function(){ placeOnHome(); } }),
+      h('button', { class:'btn sm', type:'button', id:'pubbtn', text:'Publier', onclick:function(){
+        var on = state.project.published === true || state.project.published === 'true';
+        if (on && !confirm('Retirer ce projet du site (il redeviendra un brouillon) ?')) return;
+        setPublished(!on);
+      } }),
       h('button', { class:'btn sm primary', type:'button', id:'savebtn', text:'Enregistrer', onclick:saveProject }));
     var mobtabs = h('div', { class:'mobtabs' },
       h('div', { class:'seg' },
         h('button', { type:'button', class:'on', text:'Éditer', onclick:function(e){ setSide('left', e.target); } }),
         h('button', { type:'button', text:'Aperçu', onclick:function(e){ setSide('right', e.target); } })));
+    state.showLeft = function(){
+      ed.className = 'ed show-left';
+      var bs = mobtabs.querySelectorAll('button'); if (bs.length > 1){ bs[0].className = 'on'; bs[1].className = ''; }
+    };
     function setSide(s, btn){
       ed.className = 'ed show-' + s;
       Array.prototype.forEach.call(btn.parentNode.children, function(b){ b.className = b === btn ? 'on' : ''; });
@@ -305,11 +323,37 @@
     window.removeEventListener('message', onPreviewMsg);
     window.addEventListener('message', onPreviewMsg);
     D.loadAll().then(function(all){ state.all = all; schedulePreview(); });
+    updatePubBtn();
   }
 
   function onPreviewMsg(e){
     if (e.origin !== location.origin || !e.data) return;
     if (e.data.type === 'lt-preview-ready'){ state.previewReady = true; sendPreview(); }
+    if (e.data.type === 'lt-select') selectBlock(e.data.index);
+  }
+  /* clic sur un élément de l'aperçu : on amène le bloc correspondant dans l'éditeur, avec une lueur bleue */
+  function selectBlock(idx){
+    var el = idx === 'info' ? document.getElementById('secInfos') : document.querySelector('.ed-left .blk[data-bi="' + idx + '"]');
+    if (!el) return;
+    if (state.showLeft) state.showLeft();
+    el.scrollIntoView({ behavior:'smooth', block:'center' });
+    el.classList.add('glow'); clearTimeout(el._glow);
+    el._glow = setTimeout(function(){ el.classList.remove('glow'); }, 2600);
+  }
+  function updatePubBtn(){
+    var b = document.getElementById('pubbtn'); if (!b || !state.project) return;
+    var on = state.project.published === true || state.project.published === 'true';
+    b.textContent = on ? 'Dépublier' : 'Publier'; b.className = 'btn sm' + (on ? '' : ' publish');
+  }
+  function setPublished(v){
+    var p = state.project, prev = p.published;
+    p.published = v;
+    if (state.statusSel) state.statusSel.value = v ? 'true' : 'false';
+    touch();
+    return saveProject().then(function(ok){
+      if (!ok){ p.published = prev; if (state.statusSel) state.statusSel.value = (prev === true || prev === 'true') ? 'true' : 'false'; }
+      updatePubBtn();
+    });
   }
   function schedulePreview(){ clearTimeout(previewTimer); previewTimer = setTimeout(sendPreview, 250); }
   function sendPreview(){
@@ -655,7 +699,8 @@
   function listNode(d, arr){
     var box = h('div', { class:'grp' }, h('span', { class:'l', text:d.label }));
     var items = h('div', {});
-    function paint(){
+    function paint(){ keepScroll(items, doPaint); }
+    function doPaint(){
       clear(items);
       arr.forEach(function(it, i){
         var li = h('div', { class:'li' },
@@ -686,7 +731,7 @@
     if (mIdx < 0){ month.selectedIndex = new Date().getMonth(); }
     var title = textIn(p, 'title', { placeholder:'Ex. Ri*ch*ol' });
     title.addEventListener('input', function(){ if (state.coverPaint) state.coverPaint(); });
-    return h('section', { class:'sec' }, h('h3', { text:'Infos du projet' }),
+    return h('section', { class:'sec', id:'secInfos' }, h('h3', { text:'Infos du projet' }),
       field('Titre', title, 'Mets un mot entre *étoiles* pour le colorer sur la page (ex. Ri*ch*ol).'),
       h('div', { class:'row' }, field('Catégorie', cat), field('Date', h('div', { class:'row', style:'gap:8px' }, month, year))),
       field('Dossier des fichiers', h('input', { type:'text', id:'folderInfo', disabled:true, value: p.meta.folder ? 'Stockage : projects/' + p.meta.folder + '/' : 'Créé automatiquement au premier envoi' }), "Chaque projet a son propre dossier : toutes ses images et vidéos y sont rangées sans que tu aies à faire quoi que ce soit."),
@@ -695,7 +740,7 @@
       imageField(p.meta, 'hero_image', 'Image d\'en-tête de la page (à droite du titre)'),
       fieldsNode(T.HERO_STYLE, p.meta),
       h('label', { class:'f' }, h('span', { class:'l', text:'Statut' }),
-        selectIn(p, 'published', [ ['false', 'Brouillon (invisible)'], ['true', 'Publié (visible)'] ])));
+        (state.statusSel = selectIn(p, 'published', [ ['false', 'Brouillon (invisible)'], ['true', 'Publié (visible)'] ]))));
   }
 
   function secCover(p){
@@ -762,12 +807,13 @@
     var sec = h('section', { class:'sec' }, h('h3', { text:'Contenu de la page' }));
     var list = h('div', { style:'display:flex;flex-direction:column;gap:12px;margin:0 0 16px' });
     var palette = h('div', { class:'addgrid' });
-    function paint(){
+    function paint(){ keepScroll(list, doPaint); }
+    function doPaint(){
       clear(list);
       if (!p.blocks.length) list.appendChild(h('p', { class:'hint', text:'Page vide : ajoute ton premier bloc ci-dessous.' }));
       p.blocks.forEach(function(b, i){
         var def = T.BLOCKS[b.t]; if (!def) return;
-        var card = h('div', { class:'blk' },
+        var card = h('div', { class:'blk', 'data-bi':i },
           h('div', { class:'hd' }, h('span', { class:'ty' }, h('span', { text:def.icon }), def.label),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Monter', text:'↑', disabled:i === 0, onclick:function(){ move(p.blocks, i, -1); paint(); touch(); } }),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Descendre', text:'↓', disabled:i === p.blocks.length - 1, onclick:function(){ move(p.blocks, i, 1); paint(); touch(); } }),
@@ -820,7 +866,8 @@
       var d = document.getElementById('dirty'); if (d){ d.textContent = 'Enregistré'; d.className = 'dirty'; }
       var v = document.getElementById('viewlive'); if (v){ v.hidden = !p.published; v.href = 'projet.html?p=' + encodeURIComponent(p.slug); }
       if (wasNew) history.replaceState(null, '', '#/projet/' + p.id);
-      toast(p.published ? 'Enregistré et publié.' : 'Brouillon enregistré.', 'ok');
+      updatePubBtn();
+      toast(p.published ? 'Enregistré et publié.' : 'Brouillon enregistré (invisible sur le site : clique sur Publier pour le mettre en ligne).', 'ok');
       return true;
     }).catch(function(e){
       toast('Enregistrement impossible : ' + errMsg(e), 'err'); return false;

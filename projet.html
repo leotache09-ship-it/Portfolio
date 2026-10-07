@@ -44,12 +44,20 @@
     app.innerHTML = '<div class="lt-state"><h1>' + LT_DATA.esc(title) + '</h1><p>' + LT_DATA.esc(text) + '</p><p><a href="index.html" style="color:var(--accent)">← Retour au portfolio</a></p></div>';
   }
 
+  /* aperçu de l'éditeur : un clic sur un élément sélectionne le bloc correspondant (lueur bleue) */
+  var selIdx = null;
+  function applySel(){
+    Array.prototype.forEach.call(document.querySelectorAll('.lt-sel'), function(e){ e.classList.remove('lt-sel'); });
+    if (selIdx == null) return;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-bi="' + selIdx + '"]'), function(e){ e.classList.add('lt-sel'); });
+  }
   function show(project, others, id){
     LT_RENDER.applyTheme(project.theme);
     /* le logo noir devient blanc sur un thème sombre */
     document.getElementById('markImg').style.filter = (project.theme && project.theme.mode === 'dark') ? 'invert(1)' : 'none';
     document.title = (project.title || 'Projet').replace(/\*/g, '') + ', LT Design';
-    app.innerHTML = LT_RENDER.renderBody(project, others);
+    app.innerHTML = LT_RENDER.renderBody(project, others, { edit: preview });
+    if (preview) applySel();
     var back = 'index.html#' + (project.slug || '');
     document.getElementById('backLink').href = back;
     document.getElementById('footBack').href = back;
@@ -65,6 +73,16 @@
 
   /* aperçu en direct depuis l'éditeur (même origine uniquement) */
   if (preview){
+    var pst = document.createElement('style');
+    pst.textContent = '[data-bi]{cursor:pointer} .lt-sel{outline:2px solid #189CD8;outline-offset:6px;border-radius:6px;box-shadow:0 0 0 8px rgba(24,156,216,.22),0 0 36px rgba(24,156,216,.6);transition:box-shadow .25s}';
+    document.head.appendChild(pst);
+    document.addEventListener('click', function(e){
+      var t = e.target.closest && e.target.closest('[data-bi]');
+      if (!t) return;
+      e.preventDefault(); e.stopPropagation();
+      selIdx = t.getAttribute('data-bi'); applySel();
+      window.parent.postMessage({ type: 'lt-select', index: selIdx }, location.origin);
+    }, true);
     window.addEventListener('message', function(e){
       if (e.origin !== location.origin || !e.data || e.data.type !== 'lt-preview') return;
       show(e.data.project || {}, e.data.others || [], null);

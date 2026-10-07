@@ -76,7 +76,13 @@
     var st = rc ? 'aspect-ratio:' + rc + ';' : '';
     if (o.bgMode === 'none') st += 'background:transparent;border-color:transparent;';
     else if (o.bgMode === 'color' && hexOk(o.bg)) st += 'background:' + o.bg + ';';
-    return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + img(o.url, o.caption, rc && D.frameCss ? D.frameCss(o.frame) : '', o.noZoom) + '</div>';
+    /* taille de l'image DANS le cadre (logos PNG) : image réduite et centrée */
+    var inner = +o.inner, imgStyle = rc && D.frameCss ? D.frameCss(o.frame) : '';
+    if (inner > 0 && inner < 100){
+      st += 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
+      imgStyle = 'width:' + inner + '%;height:' + (rc ? inner + '%' : 'auto') + ';object-fit:contain;';
+    }
+    return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + img(o.url, o.caption, imgStyle, o.noZoom) + '</div>';
   }
   /* taille (largeur en %) et alignement de l'image sur la page */
   function figStyle(o){
@@ -91,6 +97,7 @@
     if (w > 0 && w < 100){
       st += 'width:' + w + '%;' + (m.hero_align === 'left' ? 'margin-right:auto;' : m.hero_align === 'right' ? 'margin-left:auto;' : 'margin-left:auto;margin-right:auto;');
     }
+    if (+m.hero_inner > 0 && +m.hero_inner < 100) st += 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
     if (m.hero_bgMode === 'none') st += 'background:transparent;border-color:transparent;box-shadow:none;';
     else if (m.hero_bgMode === 'color' && hexOk(m.hero_bg)) st += 'background:' + m.hero_bg + ';';
     return st ? ' style="' + st + '"' : '';
@@ -138,34 +145,38 @@
 
   function num(n){ return ('0' + n).slice(-2); }
 
-  function renderBody(project, others){
+  function renderBody(project, others, opts){
+    var edit = !!(opts && opts.edit);
+    /* en mode aperçu de l'éditeur, chaque bloc porte son numéro (clic = on saute au bloc dans l'éditeur) */
+    function mark(html, i){ return edit ? html.replace(/^<([a-z0-9]+)/i, '<$1 data-bi="' + i + '"') : html; }
     var meta = project.meta || {}, cat = D.catOf(project.category);
     var title = inline(project.title || 'Sans titre', true);
     var out = '';
 
     /* hero */
     var hasShot = !!meta.hero_image;
-    out += '<section class="block first"><div class="case-hero' + (hasShot ? '' : ' no-image') + '"><div>' +
+    out += '<section class="block first"' + (edit ? ' data-bi="info"' : '') + '><div class="case-hero' + (hasShot ? '' : ' no-image') + '"><div>' +
       '<p class="eyebrow"><span class="num">01</span> ' + esc(cat.title) + '</p>' +
       '<h1 class="proj-name balance">' + title + '</h1>' +
       '<div class="hero-tags"><span class="tag accent">' + esc(cat.title) + '</span>' + (project.date_label ? '<span class="tag">' + esc(project.date_label) + '</span>' : '') + '</div>' +
       (meta.lede ? '<p class="hero-lede">' + inline(meta.lede) + '</p>' : '') +
-      '</div>' + (hasShot ? '<div class="hero-shot"' + heroStyle(meta) + '>' + img(meta.hero_image, project.title) + '</div>' : '') + '</div></section>';
+      '</div>' + (hasShot ? '<div class="hero-shot"' + heroStyle(meta) + '>' + img(meta.hero_image, project.title, (+meta.hero_inner > 0 && +meta.hero_inner < 100) ? 'width:' + (+meta.hero_inner) + '%;height:auto;' : '') + '</div>' : '') + '</div></section>';
 
     /* sections : chaque bloc "title" ouvre une nouvelle section numérotée */
     var n = 1, open = false, firstSection = true;
-    function openSection(eyebrow, heading){
+    function openSection(eyebrow, heading, bi){
       if (open) out += '</section>';
       n++; open = true;
-      out += '<section class="block"><p class="eyebrow"><span class="num">' + num(n) + '</span> ' + esc(eyebrow || '') + '</p>' +
-        (heading ? '<h2 class="section-title balance">' + inline(heading, true) + '</h2>' : '');
+      var da = edit ? ' data-bi="' + bi + '"' : '';
+      out += '<section class="block"><p class="eyebrow"' + da + '><span class="num">' + num(n) + '</span> ' + esc(eyebrow || '') + '</p>' +
+        (heading ? '<h2 class="section-title balance"' + da + '>' + inline(heading, true) + '</h2>' : '');
     }
-    (project.blocks || []).forEach(function(b){
+    (project.blocks || []).forEach(function(b, bi){
       if (!b || !b.t) return;
-      if (b.t === 'title'){ openSection(b.eyebrow, b.text); return; }
+      if (b.t === 'title'){ openSection(b.eyebrow, b.text, bi); return; }
       if (!R[b.t]) return;
       if (!open){ n++; open = true; out += '<section class="block">'; }
-      out += R[b.t](b);
+      out += mark(R[b.t](b), bi);
     });
     if (open) out += '</section>';
 
