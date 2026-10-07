@@ -85,6 +85,16 @@
     var a = o.align === 'left' ? 'margin-right:auto;' : o.align === 'right' ? 'margin-left:auto;' : 'margin-left:auto;margin-right:auto;';
     return ' style="width:' + w + '%;' + a + '"';
   }
+  /* image d'en-tête : taille, alignement et fond (mêmes réglages que les images des blocs) */
+  function heroStyle(m){
+    var st = '', w = +m.hero_size;
+    if (w > 0 && w < 100){
+      st += 'width:' + w + '%;' + (m.hero_align === 'left' ? 'margin-right:auto;' : m.hero_align === 'right' ? 'margin-left:auto;' : 'margin-left:auto;margin-right:auto;');
+    }
+    if (m.hero_bgMode === 'none') st += 'background:transparent;border-color:transparent;box-shadow:none;';
+    else if (m.hero_bgMode === 'color' && hexOk(m.hero_bg)) st += 'background:' + m.hero_bg + ';';
+    return st ? ' style="' + st + '"' : '';
+  }
   function figure(o){
     o = o || {};
     return '<figure' + figStyle(o) + '>' + frame(o) + (o.caption ? '<figcaption>' + esc(o.caption) + '</figcaption>' : '') + '</figure>';
@@ -140,7 +150,7 @@
       '<h1 class="proj-name balance">' + title + '</h1>' +
       '<div class="hero-tags"><span class="tag accent">' + esc(cat.title) + '</span>' + (project.date_label ? '<span class="tag">' + esc(project.date_label) + '</span>' : '') + '</div>' +
       (meta.lede ? '<p class="hero-lede">' + inline(meta.lede) + '</p>' : '') +
-      '</div>' + (hasShot ? '<div class="hero-shot">' + img(meta.hero_image, project.title) + '</div>' : '') + '</div></section>';
+      '</div>' + (hasShot ? '<div class="hero-shot"' + heroStyle(meta) + '>' + img(meta.hero_image, project.title) + '</div>' : '') + '</div></section>';
 
     /* sections : chaque bloc "title" ouvre une nouvelle section numérotée */
     var n = 1, open = false, firstSection = true;

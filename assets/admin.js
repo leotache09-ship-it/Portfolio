@@ -693,6 +693,7 @@
       p.slug ? field('Adresse de la page', h('input', { type:'text', value:'projet.html?p=' + p.slug, disabled:true }), 'Fixée après le premier enregistrement pour ne jamais casser un lien.') : null,
       field('Introduction (sous le titre)', areaIn(p.meta, 'lede', 3)),
       imageField(p.meta, 'hero_image', 'Image d\'en-tête de la page (à droite du titre)'),
+      fieldsNode(T.HERO_STYLE, p.meta),
       h('label', { class:'f' }, h('span', { class:'l', text:'Statut' }),
         selectIn(p, 'published', [ ['false', 'Brouillon (invisible)'], ['true', 'Publié (visible)'] ])));
   }

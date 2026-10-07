@@ -27,6 +27,13 @@
     { k:'zoomClick', type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
   ];
   var IMG_LIGHT = IMG;
+  /* réglages de l'image d'en-tête (stockés dans meta.hero_*) */
+  var HERO_STYLE = [
+    { k:'hero_size', type:'select', label:"Taille de l'image d'en-tête", options:SIZES },
+    { k:'hero_align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
+    { k:'hero_bgMode', type:'select', label:"Fond de l'image d'en-tête (visible sur les PNG transparents)", options:BGS },
+    { k:'hero_bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'hero_bgMode', v:'color' } }
+  ];
 
   /* définition des blocs : champs éditables + valeur par défaut */
   var BLOCKS = {
@@ -134,5 +141,5 @@
       ] }
   ];
 
-  window.LT_TEMPLATES = { BLOCKS: BLOCKS, TEMPLATES: TEMPLATES, RATIOS: RATIOS };
+  window.LT_TEMPLATES = { BLOCKS: BLOCKS, TEMPLATES: TEMPLATES, RATIOS: RATIOS, HERO_STYLE: HERO_STYLE };
 })();
