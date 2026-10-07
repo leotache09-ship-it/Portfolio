@@ -10,6 +10,7 @@
   var SIZES = [ ['', 'Pleine largeur'], ['75', 'Grande (75 %)'], ['60', 'Moyenne (60 %)'], ['50', 'Moitié (50 %)'], ['33', 'Petite (33 %)'], ['25', 'Mini (25 %)'] ];
   var ALIGNS = [ ['center', 'Centré'], ['left', 'À gauche'], ['right', 'À droite'] ];
   var INNER = [ ['', 'Remplir le cadre'], ['85', '85 %'], ['70', '70 %'], ['55', '55 %'], ['40', '40 %'], ['30', '30 %'] ];
+  var HEIGHTS = [ ['', 'Automatique'], ['120', 'Très basse (120 px)'], ['180', 'Basse (180 px)'], ['260', 'Moyenne (260 px)'], ['360', 'Haute (360 px)'], ['480', 'Très haute (480 px)'], ['600', 'Grande (600 px)'] ];
   var BGS = [ ['', 'Par défaut (carte du thème)'], ['none', 'Transparent, sans cadre (PNG détouré)'], ['color', 'Couleur personnalisée'] ];
   var FIT = [ ['cover', 'Remplir (recadrer)'], ['contain', 'Tout afficher'] ];
   /* Une image "complète" : fichier, légende, format, cadrage (zoom + point
@@ -24,6 +25,7 @@
     { k:'size', type:'select', label:'Taille sur le site', options:SIZES },
     { k:'align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
     { k:'inner', type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
+    { k:'h', type:'select', label:'Hauteur du cadre (logos PNG)', options:HEIGHTS },
     { k:'bgMode', type:'select', label:"Fond de l'image (visible sur les PNG transparents)", options:BGS },
     { k:'bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'bgMode', v:'color' } },
     { k:'zoomClick', type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
@@ -34,6 +36,7 @@
     { k:'hero_size', type:'select', label:"Taille de l'image d'en-tête", options:SIZES },
     { k:'hero_align', type:'select', label:'Alignement (si taille réduite)', options:ALIGNS },
     { k:'hero_inner', type:'select', label:"Taille de l'image dans le cadre (logos PNG)", options:INNER },
+    { k:'hero_h', type:'select', label:"Hauteur du cadre de l'image d'en-tête", options:HEIGHTS },
     { k:'hero_bgMode', type:'select', label:"Fond de l'image d'en-tête (visible sur les PNG transparents)", options:BGS },
     { k:'hero_bg', type:'color', label:'Couleur du fond', def:'#ffffff', showIf:{ k:'hero_bgMode', v:'color' } }
   ];

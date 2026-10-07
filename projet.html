@@ -74,7 +74,7 @@
   /* aperçu en direct depuis l'éditeur (même origine uniquement) */
   if (preview){
     var pst = document.createElement('style');
-    pst.textContent = '[data-bi]{cursor:pointer} .lt-sel{outline:2px solid #189CD8;outline-offset:6px;border-radius:6px;box-shadow:0 0 0 8px rgba(24,156,216,.22),0 0 36px rgba(24,156,216,.6);transition:box-shadow .25s}';
+    pst.textContent = '[data-bi]{cursor:pointer}';
     document.head.appendChild(pst);
     document.addEventListener('click', function(e){
       var t = e.target.closest && e.target.closest('[data-bi]');

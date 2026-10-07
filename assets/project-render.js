@@ -82,6 +82,13 @@
       st += 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
       imgStyle = 'width:' + inner + '%;height:' + (rc ? inner + '%' : 'auto') + ';object-fit:contain;';
     }
+    /* hauteur du cadre choisie : elle remplace le format ; l'image s'adapte sans être déformée ni coupée */
+    var H = +o.h;
+    if (H > 0){
+      var mx = (inner > 0 && inner < 100) ? inner : 100;
+      st = st.replace(/aspect-ratio:[^;]*;/, '') + 'height:' + H + 'px;max-height:80vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
+      imgStyle = 'width:auto;height:auto;max-width:' + mx + '%;max-height:' + mx + '%;object-fit:contain;';
+    }
     return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + img(o.url, o.caption, imgStyle, o.noZoom) + '</div>';
   }
   /* taille (largeur en %) et alignement de l'image sur la page */
@@ -97,10 +104,16 @@
     if (w > 0 && w < 100){
       st += 'width:' + w + '%;' + (m.hero_align === 'left' ? 'margin-right:auto;' : m.hero_align === 'right' ? 'margin-left:auto;' : 'margin-left:auto;margin-right:auto;');
     }
+    if (+m.hero_h > 0) st += 'height:' + (+m.hero_h) + 'px;max-height:80vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
     if (+m.hero_inner > 0 && +m.hero_inner < 100) st += 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
     if (m.hero_bgMode === 'none') st += 'background:transparent;border-color:transparent;box-shadow:none;';
     else if (m.hero_bgMode === 'color' && hexOk(m.hero_bg)) st += 'background:' + m.hero_bg + ';';
     return st ? ' style="' + st + '"' : '';
+  }
+  function heroImgStyle(m){
+    var w = +m.hero_inner, inner = w > 0 && w < 100 ? w : 0;
+    if (+m.hero_h > 0){ var mx = inner || 100; return 'width:auto;height:auto;max-width:' + mx + '%;max-height:' + mx + '%;object-fit:contain;'; }
+    return inner ? 'width:' + inner + '%;height:auto;' : '';
   }
   function figure(o){
     o = o || {};
@@ -160,7 +173,7 @@
       '<h1 class="proj-name balance">' + title + '</h1>' +
       '<div class="hero-tags"><span class="tag accent">' + esc(cat.title) + '</span>' + (project.date_label ? '<span class="tag">' + esc(project.date_label) + '</span>' : '') + '</div>' +
       (meta.lede ? '<p class="hero-lede">' + inline(meta.lede) + '</p>' : '') +
-      '</div>' + (hasShot ? '<div class="hero-shot"' + heroStyle(meta) + '>' + img(meta.hero_image, project.title, (+meta.hero_inner > 0 && +meta.hero_inner < 100) ? 'width:' + (+meta.hero_inner) + '%;height:auto;' : '') + '</div>' : '') + '</div></section>';
+      '</div>' + (hasShot ? '<div class="hero-shot"' + heroStyle(meta) + '>' + img(meta.hero_image, project.title, heroImgStyle(meta)) + '</div>' : '') + '</div></section>';
 
     /* sections : chaque bloc "title" ouvre une nouvelle section numérotée */
     var n = 1, open = false, firstSection = true;
