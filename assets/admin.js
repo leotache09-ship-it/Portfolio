@@ -722,7 +722,7 @@
       else if (d.type === 'video') frag.appendChild(videoField(obj, d.k, d.label));
       else if (d.type === 'frame'){
         obj[d.k] = obj[d.k] || { zoom:1, fx:50, fy:50 };
-        var fe = frameNode(obj[d.k], function(){ return obj.url; }, function(){ return obj.ratio; });
+        var fe = frameNode(obj[d.k], function(){ return obj[d.previewKey || 'url']; }, function(){ return obj.ratio; });
         frag.appendChild(field(d.label, fe));
         frag.addEventListener('change', function(){ fe._paint(); });
       }

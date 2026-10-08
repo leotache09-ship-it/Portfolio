@@ -67,9 +67,13 @@
   /* ---------- images ---------- */
   function img(url, alt, style, noZoom){ return url ? '<img src="' + esc(url) + '" alt="' + esc(alt || '') + '" loading="lazy"' + (style ? ' style="' + esc(style) + '"' : '') + (noZoom ? ' data-nozoom' : '') + '>' : ''; }
   function ratioCss(r){ return { '1:1':'1/1', '4:5':'4/5', '3:4':'3/4', '3:2':'3/2', '16:9':'16/9' }[r] || ''; }
-  function frame(o){
+  /* lecteur vidéo (mêmes réglages de cadre que les images) */
+  function vid(o, style){
+    return '<video src="' + esc(o.url) + '"' + (o.poster ? ' poster="' + esc(o.poster) + '"' : '') + ' controls playsinline preload="metadata"' + (o.loop ? ' loop muted autoplay' : '') + (style ? ' style="' + esc(style) + '"' : '') + '></video>';
+  }
+  function frame(o, kind){
     o = o || {};
-    if (!o.url) return '<div class="frame" style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Image à ajouter</div>';
+    if (!o.url) return '<div class="frame" style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">' + (kind === 'video' ? 'Vidéo' : 'Image') + ' à ajouter</div>';
     var rc = ratioCss(o.ratio);
     var cls = 'frame' + (rc ? ' fixed' : '') + (rc && o.fit === 'contain' ? ' contain' : '');
     /* fond : transparent sans cadre (PNG détourés) ou couleur choisie */
@@ -92,7 +96,7 @@
       st = st.replace(/aspect-ratio:[^;]*;/, '') + 'height:' + H + 'px;max-height:80vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
       imgStyle = 'width:auto;height:auto;max-width:' + mx + '%;max-height:' + mx + '%;object-fit:contain;';
     }
-    return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + img(o.url, o.caption, imgStyle, o.noZoom) + '</div>';
+    return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + (kind === 'video' ? vid(o, imgStyle) : img(o.url, o.caption, imgStyle, o.noZoom)) + '</div>';
   }
   /* taille (largeur en %) et alignement de l'image sur la page */
   function figStyle(o){
@@ -156,8 +160,8 @@
       }).join('') + '</div>';
     },
     video: function(b){
-      if (!b.url) return '<div class="blk">' + frame({}) + '</div>';
-      return '<div class="blk film"><video src="' + esc(b.url) + '"' + (b.poster ? ' poster="' + esc(b.poster) + '"' : '') + ' controls playsinline preload="metadata"' + (b.loop ? ' loop muted autoplay' : '') + '></video>' + (b.caption ? '<figcaption>' + esc(b.caption) + '</figcaption>' : '') + '</div>';
+      if (!b.url) return '<div class="blk">' + frame({}, 'video') + '</div>';
+      return '<div class="blk film"><figure' + figStyle(b) + '>' + frame(b, 'video') + (b.caption ? '<figcaption>' + esc(b.caption) + '</figcaption>' : '') + '</figure></div>';
     }
   };
 

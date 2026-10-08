@@ -34,6 +34,13 @@
     { k:'zoomClick', adv:true, type:'boolInv', flag:'noZoom', label:"Agrandir l'image au clic (zoom plein écran)" }
   ];
   var IMG_LIGHT = IMG;
+  /* vidéo : mêmes options que l'image (sauf « agrandir au clic »). Le zoom/cadrage se règle sur l'image d'aperçu. */
+  var VIDEO_OPTS = IMG.filter(function(d){ return d.adv && d.k !== 'zoomClick'; }).map(function(d, i){
+    var c = {}; Object.keys(d).forEach(function(k){ c[k] = d[k]; });
+    if (d.k === 'frame'){ c.previewKey = 'poster'; c.label = "Zoom et cadrage (se règle sur l'image d'aperçu)"; }
+    c.advLabel = i === 0 ? "Options de la vidéo" : undefined;
+    return c;
+  });
   /* réglages de l'image d'en-tête (stockés dans meta.hero_*) */
   var HERO_STYLE = [
     { k:'hero_size', adv:true, advLabel:"Options de l'image d'en-tête", type:'select', label:"Taille de l'image d'en-tête", options:SIZES },
@@ -88,7 +95,7 @@
       blank:function(){ return { t:'cards', items:[ { k:'Ce que j\'ai appris', v:'' } ] }; } },
     video: { label:'Vidéo', hint:'Fichier vidéo (mp4, 50 Mo max).', icon:'▶',
       fields:[ { k:'url', type:'video', label:'Vidéo (mp4)' }, { k:'poster', type:'image', label:'Image d\'aperçu (facultatif)' },
-               { k:'caption', type:'text', label:'Légende (facultatif)' }, { k:'loop', type:'bool', label:'Lecture en boucle, sans son, automatique' } ],
+               { k:'caption', type:'text', label:'Légende (facultatif)' }, { k:'loop', type:'bool', label:'Lecture en boucle, sans son, automatique' } ].concat(VIDEO_OPTS),
       blank:function(){ return { t:'video', url:'', poster:'', caption:'', loop:false }; } }
   };
 

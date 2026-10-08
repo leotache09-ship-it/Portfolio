@@ -73,7 +73,10 @@ figcaption{ font-family:"Roboto Mono",monospace; font-size:.66rem; letter-spacin
 .gal.c4{ grid-template-columns:repeat(4,minmax(0,1fr)); }
 .split{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:calc(var(--tile)*.9); align-items:start; }
 .split.rev > :first-child{ order:2; }
-.film video{ width:100%; height:auto; border-radius:var(--radius); border:1px solid var(--line); background:#000; }
+.film .frame{ background:#000; }
+.film video{ width:100%; height:auto; display:block; background:#000; }
+.frame.fixed video{ width:100%; height:100%; object-fit:cover; }
+.frame.fixed.contain video{ object-fit:contain; }
 
 /* palette / fiche / cartes */
 .palette{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:var(--unit); }
