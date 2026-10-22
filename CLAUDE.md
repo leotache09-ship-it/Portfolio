@@ -248,7 +248,26 @@ tant que non configuré → le site se comporte exactement comme avant).
   l'accueil, répertoire) ; **jamais testé contre un vrai Supabase** — à
   valider après l'installation.
 
+## Dépendances et sécurité (audit du 2026-10-22)
+
+**Règle du projet : n'adopter qu'une version publiée depuis plus de 3 jours ET sans faille connue** (vérifier sur registry.npmjs.org / pypi.org + osv.dev).
+
+| Brique | Version | Où | Remarque |
+|---|---|---|---|
+| `@supabase/supabase-js` | **2.118.0** (publiée 2026-10-15), épinglée EXACTE + SRI sha384 dans `assets/lt-auth.js` | chargée à la demande depuis jsdelivr, seulement pour la connexion admin | avant : `@2` flottant (mise à jour silencieuse). Aucun avis de sécurité connu (npm bulk advisories). Pour changer : MAJ de `LIB_URL` ET `LIB_SRI` |
+| Google Fonts | — (CSS distant) | toutes les pages | pas de version ; mentionné dans `confidentialite.html` |
+| Pillow (outil local, génère favicon/og-image) | **13.0.0** | machine de Léo | 12.3.0 avait ~30 avis connus → mis à jour |
+| beautifulsoup4 / soupsieve (outil local, import legacy) | 4.15.0 / **3.0.3** | machine de Léo | soupsieve 3.0.4 a <3 jours → non adoptée |
+| pip | **26.2.1** | machine de Léo | 25.2 avait 6 avis ; 26.2.2 a <3 jours → non adoptée |
+| Netlify / Supabase (services) | — | hébergement / base | RLS vérifiée, inscriptions désactivées (`disable_signup:true`) |
+
+Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en ligne : lecture publique OK, écriture anonyme sans effet (`PATCH` → 0 ligne), brouillons invisibles, clé `sb_publishable_…` seule dans le dépôt. **Reste à faire (non appliqué, non demandé)** : en-têtes HTTP de sécurité Netlify (`_headers` : `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Permissions-Policy`) — seul HSTS est actif aujourd'hui.
+
+**Tests** : `node tests-statiques.js` (syntaxe de tous les JS et scripts inline, JSON-LD, `<html lang>`/charset, références locales, sitemap, absence de mock/secret) — 102 vérifications au 2026-10-22. Tests d'intégration (mode créateur, rendu, mobile) faits avec un Supabase simulé injecté temporairement dans `assets/config.js` (jamais à committer ; restaurer avec `git checkout -- assets/config.js`).
+
 ## Changelog
+
+- 2026-10-22 — Audit des dépendances : supabase-js épinglé 2.118.0 + SRI, outils Python mis à jour (Pillow 13.0.0, soupsieve 3.0.3, pip 26.2.1), ajout de `tests-statiques.js`. Voir la section « Dépendances et sécurité ». **Pas publié (commit local).**
 
 - 2026-10-08 — Mode créateur : le bloc **Vidéo** a les mêmes réglages que les images, dans « Options de la vidéo » (format, cadrage, zoom/cadrage — réglé sur l'image d'aperçu via `previewKey:'poster'` —, taille sur le site, alignement, taille dans le cadre, hauteur du cadre, fond, contour, + copier/coller des réglages). Sauf « agrandir au clic » (pas de lightbox pour les vidéos). `VIDEO_OPTS` dérive de `IMG` dans `admin-templates.js` ; côté rendu `frame(o, kind)` accepte `'video'` (`vid()`), la vidéo est maintenant dans un `.frame` (fond noir par défaut, bordure/rayon portés par le cadre) et sa `<figure>` reçoit `figStyle`. Vidéos existantes : rendu identique par défaut. **Pas publié (commit local).**
 

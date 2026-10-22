@@ -9,7 +9,11 @@
  */
 (function(){
   var CFG = window.LT_CONFIG || {};
-  var LIB_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+  /* Version EXACTE + empreinte SRI : jamais de mise à jour silencieuse (supply chain).
+     Règle du projet : n'adopter qu'une version publiée depuis plus de 3 jours et sans faille connue.
+     Pour changer de version : mettre à jour LIB_URL ET LIB_SRI (openssl dgst -sha384 -binary supabase.js | openssl base64 -A). */
+  var LIB_URL = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js';
+  var LIB_SRI = 'sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK';
   var DOMAIN = '@admin.leotache.ch';
   var clientPromise = null;
 
@@ -20,6 +24,7 @@
     return new Promise(function(resolve, reject){
       var s = document.createElement('script');
       s.src = LIB_URL; s.async = true;
+      s.integrity = LIB_SRI; s.crossOrigin = 'anonymous';
       s.onload = resolve;
       s.onerror = function(){ reject(new Error('Impossible de charger la bibliothèque de connexion.')); };
       document.head.appendChild(s);
