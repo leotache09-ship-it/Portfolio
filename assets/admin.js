@@ -289,6 +289,7 @@
       h('span', { class:'sp' }),
       h('a', { class:'btn sm', id:'viewlive', href:'projet.html?p=' + encodeURIComponent(p.slug || ''), target:'_blank', rel:'noopener', text:'Voir la page', hidden:!(p.id && p.published) }),
       h('button', { class:'btn sm', type:'button', text:'Sur la page principale…', onclick:function(){ placeOnHome(); } }),
+      h('button', { class:'btn sm', type:'button', id:'featbtn', text:'Mettre en avant', title:'Affiche ce projet dans la carte « Nouveau projet » de l\'accueil', onclick:function(){ featureThis(); } }),
       h('button', { class:'btn sm', type:'button', id:'pubbtn', text:'Publier', onclick:function(){
         var on = state.project.published === true || state.project.published === 'true';
         if (on && !confirm('Retirer ce projet du site (il redeviendra un brouillon) ?')) return;
@@ -358,6 +359,24 @@
       if (!ok){ p.published = prev; if (state.statusSel) state.statusSel.value = (prev === true || prev === 'true') ? 'true' : 'false'; }
       updatePubBtn();
     });
+  }
+  /* depuis l'éditeur : afficher ce projet dans la carte « Nouveau projet » de l'accueil */
+  function featureThis(){
+    var p = state.project;
+    if (!String(p.title || '').trim()){ toast("Donne un titre au projet d'abord.", 'err'); return; }
+    var go = function(){
+      saveProject().then(function(ok){
+        if (!ok) return;
+        if (!p.cover_url){ toast("Ajoute d'abord une image de couverture : la carte en a besoin.", 'err'); return; }
+        saveFeatured({ mode:'project', slug:p.slug }).then(function(){ toast('Ce projet est maintenant dans la carte « Nouveau projet » de l\'accueil.', 'ok'); })
+          .catch(function(e){ toast('Impossible : ' + errMsg(e), 'err'); });
+      });
+    };
+    if (!(p.published === true || p.published === 'true')){
+      if (!confirm('Ce projet est un brouillon : il doit être publié pour apparaître. Le publier maintenant ?')) return;
+      p.published = true; if (state.statusSel) state.statusSel.value = 'true'; updatePubBtn();
+    }
+    go();
   }
   function schedulePreview(){ clearTimeout(previewTimer); previewTimer = setTimeout(sendPreview, 250); }
   function sendPreview(){
@@ -949,6 +968,44 @@
       if (res.error) throw res.error;
     });
   }
+  /* carte « Nouveau projet » de l'accueil : auto (dernier ajouté) / projet choisi / masquée */
+  function loadFeatured(){
+    return sb.from('site_settings').select('value').eq('key', 'featured').maybeSingle().then(function(res){
+      if (res.error) throw res.error;
+      var v = res.data && res.data.value;
+      return { mode: (v && v.mode) || 'auto', slug: (v && v.slug) || '' };
+    });
+  }
+  function saveFeatured(f){
+    var value = f.mode === 'project' && f.slug ? { mode:'project', slug:f.slug } : { mode: f.mode === 'hide' ? 'hide' : 'auto' };
+    return sb.from('site_settings').upsert({ key:'featured', value:value, updated_at:new Date().toISOString() }).then(function(res){
+      if (res.error) throw res.error;
+    });
+  }
+  function featuredPanel(cat){
+    var box = h('div', { class:'cat', style:'--c:#189CD8;margin:0 0 18px' }, h('div', { class:'ch' }, 'Carte « Nouveau projet » (en haut de l\'accueil)'));
+    var status = h('small', { class:'hint', text:'Chargement…' });
+    var sel = h('select', { 'aria-label':'Projet affiché dans la carte', disabled:true });
+    sel.appendChild(h('option', { value:'__auto', text:'Automatique : le dernier projet ajouté' }));
+    sel.appendChild(h('option', { value:'__hide', text:'Ne pas afficher la carte' }));
+    cat.list.filter(function(x){ return x.published; }).forEach(function(x){ sel.appendChild(h('option', { value:x.slug, text:x.name + (x.legacy ? ' (page d\'origine)' : '') })); });
+    var btn = h('button', { class:'btn sm primary', type:'button', text:'Enregistrer', disabled:true });
+    box.appendChild(h('p', { class:'hint', style:'margin:0 0 10px', text:'Par défaut la carte montre le dernier projet que tu as créé. Tu peux en choisir un autre, ou la masquer.' }));
+    box.appendChild(h('div', { class:'addrow' }, sel, btn));
+    box.appendChild(status);
+    loadFeatured().then(function(f){
+      sel.value = f.mode === 'hide' ? '__hide' : (f.mode === 'project' && f.slug ? f.slug : '__auto');
+      if (sel.value !== (f.mode === 'hide' ? '__hide' : (f.mode === 'project' ? f.slug : '__auto')) && f.mode === 'project') sel.value = '__auto';
+      sel.disabled = false; btn.disabled = false; status.textContent = '';
+    }).catch(function(e){ status.textContent = 'Réglage indisponible : ' + errMsg(e); });
+    btn.addEventListener('click', function(){
+      btn.disabled = true;
+      var v = sel.value, f = v === '__auto' ? { mode:'auto' } : v === '__hide' ? { mode:'hide' } : { mode:'project', slug:v };
+      saveFeatured(f).then(function(){ toast('Carte « Nouveau projet » mise à jour. Elle est visible tout de suite.', 'ok'); })
+        .catch(function(e){ toast('Impossible : ' + errMsg(e), 'err'); }).then(function(){ btn.disabled = false; });
+    });
+    return box;
+  }
   function resetHomeConfig(){
     return sb.from('site_settings').delete().eq('key', 'home').then(function(res){ if (res.error) throw res.error; });
   }
@@ -985,6 +1042,7 @@
     var holder = h('div', {}); box.appendChild(holder);
     Promise.all([ loadHomeConfig(), loadCatalog() ]).then(function(r){
       var cfg = r[0], cat = r[1];
+      box.insertBefore(featuredPanel(cat), holder);
       function save(btn){
         btn.disabled = true;
         saveHomeConfig(cfg).then(function(){ cfg.custom = true; toast('Page principale mise à jour. Elle est visible tout de suite.', 'ok'); })

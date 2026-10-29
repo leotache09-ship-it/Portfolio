@@ -90,14 +90,36 @@
     if (!configured()) return Promise.resolve([]);
     return rest('projects?select=slug,title,category,date_label,cover_url,hover_url,meta&published=eq.true&order=created_at.desc');
   }
-  /* dernier projet AJOUTÉ dans le mode créateur : le plus récent par date de création, publié, et qui n'est pas
-     un des 11 projets d'origine (importés en bloc le même jour : leur date de création ne veut rien dire). */
-  function loadLatest(){
+  /* Carte « Nouveau projet » de l'accueil. Réglage de Léo (site_settings, clé « featured ») :
+       { mode:'auto' }                 -> le dernier projet AJOUTÉ (défaut)
+       { mode:'project', slug:'…' }    -> le projet choisi
+       { mode:'hide' }                 -> pas de carte
+     Auto : le plus récent par date de création, publié, et qui n'est pas un des 11 projets d'origine
+     (importés en bloc le même jour : leur date de création ne veut rien dire). */
+  function fetchFeatured(){
     if (!configured()) return Promise.resolve(null);
+    return rest('site_settings?select=value&key=eq.featured').then(function(rows){ return rows[0] ? rows[0].value : null; });
+  }
+  function autoLatest(){
     return rest('projects?select=slug,title,category,date_label,cover_url,hover_url,meta,created_at&published=eq.true&order=created_at.desc&limit=12').then(function(rows){
       var legacy = {}; LEGACY.forEach(function(p){ legacy[p.slug] = true; });
       var r = (rows || []).filter(function(x){ return x && !legacy[x.slug] && x.cover_url; })[0];
       return r ? fromRow(r) : null;
+    });
+  }
+  function loadLatest(){
+    if (!configured()) return Promise.resolve(null);
+    return fetchFeatured().catch(function(){ return null; }).then(function(f){
+      f = f || { mode:'auto' };
+      if (f.mode === 'hide') return null;
+      if (f.mode === 'project' && f.slug){
+        return fetchProject(f.slug).then(function(row){
+          if (row && row.cover_url) return fromRow(row);
+          var lg = LEGACY.filter(function(p){ return p.slug === f.slug; })[0]; /* projet d'origine pas (encore) republié dans le mode créateur */
+          return lg ? lg : autoLatest();
+        });
+      }
+      return autoLatest();
     }).catch(function(){ return null; });
   }
   function fetchProject(slug){
