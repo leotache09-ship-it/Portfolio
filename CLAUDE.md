@@ -267,8 +267,6 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 
 ## Changelog
 
-- 2026-10-29 — `projets.html` : en tri « Ordre du portfolio », les projets sont rangés en **sections par catégorie** (titre Archivo Black + point lumineux de la couleur de la catégorie + compteur en pastille de verre + filet dégradé), au lieu d'une grille continue ; filtrer une catégorie n'affiche que sa section ; les tris par date / A→Z gardent une grille continue (sections inutiles). `sortCards()` reconstruit `#grid` (`.grouped` = conteneur de `.group > .grid`), `apply()` masque cartes ET sections. **Pas publié (commit local).**
-
 - 2026-10-29 — Accueil : « Mon parcours » sans point final ; titre du contact « Convaincu ? Écrivez-moi » sans point final et entièrement blanc (`<em>` bleu retiré sur « Écrivez-moi »). Publié dans la foulée à la demande de Léo.
 
 - 2026-10-29 — `projets.html` : les halos flous du fond (verre) sont maintenant tous dans le bleu de la marque `#189CD8` (plus de violet/orange/vert/jaune), intensités variées. **Pas publié (commit local).**

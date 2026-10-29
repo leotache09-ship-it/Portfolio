@@ -146,23 +146,6 @@
   footer{ color:rgba(255,255,255,.55); }
   @media (max-width:640px){ .card{ padding:6px 6px 11px; border-radius:20px; } .media{ border-radius:14px; } .info{ padding:0 5px; } }
   @media (prefers-reduced-motion: reduce){ .card{ transition-duration:.01ms; } }
-
-  /* ---- sections par catégorie (tri « Ordre du portfolio ») ---- */
-  #grid.grouped{ display:block; }
-  .group + .group{ margin-top:calc(var(--unit)*3.5); }
-  .group[hidden]{ display:none; }
-  .group-title{
-    display:flex; align-items:center; gap:14px; margin:0 0 calc(var(--unit)*1.3);
-    font-family:"Archivo Black"; font-weight:400; text-transform:uppercase; font-size:clamp(1.25rem,2.8vw,1.9rem); line-height:1; color:#fff;
-  }
-  .group-dot{ width:14px; height:14px; border-radius:50%; flex:none; background:var(--c); box-shadow:0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent), 0 0 18px color-mix(in srgb, var(--c) 70%, transparent); }
-  .group-count{
-    font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.08em; color:rgba(255,255,255,.8);
-    padding:5px 11px; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.2);
-    -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
-  }
-  .group-title::after{ content:""; flex:1; height:1px; margin-left:6px; background:linear-gradient(90deg, rgba(255,255,255,.28), rgba(255,255,255,0)); }
-  @media (max-width:640px){ .group + .group{ margin-top:calc(var(--unit)*2.5); } .group-dot{ width:11px; height:11px; } }
 </style>
 
 <header class="nav">
@@ -232,39 +215,17 @@
   function apply(cat){
     current = cat;
     Array.prototype.forEach.call(filters.children, function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-cat') === cat ? 'true' : 'false'); });
-    Array.prototype.forEach.call(grid.querySelectorAll('.card'), function(c){ c.hidden = !(cat === 'all' || c.getAttribute('data-cat') === cat); });
-    Array.prototype.forEach.call(grid.querySelectorAll('.group'), function(g){ g.hidden = !(cat === 'all' || g.getAttribute('data-cat') === cat); });
+    Array.prototype.forEach.call(grid.children, function(c){ c.hidden = !(cat === 'all' || c.getAttribute('data-cat') === cat); });
     try { history.replaceState(null, '', cat === 'all' ? location.pathname : '#' + cat); } catch(e){}
   }
 
-  /* « Ordre du portfolio » : une section par catégorie (titre + point de la couleur de la catégorie).
-     Tris par date / alphabet : une seule grille continue (des sections n'auraient pas de sens). */
   function sortCards(mode){
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+    var cards = Array.prototype.slice.call(grid.children);
     var byName = function(a, b){ return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'), 'fr', { sensitivity:'base' }); };
     var byIdx = function(a, b){ return a.getAttribute('data-i') - b.getAttribute('data-i'); };
     var byTs = function(dir){ return function(a, b){ return (dir * (a.getAttribute('data-ts') - b.getAttribute('data-ts'))) || byIdx(a, b); }; };
     var cmp = { 'default': byIdx, 'date-desc': byTs(-1), 'date-asc': byTs(1), 'az': byName, 'za': function(a, b){ return byName(b, a); } }[mode] || byIdx;
-    cards.sort(cmp);
-    grid.innerHTML = '';
-    if (mode === 'default'){
-      grid.classList.add('grouped');
-      D.cats.forEach(function(c){
-        var list = cards.filter(function(x){ return x.getAttribute('data-cat') === c.id; });
-        if (!list.length) return;
-        var sec = document.createElement('section');
-        sec.className = 'group'; sec.setAttribute('data-cat', c.id); sec.style.setProperty('--c', c.color);
-        sec.innerHTML = '<h2 class="group-title"><i class="group-dot" aria-hidden="true"></i>' + D.esc(c.title) + '<span class="group-count">' + list.length + '</span></h2>';
-        var g = document.createElement('div'); g.className = 'grid';
-        list.forEach(function(x){ g.appendChild(x); });
-        sec.appendChild(g); grid.appendChild(sec);
-      });
-      cards.forEach(function(x){ if (!x.parentNode) grid.appendChild(x); });
-    } else {
-      grid.classList.remove('grouped');
-      cards.forEach(function(x){ grid.appendChild(x); });
-    }
-    apply(current);
+    cards.sort(cmp).forEach(function(c){ grid.appendChild(c); });
   }
 
   sortSel.addEventListener('change', function(){ sortCards(sortSel.value); });
