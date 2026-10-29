@@ -267,6 +267,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 
 ## Changelog
 
+- 2026-10-29 — Accueil : « Mon parcours » sans point final ; titre du contact « Convaincu ? Écrivez-moi » sans point final et entièrement blanc (`<em>` bleu retiré sur « Écrivez-moi »). Publié dans la foulée à la demande de Léo.
+
 - 2026-10-29 — `projets.html` : les halos flous du fond (verre) sont maintenant tous dans le bleu de la marque `#189CD8` (plus de violet/orange/vert/jaune), intensités variées. **Pas publié (commit local).**
 
 - 2026-10-29 — `projets.html` : titre « Tous les projets » sans point final et entièrement blanc (le mot « projets » n'est plus en bleu : `<em>` retiré). **Pas publié (commit local).**
