@@ -95,6 +95,57 @@
   @media (prefers-reduced-motion: reduce){
     .media img, .veil{ transition-duration:.01ms; }
   }
+
+  /* ================= Verre dépoli façon Apple, sur toute la page ================= */
+  body{ background:#0b0b0e; }
+  /* halos de couleur flous (les 5 couleurs de catégories) derrière la page : c'est ce que le verre floute */
+  body::before{
+    content:""; position:fixed; inset:-10%; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(38% 34% at 12% 8%,  rgba(24,156,216,.55), transparent 70%),
+      radial-gradient(34% 32% at 88% 14%, rgba(168,85,247,.45), transparent 70%),
+      radial-gradient(40% 36% at 78% 62%, rgba(255,90,31,.34),  transparent 70%),
+      radial-gradient(36% 34% at 18% 74%, rgba(22,160,133,.40), transparent 70%),
+      radial-gradient(30% 28% at 52% 96%, rgba(229,184,0,.28),  transparent 70%);
+    filter:blur(30px) saturate(130%);
+  }
+  header.nav{
+    background:linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+    -webkit-backdrop-filter:blur(26px) saturate(190%); backdrop-filter:blur(26px) saturate(190%);
+    border-bottom:1px solid rgba(255,255,255,.16); box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 8px 30px rgba(0,0,0,.25);
+  }
+  .filters button, .sort select{
+    color:rgba(255,255,255,.82);
+    background-color:rgba(255,255,255,.08);
+    background-image:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.03));
+    -webkit-backdrop-filter:blur(18px) saturate(180%); backdrop-filter:blur(18px) saturate(180%);
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 4px 14px rgba(0,0,0,.22);
+  }
+  .sort select{ background-image:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.03)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat, no-repeat; background-position:0 0, right 14px center; }
+  .filters button:hover, .sort select:hover{ border-color:rgba(255,255,255,.45); color:#fff; background-color:rgba(255,255,255,.14); }
+  .filters button[aria-pressed="true"]{
+    color:#0b0b0e; background-color:rgba(255,255,255,.88); background-image:none; border-color:rgba(255,255,255,.95);
+    box-shadow:inset 0 1px 0 #fff, 0 6px 20px rgba(255,255,255,.18);
+  }
+  .card{
+    padding:8px 8px 14px; border-radius:24px;
+    background:linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+    -webkit-backdrop-filter:blur(22px) saturate(180%); backdrop-filter:blur(22px) saturate(180%);
+    border:1px solid rgba(255,255,255,.20);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.38), inset 0 -1px 0 rgba(255,255,255,.06), 0 14px 34px rgba(0,0,0,.32);
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, border-color .35s;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-4px); border-color:rgba(255,255,255,.42);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(255,255,255,.1), 0 22px 46px rgba(0,0,0,.42);
+  }
+  .media{ border-radius:17px; border:1px solid rgba(255,255,255,.16); }
+  .info{ padding:0 8px; margin-top:12px; }
+  .meta{ color:rgba(255,255,255,.62); }
+  footer{ color:rgba(255,255,255,.55); }
+  @media (max-width:640px){ .card{ padding:6px 6px 11px; border-radius:20px; } .media{ border-radius:14px; } .info{ padding:0 5px; } }
+  @media (prefers-reduced-motion: reduce){ .card{ transition-duration:.01ms; } }
 </style>
 
 <header class="nav">
@@ -147,14 +198,14 @@
       html += '<a class="card" href="' + p.href + '" data-cat="' + cat.id + '" data-ts="' + D.dateKey(D.plain(p.date)) + '" data-name="' + D.esc(alt) + '" data-i="' + i + '" style="--c:' + cat.color + '">' +
         '<span class="media">' + (p.img ? '<img src="' + D.esc(p.img) + '" alt="' + D.esc(alt) + '" loading="lazy"' + (p.imgStyle ? ' style="' + D.esc(p.imgStyle) + '"' : '') + '>' : '') + '<span class="veil"><span>Voir plus</span></span></span>' +
         '<span class="info"><span class="name">' + p.name + '</span>' +
-        '<span class="meta"><i class="dot"></i>' + D.esc(cat.title) + ' · ' + p.date + '</span></span></a>';
+        '<span class="meta">' + D.esc(cat.title) + ' · ' + p.date + '</span></span></a>';
     });
     grid.innerHTML = html;
 
     var btns = '<button type="button" aria-pressed="true" data-cat="all">Tous (' + projects.length + ')</button>';
     D.cats.forEach(function(c){
       if (!counts[c.id]) return;
-      btns += '<button type="button" aria-pressed="false" data-cat="' + c.id + '" style="--c:' + c.color + '"><i class="dot"></i>' + D.esc(c.title) + ' (' + counts[c.id] + ')</button>';
+      btns += '<button type="button" aria-pressed="false" data-cat="' + c.id + '" style="--c:' + c.color + '">' + D.esc(c.title) + ' (' + counts[c.id] + ')</button>';
     });
     filters.innerHTML = btns;
     apply(counts[current] ? current : 'all');
