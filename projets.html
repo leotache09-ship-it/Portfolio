@@ -183,9 +183,29 @@
   var start = (location.hash || '').slice(1);
   if (D.cats.some(function(c){ return c.id === start; })) current = start;
 
+  /* « Ordre du portfolio » = l'ordre de la PAGE PRINCIPALE réglée dans le mode créateur (Page principale) :
+     catégorie par catégorie, dans l'ordre choisi (échanges et ajouts compris). Un projet qui n'est pas (encore)
+     sur la page principale se range à la fin de sa catégorie. Sans réglage : ordre d'origine. */
+  function portfolioOrder(all, cfg){
+    var cats = (cfg && cfg.categories) || {}, out = [], used = {};
+    D.cats.forEach(function(c){
+      var inCat = all.filter(function(p){ return p.cat === c.id; });
+      (cats[c.id] || []).forEach(function(slug){
+        var p = inCat.filter(function(x){ return x.slug === slug; })[0];
+        if (p && !used[p.slug]){ used[p.slug] = 1; out.push(p); }
+      });
+      inCat.forEach(function(p){ if (!used[p.slug]){ used[p.slug] = 1; out.push(p); } });
+    });
+    all.forEach(function(p){ if (!used[p.slug]){ used[p.slug] = 1; out.push(p); } });
+    return out;
+  }
+
   render(D.legacy);                       /* affichage immédiat : projets d'origine */
-  if (D.configured()){                    /* puis ajout des projets créés dans le mode administrateur */
-    D.loadAll().then(function(all){ if (all.length > D.legacy.length) render(all); }).catch(function(){});
+  if (D.configured()){                    /* puis projets créés dans le mode administrateur + ordre de la page principale */
+    Promise.all([ D.loadAll(), D.fetchHomeConfig().catch(function(){ return null; }) ]).then(function(r){
+      var all = r[0] || [];
+      if (all.length > D.legacy.length || r[1]) render(portfolioOrder(all, r[1]));
+    }).catch(function(){});
   }
 })();
 </script>
