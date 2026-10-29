@@ -716,6 +716,34 @@
     /* le portrait déborde l'écran sur mobile : la flèche va dans l'espace libre à droite du cou */
     .cover-point{ right:auto; left:73%; top:20.5%; width:52px; }
   }
+
+  /* ---- « Nouveau projet » : carte du dernier projet ajouté dans le mode créateur (injectée par JS) ---- */
+  .cover-new{
+    position:absolute; right:var(--gutter); top:calc(var(--unit)*5.2); z-index:5;
+    display:flex; align-items:center; gap:14px; max-width:min(340px, 78vw);
+    padding:9px 18px 9px 9px; border-radius:14px; text-decoration:none; color:#fff;
+    background:rgba(13,13,15,.55); border:1px solid rgba(242,242,242,.18);
+    -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    animation: coverNewIn .7s cubic-bezier(.2,.7,.2,1) .5s backwards;
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .cover-new:hover, .cover-new:focus-visible{ border-color:var(--blue); box-shadow:0 0 0 1px var(--blue), 0 0 34px rgba(24,156,216,.45); }
+  .cover-new-img{ width:56px; height:70px; flex:none; object-fit:cover; border-radius:8px; background:var(--card); }
+  .cover-new-txt{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .cover-new-tag{ display:flex; align-items:center; gap:7px; font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--blue); }
+  .cover-new-tag i{ width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 0 0 rgba(24,156,216,.6); animation: coverNewPulse 1.8s ease-out infinite; }
+  .cover-new-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size:1rem; line-height:1.1; overflow-wrap:anywhere; }
+  .cover-new-date{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(242,242,242,.55); }
+  @keyframes coverNewIn{ from{ opacity:0; transform:translateY(10px); } }
+  @keyframes coverNewPulse{ 70%{ box-shadow:0 0 0 8px rgba(24,156,216,0); } 100%{ box-shadow:0 0 0 0 rgba(24,156,216,0); } }
+  @media (prefers-reduced-motion: reduce){ .cover-new{ animation:none; } .cover-new-tag i{ animation:none; } }
+  /* écrans étroits : petite pastille à gauche sous le menu (le bouton hamburger est à droite) */
+  @media (max-width:900px){
+    .cover-new{ right:auto; left:var(--gutter); top:calc(var(--unit)*4.6); padding:6px 14px 6px 6px; gap:10px; border-radius:12px; }
+    .cover-new-img{ width:34px; height:42px; border-radius:6px; }
+    .cover-new-name{ font-size:.82rem; }
+    .cover-new-date{ display:none; }
+  }
 </style>
 
 
@@ -1748,6 +1776,28 @@ var TRAVAUX_FAMILIES = [
   LT_DATA.loadHome().then(function(families){
     if (families && families.length) LT_rebuildTravaux(families);
   }).catch(function(){});
+})();
+</script>
+<script>
+/* « Nouveau projet » : carte du dernier projet ajouté dans le mode créateur (publié, hors projets d'origine).
+   Rien ne s'affiche si la base est injoignable ou s'il n'y a aucun projet créé. */
+(function(){
+  var cover = document.getElementById('cover');
+  if (!cover || !window.LT_DATA || !LT_DATA.configured() || !LT_DATA.loadLatest) return;
+  LT_DATA.loadLatest().then(function(p){
+    if (!p || !p.img) return;
+    var e = LT_DATA.esc, a = document.createElement('a');
+    a.className = 'cover-new'; a.href = p.href; a.id = 'coverNew';
+    a.setAttribute('aria-label', 'Nouveau projet : ' + LT_DATA.plain(p.name));
+    a.innerHTML = '<img class="cover-new-img" src="' + e(p.img) + '" alt=""' + (p.imgStyle ? ' style="' + e(p.imgStyle) + '"' : '') + '>' +
+      '<span class="cover-new-txt"><span class="cover-new-tag"><i></i>Nouveau projet</span>' +
+      '<span class="cover-new-name">' + p.name + '</span>' +
+      (p.date ? '<span class="cover-new-date">' + p.date + '</span>' : '') + '</span>';
+    cover.appendChild(a);
+    /* s'efface en douceur quand on commence à descendre (évènement scroll direct, pas de boucle rAF) */
+    function fade(){ var t = Math.min(1, (window.scrollY || 0) / ((window.innerHeight || 800) * .45)); a.style.opacity = String(1 - t); a.style.pointerEvents = t >= 1 ? 'none' : ''; }
+    window.addEventListener('scroll', fade, { passive:true }); window.addEventListener('resize', fade, { passive:true });
+  });
 })();
 </script>
 <script src="assets/star.js"></script>

@@ -90,6 +90,16 @@
     if (!configured()) return Promise.resolve([]);
     return rest('projects?select=slug,title,category,date_label,cover_url,hover_url,meta&published=eq.true&order=created_at.desc');
   }
+  /* dernier projet AJOUTÉ dans le mode créateur : le plus récent par date de création, publié, et qui n'est pas
+     un des 11 projets d'origine (importés en bloc le même jour : leur date de création ne veut rien dire). */
+  function loadLatest(){
+    if (!configured()) return Promise.resolve(null);
+    return rest('projects?select=slug,title,category,date_label,cover_url,hover_url,meta,created_at&published=eq.true&order=created_at.desc&limit=12').then(function(rows){
+      var legacy = {}; LEGACY.forEach(function(p){ legacy[p.slug] = true; });
+      var r = (rows || []).filter(function(x){ return x && !legacy[x.slug] && x.cover_url; })[0];
+      return r ? fromRow(r) : null;
+    }).catch(function(){ return null; });
+  }
   function fetchProject(slug){
     return rest('projects?select=*&slug=eq.' + encodeURIComponent(slug) + '&published=eq.true').then(function(rows){ return rows[0] || null; });
   }
@@ -156,6 +166,6 @@
     cfg: CFG, cats: CATS, legacy: LEGACY, configured: configured, catOf: catOf,
     dateKey: dateKey, frameCss: frameCss, esc: esc, plain: plain, months: MONTHS,
     fetchProjects: fetchProjects, fetchProject: fetchProject, fetchHomeConfig: fetchHomeConfig,
-    fromRow: fromRow, indexAll: indexAll, buildFamilies: buildFamilies, loadHome: loadHome, loadAll: loadAll
+    fromRow: fromRow, indexAll: indexAll, buildFamilies: buildFamilies, loadHome: loadHome, loadAll: loadAll, loadLatest: loadLatest
   };
 })();
