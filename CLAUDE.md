@@ -267,6 +267,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 
 ## Changelog
 
+- 2026-10-29 — `projets.html` : bug d'affichage du menu « Trier » corrigé. Le `<select>` natif avait du texte blanc (style verre) que le navigateur affichait aussi dans sa liste d'options à fond blanc → illisible. Remplacé par un menu déroulant en verre identique à celui des catégories (`.sortmenu`, aligné à droite, clavier/Échap/clic dehors) ; le `<select id="sort">` reste caché et porte toujours la valeur (logique de tri inchangée). Le libellé « Trier » est devenu un `<div>` (plus de `<label>` englobant des boutons). **Pas publié (commit local).**
+
 - 2026-10-29 — `projets.html` : les sections par catégorie (commit précédent) étaient un malentendu → **annulées** (revert). À la place, le **filtre** n'est plus une rangée de boutons : un seul bouton en verre (catégorie courante + nombre + chevron) ouvre un **menu déroulant en verre** listant « Tous les projets » et chaque catégorie, avec un **point de la couleur de la catégorie à gauche** (blanc pour « Tous ») et le nombre de projets à droite ; l'option active est en verre blanc. Fermeture au clic dehors / Échap, flèches haut/bas au clavier. Le tri reste un menu séparé. **Pas publié (commit local).**
 
 - 2026-10-29 — Accueil : « Mon parcours » sans point final ; titre du contact « Convaincu ? Écrivez-moi » sans point final et entièrement blanc (`<em>` bleu retiré sur « Écrivez-moi »). Publié dans la foulée à la demande de Léo.

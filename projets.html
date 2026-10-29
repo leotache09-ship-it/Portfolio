@@ -184,6 +184,10 @@
   .catmenu-opt[aria-selected="true"]{ background:rgba(255,255,255,.88); color:#0b0b0e; }
   .catmenu-opt[aria-selected="true"] .n{ color:rgba(11,11,14,.6); }
   @media (prefers-reduced-motion: reduce){ .catmenu-list{ animation:none; } }
+
+  /* menu « Trier » : même verre que le filtre, aligné à droite */
+  .sort select[hidden]{ display:none; }
+  .sortmenu .catmenu-list{ left:auto; right:0; min-width:240px; }
 </style>
 
 <header class="nav">
@@ -195,15 +199,19 @@
   <h1>Tous les projets</h1>
   <div class="toolbar">
     <div class="filters" id="filters" role="group" aria-label="Filtrer par catégorie"></div>
-    <label class="sort">Trier
-      <select id="sort">
+    <div class="sort"><span>Trier</span>
+      <select id="sort" hidden aria-hidden="true" tabindex="-1">
         <option value="default">Ordre du portfolio</option>
         <option value="date-desc">Date : du plus récent</option>
         <option value="date-asc">Date : du plus ancien</option>
         <option value="az">Alphabétique : A → Z</option>
         <option value="za">Alphabétique : Z → A</option>
       </select>
-    </label>
+      <div class="catmenu sortmenu">
+        <button type="button" class="catmenu-btn" id="sortBtn" aria-haspopup="listbox" aria-expanded="false"><span class="catmenu-label">Ordre du portfolio</span><svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="catmenu-list" id="sortList" role="listbox" aria-label="Trier" hidden></div>
+      </div>
+    </div>
   </div>
   <div class="grid" id="grid"></div>
 </main>
@@ -281,6 +289,34 @@
   }
 
   sortSel.addEventListener('change', function(){ sortCards(sortSel.value); });
+
+  /* menu « Trier » en verre (le <select> natif reste caché et garde la valeur) */
+  var sortBtn = document.getElementById('sortBtn'), sortList = document.getElementById('sortList');
+  sortList.innerHTML = Array.prototype.map.call(sortSel.options, function(o){
+    return '<button type="button" role="option" class="catmenu-opt" data-v="' + o.value + '" aria-selected="' + (o.selected ? 'true' : 'false') + '"><span class="t">' + D.esc(o.textContent) + '</span></button>';
+  }).join('');
+  function openSort(open){
+    sortList.hidden = !open; sortBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open){ var s = sortList.querySelector('[aria-selected="true"]') || sortList.firstChild; if (s) s.focus(); }
+  }
+  sortBtn.addEventListener('click', function(){ openSort(sortList.hidden); });
+  sortList.addEventListener('click', function(e){
+    var o = e.target.closest('.catmenu-opt'); if (!o) return;
+    sortSel.value = o.getAttribute('data-v'); sortCards(sortSel.value);
+    Array.prototype.forEach.call(sortList.children, function(b){ b.setAttribute('aria-selected', b === o ? 'true' : 'false'); });
+    sortBtn.querySelector('.catmenu-label').textContent = o.textContent;
+    openSort(false); sortBtn.focus();
+  });
+  document.addEventListener('click', function(e){ if (!e.target.closest('.sortmenu')) openSort(false); });
+  document.addEventListener('keydown', function(e){
+    if (sortList.hidden) return;
+    if (e.key === 'Escape'){ openSort(false); sortBtn.focus(); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+      e.preventDefault();
+      var items = Array.prototype.slice.call(sortList.children), i = items.indexOf(document.activeElement);
+      items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+    }
+  });
   function openMenu(open){
     var btn = document.getElementById('catBtn'), list = document.getElementById('catList');
     if (!btn || !list) return;
