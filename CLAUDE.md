@@ -267,6 +267,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 
 ## Changelog
 
+- 2026-10-29 — `projets.html` : les sections par catégorie (commit précédent) étaient un malentendu → **annulées** (revert). À la place, le **filtre** n'est plus une rangée de boutons : un seul bouton en verre (catégorie courante + nombre + chevron) ouvre un **menu déroulant en verre** listant « Tous les projets » et chaque catégorie, avec un **point de la couleur de la catégorie à gauche** (blanc pour « Tous ») et le nombre de projets à droite ; l'option active est en verre blanc. Fermeture au clic dehors / Échap, flèches haut/bas au clavier. Le tri reste un menu séparé. **Pas publié (commit local).**
+
 - 2026-10-29 — Accueil : « Mon parcours » sans point final ; titre du contact « Convaincu ? Écrivez-moi » sans point final et entièrement blanc (`<em>` bleu retiré sur « Écrivez-moi »). Publié dans la foulée à la demande de Léo.
 
 - 2026-10-29 — `projets.html` : les halos flous du fond (verre) sont maintenant tous dans le bleu de la marque `#189CD8` (plus de violet/orange/vert/jaune), intensités variées. **Pas publié (commit local).**
