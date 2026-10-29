@@ -98,15 +98,15 @@
 
   /* ================= Verre dépoli façon Apple, sur toute la page ================= */
   body{ background:#0b0b0e; }
-  /* halos de couleur flous (les 5 couleurs de catégories) derrière la page : c'est ce que le verre floute */
+  /* halos flous dans le bleu de la marque (#189CD8) derrière la page : c'est ce que le verre floute */
   body::before{
     content:""; position:fixed; inset:-10%; z-index:-1; pointer-events:none;
     background:
       radial-gradient(38% 34% at 12% 8%,  rgba(24,156,216,.55), transparent 70%),
-      radial-gradient(34% 32% at 88% 14%, rgba(168,85,247,.45), transparent 70%),
-      radial-gradient(40% 36% at 78% 62%, rgba(255,90,31,.34),  transparent 70%),
-      radial-gradient(36% 34% at 18% 74%, rgba(22,160,133,.40), transparent 70%),
-      radial-gradient(30% 28% at 52% 96%, rgba(229,184,0,.28),  transparent 70%);
+      radial-gradient(34% 32% at 88% 16%, rgba(24,156,216,.38), transparent 70%),
+      radial-gradient(40% 36% at 78% 64%, rgba(24,156,216,.30), transparent 70%),
+      radial-gradient(36% 34% at 16% 76%, rgba(24,156,216,.42), transparent 70%),
+      radial-gradient(30% 28% at 52% 98%, rgba(24,156,216,.24), transparent 70%);
     filter:blur(30px) saturate(130%);
   }
   header.nav{

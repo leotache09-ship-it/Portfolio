@@ -267,6 +267,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 
 ## Changelog
 
+- 2026-10-29 — `projets.html` : les halos flous du fond (verre) sont maintenant tous dans le bleu de la marque `#189CD8` (plus de violet/orange/vert/jaune), intensités variées. **Pas publié (commit local).**
+
 - 2026-10-29 — `projets.html` : titre « Tous les projets » sans point final et entièrement blanc (le mot « projets » n'est plus en bleu : `<em>` retiré). **Pas publié (commit local).**
 
 - 2026-10-29 — `projets.html` (« Tous les projets ») : (1) **points de couleur supprimés** sur chaque carte (`.meta .dot`) et dans les boutons de filtre (`.filters .dot`) — le texte « Catégorie · date » reste ; le point final du titre « Tous les projets. » est conservé (non demandé explicitement) ; (2) **style verre dépoli façon Apple sur toute la page** : halos de couleur flous fixes derrière la page (`body::before`, les 5 couleurs de catégories) que le verre floute, en-tête, boutons de filtre, menu de tri et cartes en verre (`backdrop-filter: blur(18–26px) saturate(180–190%)`, dégradé translucide, liseré lumineux intérieur, ombres douces, cartes qui se soulèvent au survol, bouton de filtre actif = verre blanc opaque). Bloc CSS ajouté EN FIN de `<style>` pour l'emporter sur les règles d'origine. Vérifié sur capture (desktop) ; mobile non revu. **Pas publié (commit local).**
