@@ -721,26 +721,41 @@
   .cover-new{
     position:absolute; right:var(--gutter); top:calc(var(--unit)*5.2); z-index:5;
     display:flex; align-items:center; gap:14px; max-width:min(340px, 78vw);
-    padding:9px 18px 9px 9px; border-radius:14px; text-decoration:none; color:#fff;
-    background:rgba(13,13,15,.55); border:1px solid rgba(242,242,242,.18);
-    -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    padding:10px 20px 10px 10px; border-radius:22px; text-decoration:none; color:#fff;
+    isolation:isolate; overflow:hidden;
+    /* verre dépoli façon Apple : flou + saturation du fond, reflet en haut à gauche, liseré lumineux intérieur */
+    background:
+      radial-gradient(120% 140% at 0% 0%, rgba(255,255,255,.34) 0%, rgba(255,255,255,.08) 45%, rgba(255,255,255,0) 70%),
+      linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.06));
+    -webkit-backdrop-filter:blur(24px) saturate(190%) brightness(1.08); backdrop-filter:blur(24px) saturate(190%) brightness(1.08);
+    border:1px solid rgba(255,255,255,.30);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(255,255,255,.10), inset 0 0 22px rgba(255,255,255,.07),
+                0 14px 36px rgba(0,0,0,.40), 0 2px 8px rgba(0,0,0,.30);
+    text-shadow:0 1px 8px rgba(0,0,0,.35);
     animation: coverNewIn .7s cubic-bezier(.2,.7,.2,1) .5s backwards;
-    transition: border-color .3s, box-shadow .3s;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, background-color .35s, border-color .35s;
   }
-  .cover-new:hover, .cover-new:focus-visible{ border-color:var(--blue); box-shadow:0 0 0 1px var(--blue), 0 0 34px rgba(24,156,216,.45); }
-  .cover-new-img{ width:56px; height:70px; flex:none; object-fit:cover; border-radius:8px; background:var(--card); }
+  .cover-new:hover, .cover-new:focus-visible{
+    transform:translateY(-2px) scale(1.015); border-color:rgba(255,255,255,.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.7), inset 0 -1px 0 rgba(255,255,255,.14), inset 0 0 26px rgba(255,255,255,.12),
+                0 20px 44px rgba(0,0,0,.45), 0 0 34px rgba(24,156,216,.40);
+  }
+  .cover-new:active{ transform:scale(.99); }
+  /* cadre de l'image : il découpe le zoom/recadrage choisi dans le mode créateur (scale sur l'<img>) */
+  .cover-new-media{ width:58px; height:72px; flex:none; overflow:hidden; border-radius:13px; background:var(--card); box-shadow:0 0 0 1px rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.35); }
+  .cover-new-img{ display:block; width:100%; height:100%; object-fit:cover; }
   .cover-new-txt{ display:flex; flex-direction:column; gap:4px; min-width:0; }
-  .cover-new-tag{ display:flex; align-items:center; gap:7px; font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--blue); }
+  .cover-new-tag{ display:flex; align-items:center; gap:7px; font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:#8fd6ff; }
   .cover-new-tag i{ width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 0 0 rgba(24,156,216,.6); animation: coverNewPulse 1.8s ease-out infinite; }
   .cover-new-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size:1rem; line-height:1.1; overflow-wrap:anywhere; }
-  .cover-new-date{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(242,242,242,.55); }
+  .cover-new-date{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.7); }
   @keyframes coverNewIn{ from{ opacity:0; transform:translateY(10px); } }
   @keyframes coverNewPulse{ 70%{ box-shadow:0 0 0 8px rgba(24,156,216,0); } 100%{ box-shadow:0 0 0 0 rgba(24,156,216,0); } }
   @media (prefers-reduced-motion: reduce){ .cover-new{ animation:none; } .cover-new-tag i{ animation:none; } }
   /* écrans étroits : petite pastille à gauche sous le menu (le bouton hamburger est à droite) */
   @media (max-width:900px){
-    .cover-new{ right:auto; left:var(--gutter); top:calc(var(--unit)*4.6); padding:6px 14px 6px 6px; gap:10px; border-radius:12px; }
-    .cover-new-img{ width:34px; height:42px; border-radius:6px; }
+    .cover-new{ right:auto; left:var(--gutter); top:calc(var(--unit)*4.6); padding:6px 16px 6px 6px; gap:10px; border-radius:16px; }
+    .cover-new-media{ width:36px; height:44px; border-radius:10px; }
     .cover-new-name{ font-size:.82rem; }
     .cover-new-date{ display:none; }
   }
@@ -1789,7 +1804,7 @@ var TRAVAUX_FAMILIES = [
     var e = LT_DATA.esc, a = document.createElement('a');
     a.className = 'cover-new'; a.href = p.href; a.id = 'coverNew';
     a.setAttribute('aria-label', 'Nouveau projet : ' + LT_DATA.plain(p.name));
-    a.innerHTML = '<img class="cover-new-img" src="' + e(p.img) + '" alt=""' + (p.imgStyle ? ' style="' + e(p.imgStyle) + '"' : '') + '>' +
+    a.innerHTML = '<span class="cover-new-media"><img class="cover-new-img" src="' + e(p.img) + '" alt=""' + (p.imgStyle ? ' style="' + e(p.imgStyle) + '"' : '') + '></span>' +
       '<span class="cover-new-txt"><span class="cover-new-tag"><i></i>Nouveau projet</span>' +
       '<span class="cover-new-name">' + p.name + '</span>' +
       (p.date ? '<span class="cover-new-date">' + p.date + '</span>' : '') + '</span>';
