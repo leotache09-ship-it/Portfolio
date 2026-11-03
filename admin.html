@@ -110,6 +110,17 @@
   details.adv[open] > summary::before{ transform:rotate(90deg); }
   details.adv > .fg{ padding:4px 12px 12px; }
   .blk > .hd{ display:flex; align-items:center; gap:8px; margin:0 0 12px; }
+  /* maintenir le titre d'un bloc = mode réorganisation (glisser-déposer) */
+  .blk > .hd .ty{ cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; min-width:0; }
+  .blk > .hd .grip{ color:var(--faint); font-size:.95rem; letter-spacing:0; line-height:1; }
+  .blk > .hd .sum{ display:none; }
+  .reorder .blk{ padding:10px 12px; transition:box-shadow .2s, background .2s; }
+  .reorder .blk > :not(.hd){ display:none; }
+  .reorder .blk > .hd{ margin:0; }
+  .reorder .blk > .hd .btn{ display:none; }
+  .reorder .blk > .hd .sum{ display:block; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:none; letter-spacing:0; font-family:Roboto, sans-serif; font-size:.82rem; color:var(--faint); }
+  .reorder .blk.dragging{ position:relative; z-index:5; cursor:grabbing; border-color:var(--blue); box-shadow:0 0 0 2px var(--blue), 0 16px 34px rgba(0,0,0,.45); background:var(--card); }
+  .reorder .blk.dragging .ty{ cursor:grabbing; }
   .blk > .hd .ty{ font-family:"Roboto Mono"; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--blue); flex:1; display:flex; align-items:center; gap:8px; }
   .blk .grp{ border-left:2px solid var(--line); padding-left:12px; margin:0 0 14px; }
   .blk .grp > .l{ display:block; font-family:"Roboto Mono"; font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin:0 0 8px; }

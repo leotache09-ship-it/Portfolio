@@ -864,6 +864,13 @@
       paperWrap, h('label', { class:'radio' }, auto, h('span', { text:'Couleur de fond automatique (selon l\'accent)' })), paperRow);
   }
 
+  function blockSummary(b){
+    var t = b.text || b.eyebrow || b.caption || (b.image && b.image.caption) || (b.a && b.a.caption) || '';
+    if (!t && b.items && b.items.length) t = b.items.map(function(x){ return x.k || x.name || x.caption || ''; }).filter(Boolean).join(', ');
+    if (!t && b.colors && b.colors.length) t = b.colors.map(function(c){ return c.name || c.hex; }).join(', ');
+    t = String(t).replace(/[*\[\]]/g, '').replace(/\s+/g, ' ').trim();
+    return t.length > 46 ? t.slice(0, 45) + '…' : t;
+  }
   function secBlocks(p){
     var sec = h('section', { class:'sec' }, h('h3', { text:'Contenu de la page' }));
     var list = h('div', { style:'display:flex;flex-direction:column;gap:12px;margin:0 0 16px' });
@@ -875,14 +882,75 @@
       p.blocks.forEach(function(b, i){
         var def = T.BLOCKS[b.t]; if (!def) return;
         var card = h('div', { class:'blk', 'data-bi':i },
-          h('div', { class:'hd' }, h('span', { class:'ty' }, h('span', { text:def.icon }), def.label),
+          h('div', { class:'hd' }, h('span', { class:'ty', title:'Maintiens pour réorganiser les blocs' }, h('span', { class:'grip', text:'⠿', 'aria-hidden':'true' }), h('span', { text:def.icon }), def.label, h('span', { class:'sum', text:blockSummary(b) })),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Monter', text:'↑', disabled:i === 0, onclick:function(){ move(p.blocks, i, -1); paint(); touch(); } }),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Descendre', text:'↓', disabled:i === p.blocks.length - 1, onclick:function(){ move(p.blocks, i, 1); paint(); touch(); } }),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Dupliquer', text:'⧉', onclick:function(){ p.blocks.splice(i + 1, 0, clone(b)); paint(); touch(); } }),
             h('button', { class:'btn sm ico-btn danger', type:'button', title:'Supprimer', text:'✕', onclick:function(){ if (confirm('Supprimer ce bloc ?')){ p.blocks.splice(i, 1); paint(); touch(); } } })));
         card.appendChild(fieldsNode(def.fields, b));
         list.appendChild(card);
+        armReorder(card, card.querySelector('.ty'));
       });
+    }
+
+    /* ---- maintenir le titre d'un bloc : tous les blocs se replient en une liste de noms,
+       on glisse celui qu'on tient au-dessus / en dessous des autres, on relâche = nouvel ordre ---- */
+    var HOLD_MS = 350;
+    function armReorder(card, handle){
+      if (!handle) return;
+      handle.addEventListener('pointerdown', function(e){
+        if (e.button) return;
+        var sx = e.clientX, sy = e.clientY, timer, moved = false;
+        function cancel(){ clearTimeout(timer); handle.removeEventListener('pointermove', early); handle.removeEventListener('pointerup', cancel); handle.removeEventListener('pointercancel', cancel); }
+        function early(ev){ if (Math.abs(ev.clientX - sx) > 8 || Math.abs(ev.clientY - sy) > 8){ moved = true; cancel(); } }
+        handle.addEventListener('pointermove', early);
+        handle.addEventListener('pointerup', cancel);
+        handle.addEventListener('pointercancel', cancel);
+        timer = setTimeout(function(){ cancel(); if (!moved) startDrag(card, handle, e.pointerId, sy); }, HOLD_MS);
+      });
+    }
+    function startDrag(card, handle, pointerId, y0){
+      if (navigator.vibrate) try { navigator.vibrate(12); } catch (x){}
+      var before = card.getBoundingClientRect().top;
+      list.style.minHeight = '';
+      list.classList.add('reorder'); card.classList.add('dragging');
+      window.scrollBy(0, card.getBoundingClientRect().top - before);   /* le bloc tenu reste sous le doigt */
+      try { handle.setPointerCapture(pointerId); } catch (x){}
+      var startY = y0, GAP = 8, lastY = y0;
+      function mid(el){ var r = el.getBoundingClientRect(); return r.top + r.height / 2; }
+      function onMove(ev){
+        lastY = ev.clientY;
+        if (lastY < 70) window.scrollBy(0, -14); else if (lastY > window.innerHeight - 70) window.scrollBy(0, 14);
+        card.style.transform = 'translateY(' + (lastY - startY) + 'px)';
+        var next = card.nextElementSibling, prev = card.previousElementSibling;
+        if (next && next.classList.contains('blk') && lastY > mid(next)){
+          list.insertBefore(next, card); startY += next.offsetHeight + GAP;
+        } else if (prev && prev.classList.contains('blk') && lastY < mid(prev)){
+          list.insertBefore(card, prev); startY -= prev.offsetHeight + GAP;
+        }
+        card.style.transform = 'translateY(' + (lastY - startY) + 'px)';
+      }
+      function onEnd(){
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onEnd);
+        handle.removeEventListener('pointercancel', onEnd);
+        document.removeEventListener('keydown', onKey);
+        var order = Array.prototype.map.call(list.querySelectorAll('.blk'), function(el){ return +el.getAttribute('data-bi'); });
+        var moved = !cancelled && order.some(function(v, i){ return v !== i; });
+        var moving = +card.getAttribute('data-bi'), newIdx = moved ? order.indexOf(moving) : moving;
+        if (moved){ var nb = order.map(function(i){ return p.blocks[i]; }); p.blocks.length = 0; Array.prototype.push.apply(p.blocks, nb); }
+        list.classList.remove('reorder');
+        doPaint();
+        var el = list.querySelector('.blk[data-bi="' + newIdx + '"]');
+        if (el){ window.scrollBy(0, el.getBoundingClientRect().top - (lastY - 20)); el.classList.add('glow'); setTimeout(function(){ el.classList.remove('glow'); }, 1400); }
+        if (moved) touch();
+      }
+      var cancelled = false;
+      function onKey(ev){ if (ev.key === 'Escape'){ cancelled = true; card.style.transform = ''; onEnd(); } }
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onEnd);
+      handle.addEventListener('pointercancel', onEnd);
+      document.addEventListener('keydown', onKey);
     }
     Object.keys(T.BLOCKS).forEach(function(t){
       var d = T.BLOCKS[t];
