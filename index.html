@@ -1443,7 +1443,7 @@ var TRAVAUX_FAMILIES = [
          survol, la même image d'aperçu floutée + "Voir plus" que les
          autres projets s'affiche par-dessus. */
       var mainMedia = isVideo
-        ? '<video class="tv-card-vid" src="' + p.video + '" poster="' + p.peek + '"' + (reducedMotion ? '' : ' autoplay loop') + ' muted playsinline></video>'
+        ? '<video class="tv-card-vid" src="' + p.video + '" poster="' + (p.peek || p.img) + '"' + (reducedMotion ? '' : ' autoplay loop') + ' muted playsinline></video>'
         : '<img class="tv-card-img" src="' + p.img + '" alt="' + altText + '" loading="lazy" draggable="false"' + (p.imgStyle ? ' style="' + p.imgStyle + '"' : '') + '>';
       var peek = p.peek
         ? '<img class="tv-card-peek" src="' + p.peek + '" alt="" aria-hidden="true" loading="lazy" draggable="false"' + (p.peekStyle ? ' style="' + p.peekStyle + '"' : '') + '>'
@@ -1803,7 +1803,9 @@ var TRAVAUX_FAMILIES = [
     var e = LT_DATA.esc, a = document.createElement('a');
     a.className = 'cover-new'; a.href = p.href; a.id = 'coverNew';
     a.setAttribute('aria-label', 'Nouveau projet : ' + LT_DATA.plain(p.name));
-    a.innerHTML = '<span class="cover-new-media"><img class="cover-new-img" src="' + e(p.img) + '" alt=""' + (p.imgStyle ? ' style="' + e(p.imgStyle) + '"' : '') + '></span>' +
+    a.innerHTML = '<span class="cover-new-media">' + (p.video
+        ? '<video class="cover-new-img" src="' + e(p.video) + '" poster="' + e(p.img) + '" autoplay loop muted playsinline></video>'
+        : '<img class="cover-new-img" src="' + e(p.img) + '" alt=""' + (p.imgStyle ? ' style="' + e(p.imgStyle) + '"' : '') + '>') + '</span>' +
       '<span class="cover-new-txt"><span class="cover-new-tag"><i></i>Nouveau projet</span>' +
       '<span class="cover-new-name">' + p.name + '</span>' +
       (p.date ? '<span class="cover-new-date">' + p.date + '</span>' : '') + '</span>';

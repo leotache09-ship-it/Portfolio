@@ -134,7 +134,7 @@
   function fromRow(r){
     return {
       slug: r.slug, cat: r.category, name: esc(String(r.title || '').replace(/\*/g, '')), href: 'projet.html?p=' + encodeURIComponent(r.slug),
-      img: r.cover_url || '', peek: r.hover_url || '', imgStyle: frameCss((r.meta || {}).cover_frame), peekStyle: frameCss((r.meta || {}).hover_frame), ar: '1080/1380', date: esc(r.date_label || ''), legacy: false
+      img: r.cover_url || '', peek: r.hover_url || '', video: (r.meta || {}).cover_video || '', imgStyle: frameCss((r.meta || {}).cover_frame), peekStyle: frameCss((r.meta || {}).hover_frame), ar: '1080/1380', date: esc(r.date_label || ''), legacy: false
     };
   }
 

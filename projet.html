@@ -32,6 +32,7 @@
 <script src="assets/lt-data.js"></script>
 <script src="assets/lt-auth.js"></script>
 <script src="assets/project-render.js"></script>
+<script src="assets/autoplay-videos.js"></script>
 <script>
 (function(){
   var app = document.getElementById('app');
@@ -57,6 +58,7 @@
     document.getElementById('markImg').style.filter = (project.theme && project.theme.mode === 'dark') ? 'invert(1)' : 'none';
     document.title = (project.title || 'Projet').replace(/\*/g, '') + ', LT Design';
     app.innerHTML = LT_RENDER.renderBody(project, others, { edit: preview });
+    if (window.LT_autoplay) LT_autoplay(app);
     if (preview) applySel();
     var back = 'index.html#' + (project.slug || '');
     document.getElementById('backLink').href = back;

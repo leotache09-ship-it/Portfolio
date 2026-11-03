@@ -69,7 +69,7 @@
   function ratioCss(r){ return { '1:1':'1/1', '4:5':'4/5', '3:4':'3/4', '3:2':'3/2', '16:9':'16/9' }[r] || ''; }
   /* lecteur vidéo (mêmes réglages de cadre que les images) */
   function vid(o, style){
-    return '<video src="' + esc(o.url) + '"' + (o.poster ? ' poster="' + esc(o.poster) + '"' : '') + ' controls playsinline preload="metadata"' + (o.loop ? ' loop muted autoplay' : '') + (style ? ' style="' + esc(style) + '"' : '') + '></video>';
+    return '<video src="' + esc(o.url) + '"' + (o.poster ? ' poster="' + esc(o.poster) + '"' : '') + ' controls playsinline muted autoplay preload="metadata"' + (o.loop ? ' loop' : '') + (style ? ' style="' + esc(style) + '"' : '') + '></video>';
   }
   function frame(o, kind){
     o = o || {};

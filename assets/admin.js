@@ -831,7 +831,8 @@
     p.meta.cover_frame = p.meta.cover_frame || {}; p.meta.hover_frame = p.meta.hover_frame || {};
     var cfr = frameNode(p.meta.cover_frame, function(){ return p.cover_url; }, function(){ return '4:5'; }, paint);
     var hfr = frameNode(p.meta.hover_frame, function(){ return p.hover_url; }, function(){ return '4:5'; }, paint);
-    var chost = h('div', { class:'fg' }, imageField(p, 'cover_url', 'Image de cover', paint), field('Zoom et cadrage de la cover', cfr));
+    var chost = h('div', { class:'fg' }, imageField(p, 'cover_url', 'Image de cover', paint), field('Zoom et cadrage de la cover', cfr),
+      videoField(p.meta, 'cover_video', 'Vidéo de cover (facultatif : elle joue en boucle sur la carte, sans son ; l\'image de cover sert d\'aperçu pendant le chargement)'));
     var hhost = h('div', { class:'fg' }, imageField(p, 'hover_url', 'Image au survol', paint), field("Zoom et cadrage de l'image au survol", hfr));
     chost.addEventListener('change', function(){ cfr._paint(); paint(); });
     hhost.addEventListener('change', function(){ hfr._paint(); paint(); });
