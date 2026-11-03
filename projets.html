@@ -203,13 +203,13 @@
     <div class="sort"><span>Trier</span>
       <select id="sort" hidden aria-hidden="true" tabindex="-1">
         <option value="default">Ordre du portfolio</option>
-        <option value="date-desc">Date : du plus récent</option>
+        <option value="date-desc" selected>Date : du plus récent</option>
         <option value="date-asc">Date : du plus ancien</option>
         <option value="az">Alphabétique : A → Z</option>
         <option value="za">Alphabétique : Z → A</option>
       </select>
       <div class="catmenu sortmenu">
-        <button type="button" class="catmenu-btn" id="sortBtn" aria-haspopup="listbox" aria-expanded="false"><span class="catmenu-label">Ordre du portfolio</span><svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="catmenu-btn" id="sortBtn" aria-haspopup="listbox" aria-expanded="false"><span class="catmenu-label">Date : du plus récent</span><svg class="chev" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="catmenu-list" id="sortList" role="listbox" aria-label="Trier" hidden></div>
       </div>
     </div>
@@ -298,6 +298,7 @@
   sortList.innerHTML = Array.prototype.map.call(sortSel.options, function(o){
     return '<button type="button" role="option" class="catmenu-opt" data-v="' + o.value + '" aria-selected="' + (o.selected ? 'true' : 'false') + '"><span class="t">' + D.esc(o.textContent) + '</span></button>';
   }).join('');
+  sortBtn.querySelector('.catmenu-label').textContent = sortSel.options[sortSel.selectedIndex].textContent;
   function openSort(open){
     sortList.hidden = !open; sortBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open){ var s = sortList.querySelector('[aria-selected="true"]') || sortList.firstChild; if (s) s.focus(); }
