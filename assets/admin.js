@@ -883,6 +883,7 @@
         var def = T.BLOCKS[b.t]; if (!def) return;
         var card = h('div', { class:'blk', 'data-bi':i },
           h('div', { class:'hd' }, h('span', { class:'ty', title:'Maintiens pour réorganiser les blocs' }, h('span', { class:'grip', text:'⠿', 'aria-hidden':'true' }), h('span', { text:def.icon }), def.label, h('span', { class:'sum', text:blockSummary(b) })),
+            multiBtn(b),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Monter', text:'↑', disabled:i === 0, onclick:function(){ move(p.blocks, i, -1); paint(); touch(); } }),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Descendre', text:'↓', disabled:i === p.blocks.length - 1, onclick:function(){ move(p.blocks, i, 1); paint(); touch(); } }),
             h('button', { class:'btn sm ico-btn ghost', type:'button', title:'Dupliquer', text:'⧉', onclick:function(){ p.blocks.splice(i + 1, 0, clone(b)); paint(); touch(); } }),
@@ -891,6 +892,44 @@
         list.appendChild(card);
         armReorder(card, card.querySelector('.ty'));
       });
+    }
+
+    /* ---- importer plusieurs images d'un coup (galerie, 2 images) : bouton à côté des flèches ---- */
+    function multiBtn(b){
+      if (b.t !== 'gallery' && b.t !== 'images2') return null;
+      var inp = h('input', { type:'file', accept:'image/*', multiple:true, hidden:true });
+      var btn = h('button', { class:'btn sm', type:'button', title:"Importer plusieurs images d'un coup", text:'⇪ Images', onclick:function(){ inp.click(); } });
+      inp.addEventListener('change', function(){
+        var files = Array.prototype.slice.call(inp.files || []); inp.value = '';
+        if (!files.length) return;
+        if (b.t === 'images2' && files.length > 2){ toast('Ce bloc contient 2 images : seules les 2 premières sont utilisées.', 'err'); files = files.slice(0, 2); }
+        btn.disabled = true;
+        var urls = [], seq = Promise.resolve();
+        files.forEach(function(f){
+          seq = seq.then(function(){
+            return prepareImage(f).then(function(r){ return upload(r.blob, r.ext, r.type, r.name); })
+              .then(function(url){ urls.push(url); btn.textContent = '⇪ ' + urls.length + '/' + files.length; });
+          });
+        });
+        seq.then(function(){ placeImages(b, urls); paint(); touch(); toast(urls.length + ' image' + (urls.length > 1 ? 's ajoutées' : ' ajoutée') + '.', 'ok'); })
+          .catch(function(e){ if (urls.length){ placeImages(b, urls); paint(); touch(); } toast('Envoi interrompu : ' + errMsg(e), 'err'); })
+          .then(function(){ btn.disabled = false; btn.textContent = '⇪ Images'; });
+      });
+      return [btn, inp];
+    }
+    /* remplit d'abord les emplacements vides, puis ajoute les images restantes à la suite (galerie) */
+    function placeImages(b, urls){
+      if (b.t === 'images2'){
+        b.a = b.a || {}; b.b = b.b || {};
+        var slots = [b.a, b.b].filter(function(s){ return !s.url; });
+        if (slots.length < urls.length) slots = [b.a, b.b];
+        urls.forEach(function(u, i){ if (slots[i]) slots[i].url = u; });
+        return;
+      }
+      b.items = b.items || [];
+      var q = urls.slice();
+      b.items.forEach(function(it){ if (!it.url && q.length) it.url = q.shift(); });
+      q.forEach(function(u){ b.items.push({ url:u, caption:'' }); });
     }
 
     /* ---- maintenir le titre d'un bloc : tous les blocs se replient en une liste de noms,
