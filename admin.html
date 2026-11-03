@@ -114,6 +114,9 @@
   .blk > .hd .ty{ cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; min-width:0; }
   .blk > .hd .grip{ color:var(--faint); font-size:.95rem; letter-spacing:0; line-height:1; }
   .blk > .hd .sum{ display:none; }
+  .reorder-bar{ position:sticky; top:112px; z-index:30; display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 12px; padding:10px 12px 10px 16px; border-radius:12px; background:rgba(24,156,216,.16); border:1px solid rgba(24,156,216,.55); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); font-size:.85rem; }
+  .reorder-bar[hidden]{ display:none; }
+  .reorder .blk > .hd .ty{ cursor:grab; }
   .reorder .blk{ padding:10px 12px; transition:box-shadow .2s, background .2s; }
   .reorder .blk > :not(.hd){ display:none; }
   .reorder .blk > .hd{ margin:0; }

@@ -875,8 +875,18 @@
     var sec = h('section', { class:'sec' }, h('h3', { text:'Contenu de la page' }));
     var list = h('div', { style:'display:flex;flex-direction:column;gap:12px;margin:0 0 16px' });
     var palette = h('div', { class:'addgrid' });
+    /* mode réorganisation : reste actif après chaque dépôt (on peut déplacer plusieurs blocs) jusqu'à « Terminé » */
+    var reorderMode = false;
+    var reBar = h('div', { class:'reorder-bar', hidden:true },
+      h('span', { text:'Glisse les blocs pour changer leur ordre.' }),
+      h('button', { class:'btn sm primary', type:'button', text:'Terminé', onclick:function(){ exitReorder(); } }));
+    function exitReorder(){
+      reorderMode = false; doPaint();
+      sec.scrollIntoView({ block:'start' }); window.scrollBy(0, -130);
+    }
     function paint(){ keepScroll(list, doPaint); }
     function doPaint(){
+      list.classList.toggle('reorder', reorderMode); reBar.hidden = !reorderMode;
       clear(list);
       if (!p.blocks.length) list.appendChild(h('p', { class:'hint', text:'Page vide : ajoute ton premier bloc ci-dessous.' }));
       p.blocks.forEach(function(b, i){
@@ -939,6 +949,7 @@
       if (!handle) return;
       handle.addEventListener('pointerdown', function(e){
         if (e.button) return;
+        if (reorderMode){ e.preventDefault(); startDrag(card, handle, e.pointerId, e.clientY); return; }
         var sx = e.clientX, sy = e.clientY, timer, moved = false;
         function cancel(){ clearTimeout(timer); handle.removeEventListener('pointermove', early); handle.removeEventListener('pointerup', cancel); handle.removeEventListener('pointercancel', cancel); }
         function early(ev){ if (Math.abs(ev.clientX - sx) > 8 || Math.abs(ev.clientY - sy) > 8){ moved = true; cancel(); } }
@@ -978,7 +989,7 @@
         var moved = !cancelled && order.some(function(v, i){ return v !== i; });
         var moving = +card.getAttribute('data-bi'), newIdx = moved ? order.indexOf(moving) : moving;
         if (moved){ var nb = order.map(function(i){ return p.blocks[i]; }); p.blocks.length = 0; Array.prototype.push.apply(p.blocks, nb); }
-        list.classList.remove('reorder');
+        reorderMode = true;
         doPaint();
         var el = list.querySelector('.blk[data-bi="' + newIdx + '"]');
         if (el){ window.scrollBy(0, el.getBoundingClientRect().top - (lastY - 20)); el.classList.add('glow'); setTimeout(function(){ el.classList.remove('glow'); }, 1400); }
@@ -997,6 +1008,7 @@
         setTimeout(function(){ var last = list.lastElementChild; if (last) last.scrollIntoView({ behavior:'smooth', block:'center' }); }, 30); } },
         h('b', { text:d.icon + '  ' + d.label }), h('span', { text:d.hint })));
     });
+    sec.appendChild(reBar);
     sec.appendChild(list);
     sec.appendChild(h('div', { class:'hint', style:'margin:0 0 8px', text:'Ajouter un bloc :' }));
     sec.appendChild(palette);
