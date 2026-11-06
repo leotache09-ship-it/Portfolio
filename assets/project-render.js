@@ -141,7 +141,10 @@
       return '<div class="blk gal c' + c + '">' + items.map(figure).join('') + '</div>';
     },
     split: function(b){
-      return '<div class="blk split' + (b.side === 'left' ? ' rev' : '') + '"><div>' + paragraphs(b.text, 'body-text') + '</div>' + figure(b.image) + '</div>';
+      /* alignement du texte : horizontal (gauche / centré / droite) et vertical par rapport à l'image (haut / milieu / bas) */
+      var ta = { center:'center', right:'right' }[b.textAlign] || '', va = { center:'center', end:'end' }[b.vAlign] || '';
+      var ts = (ta ? 'text-align:' + ta + ';' : '') + (va ? 'align-self:' + va + ';' : '');
+      return '<div class="blk split' + (b.side === 'left' ? ' rev' : '') + '"><div' + (ts ? ' style="' + ts + '"' : '') + '>' + paragraphs(b.text, 'body-text') + '</div>' + figure(b.image) + '</div>';
     },
     palette: function(b){
       return '<div class="blk palette">' + (b.colors || []).map(function(c){

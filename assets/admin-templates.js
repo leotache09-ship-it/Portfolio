@@ -76,6 +76,8 @@
     split: { label:'Texte + image', hint:'Un texte à côté d\'une image.', icon:'▤▯',
       fields:[ { k:'side', type:'select', label:'Image à…', options:[ ['right','Droite'], ['left','Gauche'] ] },
                { k:'text', type:'textarea', label:'Texte' },
+               { k:'textAlign', type:'select', label:'Alignement du texte', options:[ ['', 'À gauche'], ['center', 'Centré'], ['right', 'À droite'] ] },
+               { k:'vAlign', type:'select', label:"Position verticale du texte (par rapport à l'image)", options:[ ['', 'En haut'], ['center', 'Au milieu'], ['end', 'En bas'] ] },
                { k:'image', type:'group', label:'Image', fields:IMG_LIGHT } ],
       blank:function(){ return { t:'split', side:'right', text:'', image:{ url:'', caption:'' } }; } },
     palette: { label:'Palette de couleurs', hint:'Pastilles de couleurs avec nom et code.', icon:'◐',
