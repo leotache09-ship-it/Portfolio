@@ -88,7 +88,7 @@
   /* projets publiés créés dans le mode administrateur (résumé pour les cartes) */
   function fetchProjects(){
     if (!configured()) return Promise.resolve([]);
-    return rest('projects?select=slug,title,category,date_label,cover_url,hover_url,meta&published=eq.true&order=created_at.desc');
+    return rest('projects?select=slug,title,category,date_label,cover_url,hover_url,meta,created_at&published=eq.true&order=created_at.desc');
   }
   /* Carte « Nouveau projet » de l'accueil. Réglage de Léo (site_settings, clé « featured ») :
        { mode:'auto' }                 -> le dernier projet AJOUTÉ (défaut)
@@ -134,7 +134,7 @@
   function fromRow(r){
     return {
       slug: r.slug, cat: r.category, name: esc(String(r.title || '').replace(/\*/g, '')), href: 'projet.html?p=' + encodeURIComponent(r.slug),
-      img: r.cover_url || '', peek: r.hover_url || '', video: (r.meta || {}).cover_video || '', imgStyle: frameCss((r.meta || {}).cover_frame), peekStyle: frameCss((r.meta || {}).hover_frame), ar: '1080/1380', date: esc(r.date_label || ''), legacy: false
+      img: r.cover_url || '', peek: r.hover_url || '', video: (r.meta || {}).cover_video || '', imgStyle: frameCss((r.meta || {}).cover_frame), peekStyle: frameCss((r.meta || {}).hover_frame), ar: '1080/1380', date: esc(r.date_label || ''), created: Date.parse(r.created_at || '') || 0, legacy: false
     };
   }
 

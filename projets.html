@@ -242,7 +242,7 @@
       var cat = D.catOf(p.cat);
       counts[cat.id] = (counts[cat.id] || 0) + 1;
       var alt = D.plain(p.name);
-      html += '<a class="card" href="' + p.href + '" data-cat="' + cat.id + '" data-ts="' + D.dateKey(D.plain(p.date)) + '" data-name="' + D.esc(alt) + '" data-i="' + i + '" style="--c:' + cat.color + '">' +
+      html += '<a class="card" href="' + p.href + '" data-cat="' + cat.id + '" data-ts="' + D.dateKey(D.plain(p.date)) + '" data-name="' + D.esc(alt) + '" data-created="' + (p.created || 0) + '" data-i="' + i + '" style="--c:' + cat.color + '">' +
         '<span class="media">' + (p.video
           ? '<video src="' + D.esc(p.video) + '" poster="' + D.esc(p.img || p.peek || '') + '" autoplay loop muted playsinline preload="metadata"></video>'
           : (p.img ? '<img src="' + D.esc(p.img) + '" alt="' + D.esc(alt) + '" loading="lazy"' + (p.imgStyle ? ' style="' + D.esc(p.imgStyle) + '"' : '') + '>' : '')) + '<span class="veil"><span>Voir plus</span></span></span>' +
@@ -286,7 +286,8 @@
     var cards = Array.prototype.slice.call(grid.children);
     var byName = function(a, b){ return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'), 'fr', { sensitivity:'base' }); };
     var byIdx = function(a, b){ return a.getAttribute('data-i') - b.getAttribute('data-i'); };
-    var byTs = function(dir){ return function(a, b){ return (dir * (a.getAttribute('data-ts') - b.getAttribute('data-ts'))) || byIdx(a, b); }; };
+    /* même mois (la date affichée n'a pas de jour) : le projet créé le plus récemment dans le mode créateur passe devant */
+    var byTs = function(dir){ return function(a, b){ return (dir * (a.getAttribute('data-ts') - b.getAttribute('data-ts'))) || (dir * (a.getAttribute('data-created') - b.getAttribute('data-created'))) || byIdx(a, b); }; };
     var cmp = { 'default': byIdx, 'date-desc': byTs(-1), 'date-asc': byTs(1), 'az': byName, 'za': function(a, b){ return byName(b, a); } }[mode] || byIdx;
     cards.sort(cmp).forEach(function(c){ grid.appendChild(c); });
   }
