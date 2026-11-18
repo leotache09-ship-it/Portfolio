@@ -720,18 +720,18 @@
         }
         frag = adv;
       } else adv = null;
+      /* d.showIf = { k, v } : le champ n'est visible que si le select k vaut v (ou une des valeurs de la liste v) — valable pour tous les types */
+      if (d.showIf){
+        var host = h('div', {}), realFrag = frag, sif = d.showIf;
+        var okVal = function(v){ return Array.isArray(sif.v) ? sif.v.indexOf(v) > -1 : v === sif.v; };
+        host.style.display = okVal(String(obj[sif.k] || '')) ? '' : 'none';
+        (watch[sif.k] = watch[sif.k] || []).push(function(v){ host.style.display = okVal(v) ? '' : 'none'; });
+        realFrag.appendChild(host); frag = host;
+      }
       if (d.type === 'text') frag.appendChild(field(d.label, textIn(obj, d.k)));
       else if (d.type === 'textarea') frag.appendChild(field(d.label, areaIn(obj, d.k, d.rows)));
       else if (d.type === 'select') frag.appendChild(field(d.label, selectIn(obj, d.k, d.options, function(v){ (watch[d.k] || []).forEach(function(fn){ fn(v); }); })));
-      else if (d.type === 'color'){
-        var cf = field(d.label, colorIn(obj, d.k, d.def || '#189CD8'));
-        if (d.showIf){
-          var okVal = function(v){ return Array.isArray(d.showIf.v) ? d.showIf.v.indexOf(v) > -1 : v === d.showIf.v; };
-          cf.style.display = okVal(String(obj[d.showIf.k] || '')) ? '' : 'none';
-          (watch[d.showIf.k] = watch[d.showIf.k] || []).push(function(v){ cf.style.display = okVal(v) ? '' : 'none'; });
-        }
-        frag.appendChild(cf);
-      }
+      else if (d.type === 'color') frag.appendChild(field(d.label, colorIn(obj, d.k, d.def || '#189CD8')));
       else if (d.type === 'bool') frag.appendChild(boolIn(obj, d.k, d.label));
       else if (d.type === 'boolInv'){
         var cb = h('input', { type:'checkbox', checked:!obj[d.flag], style:'width:auto', onchange:function(){ obj[d.flag] = !cb.checked; touch(); } });
@@ -859,9 +859,13 @@
     var paperRow = h('div', { hidden:autoPaper });
     function paperInputs(){ clear(paperRow); if (!autoPaper) paperRow.appendChild(colorIn(p.theme, 'paper', '#f4f8fb')); }
     paperInputs();
+    /* dégradé : deux couleurs proposées au départ (blanc → accent), on peut en ajouter au milieu */
+    if (!Array.isArray(p.theme.bgColors) || p.theme.bgColors.length < 2) p.theme.bgColors = [ { hex:'#ffffff' }, { hex:R.hexOk(p.theme.accent) ? p.theme.accent : '#189CD8' } ];
     return h('section', { class:'sec' }, h('h3', { text:'Style de la page' }),
       field('Ambiance', seg),
       field('Couleur d\'accent', colorIn(p.theme, 'accent', '#189CD8'), 'Utilisée pour les mots colorés, les étiquettes et les détails.'),
+      fieldsNode(T.PAGE_BG, p.theme),
+      h('p', { class:'hint', text:'Le dégradé va du tout en haut de la page jusqu\'en bas, en passant par les couleurs du milieu. Le motif se répète par-dessus le fond (couleur unie ou dégradé).' }),
       paperWrap, h('label', { class:'radio' }, auto, h('span', { text:'Couleur de fond automatique (selon l\'accent)' })), paperRow);
   }
 

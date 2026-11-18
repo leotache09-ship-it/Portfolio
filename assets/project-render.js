@@ -9,7 +9,7 @@
  *     meta:  { lede, hero_image },
  *     theme: { mode:'light'|'dark', accent:'#rrggbb', paper:'#rrggbb'|'' },
  *     blocks:[ { t:'title'|'text'|'image'|'images2'|'gallery'|'split'|
- *                 'statement'|'palette'|'facts'|'cards'|'video', … } ] }
+ *                 'statement'|'compare'|'palette'|'facts'|'cards'|'video', … } ] }
  * Dans les titres/textes : **gras**, *mot en couleur d'accent* (titres et
  * énoncés) et [lien](https://…).
  */
@@ -46,6 +46,30 @@
     var v = themeVars(theme), root = document.documentElement;
     Object.keys(v).forEach(function(k){ root.style.setProperty(k, v[k]); });
     root.style.colorScheme = theme && theme.mode === 'dark' ? 'dark' : 'light';
+    applyPageBg(theme || {});
+  }
+  /* fond de toute la page : dégradé du haut jusqu'en bas du document (fond du body, qui couvre toute la hauteur)
+     et/ou motif répété (body::before, voir project-page.css) */
+  function applyPageBg(t){
+    var root = document.documentElement, body = document.body;
+    if (!body) return;
+    var cols = (t.bgColors || []).map(function(c){ return c && c.hex; }).filter(hexOk);
+    if (t.bgType === 'gradient' && cols.length >= 2){
+      body.style.backgroundImage = 'linear-gradient(180deg,' + cols.join(',') + ')';
+      body.style.backgroundColor = cols[cols.length - 1];
+      root.style.setProperty('--paper', cols[0]);   /* l'en-tête (verre) reprend la couleur du haut */
+    } else {
+      body.style.backgroundImage = ''; body.style.backgroundColor = '';
+    }
+    var u = String(t.patUrl || '').trim();
+    if (t.patMode === 'on' && /^(https?:\/\/|\/|assets\/)/i.test(u)){
+      var abs = u; try { abs = new URL(u, location.href).href; } catch (x){}   /* adresse absolue : sinon elle serait lue depuis le dossier du CSS */
+      root.style.setProperty('--pat-img', 'url("' + abs.replace(/["\\()\s]/g, encodeURIComponent) + '")');
+      root.style.setProperty('--pat-size', ([40, 70, 200, 320].indexOf(+t.patSize) > -1 ? +t.patSize : 120) + 'px');
+      root.style.setProperty('--pat-op', String(([10, 50, 100].indexOf(+t.patOpacity) > -1 ? +t.patOpacity : 25) / 100));
+    } else {
+      root.style.removeProperty('--pat-img'); root.style.setProperty('--pat-op', '0');
+    }
   }
 
   /* ---------- texte ---------- */
@@ -145,6 +169,21 @@
       var ta = { center:'center', right:'right' }[b.textAlign] || '', va = { center:'center', end:'end' }[b.vAlign] || '';
       var ts = (ta ? 'text-align:' + ta + ';' : '') + (va ? 'align-self:' + va + ';' : '');
       return '<div class="blk split' + (b.side === 'left' ? ' rev' : '') + '"><div' + (ts ? ' style="' + ts + '"' : '') + '>' + paragraphs(b.text, 'body-text') + '</div>' + figure(b.image) + '</div>';
+    },
+    /* avant / après : l'image « avec effets » en dessous, l'image « sans effets » par-dessus, coupée à la position de la barre (--pos) ; assets/compare.js gère le glisser */
+    compare: function(b){
+      if (!b.before || !b.after){
+        return '<div class="blk"><figure' + figStyle(b) + '><div class="frame" style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;text-align:center;padding:var(--unit);color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Avant / après : ajoute les deux images</div></figure></div>';
+      }
+      var pos = [25, 50, 75].indexOf(+b.start) > -1 ? +b.start : 50, rc = ratioCss(b.ratio);
+      var la = String(b.labelA || '').trim(), lb = String(b.labelB || '').trim();
+      return '<div class="blk"><figure' + figStyle(b) + '><div class="cmp' + (rc ? ' fixed' : '') + '" style="--pos:' + pos + '%;' + (rc ? 'aspect-ratio:' + rc + ';' : '') + '">' +
+        '<img class="cmp-after" src="' + esc(b.after) + '" alt="' + esc(lb || 'Après') + '" draggable="false" data-nozoom>' +
+        '<img class="cmp-before" src="' + esc(b.before) + '" alt="' + esc(la || 'Avant') + '" draggable="false" data-nozoom>' +
+        (la ? '<span class="cmp-tag l">' + esc(la) + '</span>' : '') + (lb ? '<span class="cmp-tag r">' + esc(lb) + '</span>' : '') +
+        '<div class="cmp-bar" role="slider" tabindex="0" aria-label="Glisser pour comparer avant et après" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pos + '">' +
+        '<span class="cmp-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span></div>' +
+        '</div>' + (b.caption ? '<figcaption>' + esc(b.caption) + '</figcaption>' : '') + '</figure></div>';
     },
     palette: function(b){
       return '<div class="blk palette">' + (b.colors || []).map(function(c){

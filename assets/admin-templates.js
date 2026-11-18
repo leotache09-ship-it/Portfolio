@@ -80,6 +80,17 @@
                { k:'vAlign', type:'select', label:"Position verticale du texte (par rapport à l'image)", options:[ ['', 'En haut'], ['center', 'Au milieu'], ['end', 'En bas'] ] },
                { k:'image', type:'group', label:'Image', fields:IMG_LIGHT } ],
       blank:function(){ return { t:'split', side:'right', text:'', image:{ url:'', caption:'' } }; } },
+    compare: { label:'Avant / après (curseur)', hint:'Deux images superposées : on glisse une barre de gauche à droite pour passer de l\'une à l\'autre.', icon:'⇆',
+      fields:[ { k:'before', type:'image', label:'Image SANS effets (côté gauche de la barre)' },
+               { k:'after', type:'image', label:'Image AVEC effets (côté droit de la barre)' },
+               { k:'labelA', type:'text', label:'Étiquette de gauche (vide = aucune)' },
+               { k:'labelB', type:'text', label:'Étiquette de droite (vide = aucune)' },
+               { k:'start', type:'select', label:'Position de la barre au départ', options:[ ['50', 'Au milieu'], ['25', 'Plutôt à gauche (25 %)'], ['75', 'Plutôt à droite (75 %)'] ] },
+               { k:'caption', type:'text', label:'Légende (facultatif)' },
+               { k:'ratio', adv:true, advLabel:'Options', type:'select', label:'Format', options:RATIOS },
+               { k:'size', adv:true, type:'select', label:'Taille sur le site', options:SIZES },
+               { k:'align', adv:true, type:'select', label:'Alignement (si taille réduite)', options:ALIGNS } ],
+      blank:function(){ return { t:'compare', before:'', after:'', labelA:'Sans effets', labelB:'Avec effets', start:'50', caption:'', ratio:'' }; } },
     palette: { label:'Palette de couleurs', hint:'Pastilles de couleurs avec nom et code.', icon:'◐',
       fields:[ { k:'colors', type:'list', label:'Couleurs', addLabel:'Ajouter une couleur', min:1,
                  item:[ { k:'name', type:'text', label:'Nom' }, { k:'hex', type:'color', label:'Couleur' }, { k:'extra', type:'text', label:'Détail (ex. Pantone 179 C)' } ],
@@ -161,5 +172,18 @@
       ] }
   ];
 
-  window.LT_TEMPLATES = { BLOCKS: BLOCKS, TEMPLATES: TEMPLATES, RATIOS: RATIOS, HERO_STYLE: HERO_STYLE };
+  /* fond de toute la page (stocké dans theme.*) : dégradé du haut jusqu'en bas du site et/ou motif répété */
+  var PAGE_BG = [
+    { k:'bgType', type:'select', label:'Fond de la page', options:[ ['', 'Couleur unie (réglage ci-dessous)'], ['gradient', 'Dégradé du haut jusqu\'en bas de la page'] ] },
+    { k:'bgColors', type:'list', label:'Couleurs du dégradé (de haut en bas)', addLabel:'Ajouter une couleur', min:2, showIf:{ k:'bgType', v:'gradient' },
+      item:[ { k:'hex', type:'color', label:'Couleur' } ], blank:function(){ return { hex:'#ffffff' }; } },
+    { k:'patMode', type:'select', label:'Motif qui se répète sur tout le fond', options:[ ['', 'Aucun motif'], ['on', 'Ajouter un motif'] ] },
+    { k:'patUrl', type:'image', label:'Image du motif (idéalement un PNG transparent : il se répète en mosaïque)', showIf:{ k:'patMode', v:'on' } },
+    { k:'patSize', type:'select', label:'Taille du motif', showIf:{ k:'patMode', v:'on' },
+      options:[ ['', 'Moyenne (120 px)'], ['40', 'Très petite (40 px)'], ['70', 'Petite (70 px)'], ['200', 'Grande (200 px)'], ['320', 'Très grande (320 px)'] ] },
+    { k:'patOpacity', type:'select', label:'Visibilité du motif', showIf:{ k:'patMode', v:'on' },
+      options:[ ['', 'Discrète (25 %)'], ['10', 'Très discrète (10 %)'], ['50', 'Moyenne (50 %)'], ['100', 'Pleine (100 %)'] ] }
+  ];
+
+  window.LT_TEMPLATES = { BLOCKS: BLOCKS, TEMPLATES: TEMPLATES, RATIOS: RATIOS, HERO_STYLE: HERO_STYLE, PAGE_BG: PAGE_BG };
 })();
