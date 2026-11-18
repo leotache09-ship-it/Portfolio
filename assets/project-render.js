@@ -98,7 +98,14 @@
   function frame(o, kind){
     o = o || {};
     if (!o.url) return '<div class="frame" style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">' + (kind === 'video' ? 'Vidéo' : 'Image') + ' à ajouter</div>';
-    var rc = ratioCss(o.ratio);
+    var P = frameParts(o);
+    return '<div class="' + P.cls + '"' + (P.st ? ' style="' + P.st + '"' : '') + '>' + (kind === 'video' ? vid(o, P.imgStyle) : img(o.url, o.caption, P.imgStyle, o.noZoom)) + '</div>';
+  }
+  /* réglages communs d'un cadre d'image (format, fond, contour, taille dans le cadre, hauteur, zoom) :
+     cls / st = classe et style du cadre, lay = la partie « mise en page » du style (reprise par les calques du bloc avant/après),
+     imgStyle = style de l'image */
+  function frameParts(o){
+    var rc = ratioCss(o.ratio), lay = '';
     var cls = 'frame' + (rc ? ' fixed' : '') + (rc && o.fit === 'contain' ? ' contain' : '');
     /* fond : transparent sans cadre (PNG détourés) ou couleur choisie */
     var st = rc ? 'aspect-ratio:' + rc + ';' : '';
@@ -110,17 +117,18 @@
     /* taille de l'image DANS le cadre (logos PNG) : image réduite et centrée */
     var inner = +o.inner, imgStyle = rc && D.frameCss ? D.frameCss(o.frame) : '';
     if (inner > 0 && inner < 100){
-      st += 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
+      lay = 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);'; st += lay;
       imgStyle = 'width:' + inner + '%;height:' + (rc ? inner + '%' : 'auto') + ';object-fit:contain;';
     }
     /* hauteur du cadre choisie : elle remplace le format ; l'image s'adapte sans être déformée ni coupée */
     var H = +o.h;
     if (H > 0){
       var mx = (inner > 0 && inner < 100) ? inner : 100;
-      st = st.replace(/aspect-ratio:[^;]*;/, '') + 'height:' + H + 'px;max-height:80vh;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
+      lay = 'display:flex;align-items:center;justify-content:center;padding:calc(var(--unit)*1.2);';
+      st = st.replace(/aspect-ratio:[^;]*;/, '') + 'height:' + H + 'px;max-height:80vh;box-sizing:border-box;' + lay;
       imgStyle = 'width:auto;height:auto;max-width:' + mx + '%;max-height:' + mx + '%;object-fit:contain;';
     }
-    return '<div class="' + cls + '"' + (st ? ' style="' + st + '"' : '') + '>' + (kind === 'video' ? vid(o, imgStyle) : img(o.url, o.caption, imgStyle, o.noZoom)) + '</div>';
+    return { cls: cls, st: st, lay: lay, imgStyle: imgStyle, rc: rc };
   }
   /* taille (largeur en %) et alignement de l'image sur la page */
   function figStyle(o){
@@ -171,15 +179,21 @@
       return '<div class="blk split' + (b.side === 'left' ? ' rev' : '') + '"><div' + (ts ? ' style="' + ts + '"' : '') + '>' + paragraphs(b.text, 'body-text') + '</div>' + figure(b.image) + '</div>';
     },
     /* avant / après : l'image « avec effets » en dessous, l'image « sans effets » par-dessus, coupée à la position de la barre (--pos) ; assets/compare.js gère le glisser */
+    /* avant / après : mêmes réglages de cadre que les images (format, fond, contour, taille, hauteur, zoom).
+       Une copie invisible de l'image « après » donne la hauteur ; deux calques superposés (après / avant) ont exactement
+       la même mise en page que le cadre et sont coupés de part et d'autre de la barre (--pos). assets/compare.js gère le glisser et l'animation d'appel. */
     compare: function(b){
       if (!b.before || !b.after){
         return '<div class="blk"><figure' + figStyle(b) + '><div class="frame" style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;text-align:center;padding:var(--unit);color:var(--ink-faint);font-family:\'Roboto Mono\',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase">Avant / après : ajoute les deux images</div></figure></div>';
       }
-      var pos = [25, 50, 75].indexOf(+b.start) > -1 ? +b.start : 50, rc = ratioCss(b.ratio);
+      var pos = [25, 50, 75].indexOf(+b.start) > -1 ? +b.start : 50, P = frameParts(b);
       var la = String(b.labelA || '').trim(), lb = String(b.labelB || '').trim();
-      return '<div class="blk"><figure' + figStyle(b) + '><div class="cmp' + (rc ? ' fixed' : '') + '" style="--pos:' + pos + '%;' + (rc ? 'aspect-ratio:' + rc + ';' : '') + '">' +
-        '<img class="cmp-after" src="' + esc(b.after) + '" alt="' + esc(lb || 'Après') + '" draggable="false" data-nozoom>' +
-        '<img class="cmp-before" src="' + esc(b.before) + '" alt="' + esc(la || 'Avant') + '" draggable="false" data-nozoom>' +
+      var layerImg = P.imgStyle || (!P.rc && !P.lay ? 'width:100%;height:100%;object-fit:cover;' : '');
+      function im(u, alt, st, cls){ return '<img' + (cls ? ' class="' + cls + '"' : '') + ' src="' + esc(u) + '" alt="' + esc(alt) + '" draggable="false" data-nozoom' + (st ? ' style="' + esc(st) + '"' : '') + '>'; }
+      return '<div class="blk"><figure' + figStyle(b) + '><div class="' + P.cls + ' cmp" data-start="' + pos + '" style="--pos:' + pos + '%;' + P.st + '">' +
+        im(b.after, '', P.imgStyle, 'cmp-sizer') +
+        '<div class="cmp-over cmp-a"' + (P.lay ? ' style="' + P.lay + '"' : '') + '>' + im(b.after, lb || 'Après', layerImg) + '</div>' +
+        '<div class="cmp-over cmp-b"' + (P.lay ? ' style="' + P.lay + '"' : '') + '>' + im(b.before, la || 'Avant', layerImg) + '</div>' +
         (la ? '<span class="cmp-tag l">' + esc(la) + '</span>' : '') + (lb ? '<span class="cmp-tag r">' + esc(lb) + '</span>' : '') +
         '<div class="cmp-bar" role="slider" tabindex="0" aria-label="Glisser pour comparer avant et après" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pos + '">' +
         '<span class="cmp-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"/></svg></span></div>' +

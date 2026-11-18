@@ -41,6 +41,14 @@
     c.advLabel = i === 0 ? "Options de la vidéo" : undefined;
     return c;
   });
+  /* avant / après : mêmes options que l'image (sauf « agrandir au clic », la barre se glisse). Le zoom/cadrage se règle sur l'image
+     avec effets et s'applique aux deux images, pour qu'elles restent parfaitement superposées. */
+  var COMPARE_OPTS = IMG.filter(function(d){ return d.adv && d.k !== 'zoomClick'; }).map(function(d, i){
+    var c = {}; Object.keys(d).forEach(function(k){ c[k] = d[k]; });
+    if (d.k === 'frame'){ c.previewKey = 'after'; c.label = "Zoom et cadrage (se règle sur l'image avec effets, appliqué aux deux)"; }
+    c.advLabel = i === 0 ? 'Options des images' : undefined;
+    return c;
+  });
   /* réglages de l'image d'en-tête (stockés dans meta.hero_*) */
   var HERO_STYLE = [
     { k:'hero_size', adv:true, advLabel:"Options de l'image d'en-tête", type:'select', label:"Taille de l'image d'en-tête", options:SIZES },
@@ -86,11 +94,8 @@
                { k:'labelA', type:'text', label:'Étiquette de gauche (vide = aucune)' },
                { k:'labelB', type:'text', label:'Étiquette de droite (vide = aucune)' },
                { k:'start', type:'select', label:'Position de la barre au départ', options:[ ['50', 'Au milieu'], ['25', 'Plutôt à gauche (25 %)'], ['75', 'Plutôt à droite (75 %)'] ] },
-               { k:'caption', type:'text', label:'Légende (facultatif)' },
-               { k:'ratio', adv:true, advLabel:'Options', type:'select', label:'Format', options:RATIOS },
-               { k:'size', adv:true, type:'select', label:'Taille sur le site', options:SIZES },
-               { k:'align', adv:true, type:'select', label:'Alignement (si taille réduite)', options:ALIGNS } ],
-      blank:function(){ return { t:'compare', before:'', after:'', labelA:'Sans effets', labelB:'Avec effets', start:'50', caption:'', ratio:'' }; } },
+               { k:'caption', type:'text', label:'Légende (facultatif)' } ].concat(COMPARE_OPTS),
+      blank:function(){ return { t:'compare', before:'', after:'', labelA:'Sans effets', labelB:'Avec effets', start:'50', caption:'', ratio:'', fit:'cover' }; } },
     palette: { label:'Palette de couleurs', hint:'Pastilles de couleurs avec nom et code.', icon:'◐',
       fields:[ { k:'colors', type:'list', label:'Couleurs', addLabel:'Ajouter une couleur', min:1,
                  item:[ { k:'name', type:'text', label:'Nom' }, { k:'hex', type:'color', label:'Couleur' }, { k:'extra', type:'text', label:'Détail (ex. Pantone 179 C)' } ],
