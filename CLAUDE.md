@@ -37,6 +37,13 @@ Site portfolio statique (HTML/CSS/JS vanilla, sans build) pour Léo Tâche,
   utilisé dans le hero de `index.html` et sur `apropos.html`.
 - `apropos.html` — page "à propos" (parcours, ce qu'il fait, contact),
   accessible en cliquant sur le portrait dans le hero.
+- `assets/socials.js` — **la liste des réseaux sociaux de tout le site**
+  (Instagram, LinkedIn, Facebook). Remplit les pastilles de la section
+  Contact de l'accueil (`[data-lt-socials="pills"]`) et le bloc « Un projet
+  en tête ? / Parlons-en » en bas des 11 pages projet, de `projet.html` et de
+  `projets.html` (`<section data-lt-follow>` juste avant le `<footer>`).
+  Un réseau sans adresse n'est pas affiché : **l'adresse Facebook est encore
+  vide (à compléter dans `NETS`)**.
 
 ## Design system
 
@@ -86,6 +93,30 @@ essais/erreurs :
 - Le fond de la page entière (`document.body.style.backgroundColor`)
   dégrade en continu d'une couleur de catégorie à l'autre, calé sur les
   mêmes positions de scroll.
+
+### Téléphone (≤760px) : mêmes effets que sur ordinateur (depuis le 2026-11-19)
+Vitrine, bandeau « Ma vitrine. » et portrait sont animés en **CSS natif lié
+au défilement** (`animation-timeline` : `view-timeline` sur `#cover` et sur
+chaque `.tv-cat`, `scroll(root)` pour le fond du `body`), dans le bloc
+« TÉLÉPHONE : MÊMES EFFETS QUE SUR ORDINATEUR » en fin de `<style>`, sous
+`@supports (animation-timeline: view())` + `prefers-reduced-motion:
+no-preference`. Le navigateur calcule ces animations avec le défilement :
+**aucun script au scroll** (les versions JS sur téléphone saccadaient ou se
+figeaient). Le JS ne fait que **mesurer** (chargement, `resize`, après
+`LT_rebuildTravaux`) : `--tx0/--tx1` de chaque `.tv-strip-row` (miroir
+compris), la règle `@keyframes tvBg` (`<style id="tvBgKeyframes">`, mêmes
+repères de couleur que sur ordinateur) et `--hint-s` (échelle du bandeau).
+`.tv-strip` y est en `overflow:clip` (un `overflow:hidden` créerait un
+conteneur de défilement qui casserait `view()`). Navigateurs sans
+`animation-timeline` (iOS < 26, Firefox) : ancienne version (swipe natif +
+dégradé statique), sous `@supports not`. Écrans tactiles (`hover:none`) : la
+lueur et les icônes Ps/Ai/Id du portrait apparaissent seules au chargement
+(`@property --glowi` animé, `--glow: var(--glowi)` ; **ne jamais enregistrer
+`--glow` lui-même en `@property`** : il sert aussi de COULEUR sur les cartes
+`.tv-card`). Sur téléphone les icônes passent devant le portrait (il prend
+toute la largeur). « Mon parcours » est épinglé (sticky, `330svh`) avec le
+même script que sur ordinateur, une étape à la fois dans une carte,
+compteur `01 / 06` et barre de progression.
 
 ### Hero (`#cover`, `.cover-hint`)
 Le carré bleu "Mes travaux." grandit au scroll (jamais de transition CSS,
@@ -266,6 +297,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 **Tests** : `node tests-statiques.js` (syntaxe de tous les JS et scripts inline, JSON-LD, `<html lang>`/charset, références locales, sitemap, absence de mock/secret) — 102 vérifications au 2026-10-22. Tests d'intégration (mode créateur, rendu, mobile) faits avec un Supabase simulé injecté temporairement dans `assets/config.js` (jamais à committer ; restaurer avec `git checkout -- assets/config.js`).
 
 ## Changelog
+
+- 2026-11-19 — **Grosse refonte (« test avec Opus »)**. (1) **Mon parcours** : vraie carte du canton de Vaud (contour officiel swissBOUNDARIES3D + lacs Léman, Neuchâtel, Joux, Brenet de VECTOR25, récupérés sur l'API publique geo.admin.ch, simplifiés Douglas-Peucker ; enclaves fribourgeoises en trous `evenodd` ; lacs opaques pour masquer la frontière dans l'eau ; noms « Léman » / « Lac de Neuchâtel » ; mention « Fond de carte © swisstopo · OFEV »), villes placées à leurs vraies coordonnées (Mézières, Lausanne, Sainte-Croix), contour qui se dessine à l'arrivée (IntersectionObserver), « Lancement en freelance » devient une 6e étape (`data-reach="5"`, trajet à 5 segments). (2) **Contact** refait : bandeau bleu défilant des prestations, pastille « Disponible pour de nouveaux projets », titre sur 2 lignes sans coupure, 3 chiffres clés (48 h, Lausanne, freelance depuis mars 2026), réseaux en pastilles, formulaire en verre avec **type de projet** en pastilles (champ `Projet`, envoyé à FormSubmit) et gros bouton bleu. (3) **Réseaux sous tous les projets** : nouveau `assets/socials.js` (voir Structure) ; Facebook prêt mais **adresse à compléter**. (4) **Téléphone = mêmes effets que l'ordinateur** : vitrine qui glisse au défilement en miroir + fond qui change de couleur, bandeau « Ma vitrine. » qui grandit, portrait qui s'efface, lueur et icônes Ps/Ai/Id, parcours épinglé (voir « Téléphone » plus haut). Vérifié en émulation 430×880 et 430×640 (panneau visible) et sur ordinateur (rien ne change dans le script ordinateur de la vitrine) ; formulaire testé avec un faux `fetch` (aucun message envoyé). **Pas testé sur un vrai téléphone. Pas publié (commit local).**
 
 - 2026-11-18 — `projets.html`, tri « du plus récent » faux pour les projets du même mois (Bam Adebayo, INV 2027, Portes ouvertes 2026 = tous « Nov. 2026 ») : la date affichée n'a pas de jour, donc à égalité ils restaient dans l'ordre de la page principale. Départage maintenant par l'heure de création dans le mode créateur : `fetchProjects()` lit `created_at`, `fromRow()` → `created` (ms), carte `data-created`, `byTs` compare mois puis création (même sens), puis l'ordre du portfolio. Projets d'origine non republiés = 0 (plus anciens). Vérifié sur les vraies données en local (lecture seule). **Pas publié (commit local).**
 

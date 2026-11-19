@@ -529,54 +529,107 @@
     .tv-strip-row{ display:flex; flex-direction:column; width:auto; gap: calc(var(--unit)*2); transform:none !important; }
   }
 
-  h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2rem,7vw,4.6rem); line-height:.96; margin:0 0 calc(var(--unit)*1.2); letter-spacing:-.02em; }
+  /* ---- CONTACT ----
+     Bandeau défilant (les prestations), disponibilité, titre, 3 chiffres clés, réseaux en pastilles
+     et un formulaire plus engageant (type de projet en pastilles, gros bouton bleu). */
+  #contact{ position:relative; overflow:hidden; border-top:1px solid var(--line); }
+  .contact-ribbon{ position:relative; z-index:1; background: var(--blue); color:#fff; transform: rotate(-2deg) scale(1.06);
+    margin: calc(var(--unit)*3.2) 0 calc(var(--unit)*.5); padding: calc(var(--unit)*.85) 0; box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+  .contact-ribbon-track{ display:flex; width:max-content; animation: ribbon 34s linear infinite; }
+  .contact-ribbon-track > div{ display:flex; align-items:center; flex:none; }
+  .contact-ribbon span{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.15rem, 2.6vw, 1.9rem); letter-spacing:.01em; white-space:nowrap; padding: 0 calc(var(--unit)*1.2); }
+  .contact-ribbon i{ font-style:normal; font-size: clamp(.9rem, 1.8vw, 1.3rem); opacity:.75; }
+  @keyframes ribbon{ to{ transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){ .contact-ribbon-track{ animation:none; } }
+  .contact-inner{ position:relative; border-top:none; padding-top: calc(var(--unit)*4.5); }
+  /* halo bleu discret derrière le titre (même lumière que la lueur du portrait) */
+  .contact-inner::before{ content:""; position:absolute; z-index:0; pointer-events:none; left:-10%; top:8%; width:62%; height:70%;
+    background: radial-gradient(closest-side, rgba(24,156,216,.22), rgba(24,156,216,0)); filter: blur(10px); }
+  .contact-inner > *{ position:relative; z-index:1; }
+  .contact-grid{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.08fr); gap: calc(var(--unit)*4); align-items:start; }
+  .contact-avail{ display:inline-flex; align-items:center; gap:10px; margin:0 0 calc(var(--unit)*1.4); padding:7px 14px 7px 11px; border-radius:999px;
+    font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink); background: rgba(242,242,242,.06); border:1px solid var(--line); }
+  .contact-avail i{ width:8px; height:8px; border-radius:50%; background:#3ddc84; box-shadow: 0 0 10px rgba(61,220,132,.75); }
+  h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2.1rem, 4.3vw, 4.4rem); line-height:.95; margin:0 0 calc(var(--unit)*1.3); letter-spacing:-.02em; }
+  h2.contact-title .nw{ white-space:nowrap; }
+  @media (max-width: 860px){ h2.contact-title{ font-size: clamp(2.1rem, 10.5vw, 4.4rem); } }
   h2.contact-title em{ font-style:normal; color: var(--blue); }
-  .contact-lede{ font-size: clamp(1rem,1.7vw,1.2rem); line-height:1.65; color: var(--ink-soft); max-width:52ch; margin:0 0 calc(var(--unit)*2.5); }
+  .contact-lede{ font-size: clamp(1.02rem,1.6vw,1.18rem); line-height:1.6; color: var(--ink-soft); max-width:44ch; margin:0 0 calc(var(--unit)*2); }
+  .contact-facts{ list-style:none; margin:0 0 calc(var(--unit)*2.2); padding:0; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: calc(var(--unit)*.75); max-width:520px; }
+  .contact-facts li{ display:flex; flex-direction:column; gap:4px; padding: calc(var(--unit)*.9) calc(var(--unit)*.95); border-radius:14px;
+    background: rgba(242,242,242,.04); border:1px solid var(--line); }
+  .contact-facts b{ font-family:"Archivo Black"; text-transform:uppercase; font-weight:400; font-size: clamp(.95rem,1.7vw,1.2rem); line-height:1.1; color:#fff; }
+  .contact-facts span{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); }
+  .contact-or{ margin:0 0 calc(var(--unit)*.7); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color: var(--ink-faint); }
+  .contact-socials{ display:flex; flex-wrap:wrap; gap: calc(var(--unit)*.6); }
+  .cs-pill{ display:inline-flex; align-items:center; gap:11px; padding:8px 18px 8px 8px; border-radius:999px; text-decoration:none; color: var(--ink);
+    background: rgba(242,242,242,.05); border:1px solid var(--line);
+    transition: border-color .3s, background .3s, transform .3s cubic-bezier(.2,.7,.2,1); }
+  .cs-pill:hover, .cs-pill:focus-visible{ border-color: var(--blue); background: rgba(24,156,216,.12); transform: translateY(-2px); }
+  .cs-ico{ width:36px; height:36px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; background: var(--blue); color:#fff; }
+  .cs-ico svg{ width:17px; height:17px; }
+  .cs-txt{ display:flex; flex-direction:column; line-height:1.15; }
+  .cs-txt b{ font-size:.86rem; font-weight:700; }
+  .cs-txt small{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.04em; color: var(--ink-faint); }
 
   .contact-form{
-    display:flex; flex-direction:column; gap: var(--unit);
-    background: var(--card); border:1px solid var(--line); border-radius:3px;
-    padding: calc(var(--unit)*1.75);
-    transition: border-color .4s cubic-bezier(.2,.7,.2,1);
+    display:flex; flex-direction:column; gap: calc(var(--unit)*1.1);
+    background: linear-gradient(160deg, rgba(242,242,242,.075), rgba(242,242,242,.025));
+    border:1px solid rgba(242,242,242,.16); border-radius:22px;
+    padding: calc(var(--unit)*1.9);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 24px 60px rgba(0,0,0,.35);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    transition: border-color .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s;
   }
-  .contact-form:focus-within{ border-color: var(--blue); }
+  .contact-form:focus-within{ border-color: rgba(24,156,216,.7); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 24px 60px rgba(0,0,0,.35), 0 0 0 4px rgba(24,156,216,.12); }
+  .cf-topics{ border:none; margin:0; padding:0; min-width:0; }
+  .cf-topics legend{ padding:0; margin:0 0 10px; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); }
+  .cf-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .cf-chip{ position:relative; cursor:pointer; }
+  .cf-chip input{ position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
+  .cf-chip span{ display:inline-block; padding:8px 14px; border-radius:999px; font-size:.86rem; color: var(--ink-soft);
+    border:1px solid var(--line); background: rgba(13,13,15,.5); transition: background .25s, border-color .25s, color .25s; }
+  .cf-chip:hover span{ border-color: rgba(242,242,242,.4); color: var(--ink); }
+  .cf-chip input:checked + span{ background: var(--blue); border-color: var(--blue); color:#fff; }
+  .cf-chip input:focus-visible + span{ outline:2px solid var(--blue); outline-offset:2px; }
   .cf-row{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--unit); }
   .cf-field{ display:flex; flex-direction:column; gap:8px; }
   .cf-field label{ font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); }
   .cf-field input, .cf-field textarea{
-    width:100%; background: var(--paper); border:1px solid var(--line); border-radius:3px; color: var(--ink);
-    font-family:"Roboto"; font-size:.96rem; padding: calc(var(--unit)*.75) var(--unit); resize:vertical;
-    transition: border-color .3s;
+    width:100%; background: rgba(13,13,15,.6); border:1px solid var(--line); border-radius:12px; color: var(--ink);
+    font-family:"Roboto"; font-size:1rem; padding: calc(var(--unit)*.8) var(--unit); resize:vertical;
+    transition: border-color .3s, background .3s;
   }
-  .cf-field input:focus, .cf-field textarea:focus{ outline:none; border-color: var(--blue); }
+  .cf-field input::placeholder, .cf-field textarea::placeholder{ color: rgba(242,242,242,.28); }
+  .cf-field input:focus, .cf-field textarea:focus{ outline:none; border-color: var(--blue); background: rgba(13,13,15,.85); }
   .cf-submit{
-    align-self:flex-end; display:flex; align-items:center; gap: var(--unit);
-    background:none; border:none; cursor:pointer; padding:0; font:inherit;
-    font-family:"Roboto Mono"; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:#fff;
+    display:flex; align-items:center; justify-content:center; gap: calc(var(--unit)*.8); width:100%;
+    background: var(--blue); color:#fff; border:none; border-radius:999px; cursor:pointer;
+    padding: 10px 10px 10px 26px; font:inherit; font-family:"Archivo Black"; font-size:1rem; letter-spacing:.02em; text-transform:uppercase;
+    box-shadow: 0 12px 30px rgba(24,156,216,.35);
+    transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s, background .3s;
   }
-  .cf-submit .arrow{ flex:none; width:38px; height:38px; border-radius:50%; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; color: var(--blue); transition: background .4s, color .4s, transform .4s cubic-bezier(.2,.7,.2,1); }
-  .cf-submit:hover .arrow{ background: var(--blue); color: var(--on-blue); border-color: var(--blue); transform: translateX(4px); }
-  .cf-submit .arrow svg{ width:15px; height:15px; }
+  .cf-submit > span:first-child{ flex:1; text-align:left; }
+  .cf-submit:hover{ transform: translateY(-2px); box-shadow: 0 18px 40px rgba(24,156,216,.5); background:#21a9e6; }
+  .cf-submit:active{ transform:none; }
+  .cf-submit .arrow{ flex:none; width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#fff; color: var(--blue); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  .cf-submit:hover .arrow{ transform: translateX(3px) rotate(-8deg); }
+  .cf-submit .arrow svg{ width:18px; height:18px; }
   .cf-note{ margin:0; font-size:.78rem; line-height:1.5; color: var(--ink-faint); }
   .cf-note a{ color: var(--ink-soft); text-underline-offset:3px; }
   .cf-status{ margin:0; font-size:.92rem; line-height:1.5; color: var(--ink-soft); }
   .cf-status.is-ok{ color: var(--blue); }
   .cf-status.is-err{ color: #ff7a59; }
   .cf-submit[disabled]{ opacity:.55; cursor:progress; }
-
-  .contact-foot{
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap: var(--unit);
-    margin-top: calc(var(--unit)*2.5); padding-top: calc(var(--unit)*1.75); border-top:1px solid var(--line);
+  @media (max-width: 860px){
+    .contact-grid{ grid-template-columns:1fr; gap: calc(var(--unit)*2.4); }
   }
-  .contact-foot-loc{ font-family:"Roboto Mono"; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color: var(--ink-faint); }
-  .contact-foot-social{ display:flex; gap: calc(var(--unit)*.9); }
-  .contact-foot-social a{
-    width:38px; height:38px; border-radius:50%; border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center; color: var(--ink-soft);
-    transition: border-color .3s, color .3s;
+  @media (max-width: 520px){
+    .contact-facts{ gap:8px; }
+    .contact-facts li{ padding: 12px 10px; }
+    .contact-form{ padding: calc(var(--unit)*1.25); border-radius:18px; }
+    .cs-pill{ flex:1 1 100%; }
   }
-  .contact-foot-social a:hover{ border-color: var(--blue); color: var(--blue); }
-  .contact-foot-social svg{ width:17px; height:17px; }
   footer{ text-align:center; padding: var(--unit) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
 
   /* Parcours/Contact/footer n'avaient pas leur propre couleur de fond :
@@ -603,13 +656,17 @@
   .parcours-inner{ width:100%; border-top:none; padding-top: calc(var(--unit)*1.5); padding-bottom: calc(var(--unit)*1.5); }
   .parcours-inner .section-sub{ margin-bottom: calc(var(--unit)*2); }
   .parcours-wrap{ display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); gap: calc(var(--tile)*.9); align-items:center; }
-  .vaud-map svg{ width:auto; max-width:100%; height:min(54vh, 470px); display:block; margin:0 auto; overflow:visible; }
-  .vaud-outline{ fill: rgba(255,255,255,.62); stroke: rgba(29,29,27,.45); stroke-width:3; stroke-linejoin:round; }
-  .vaud-lake{ fill: rgba(24,156,216,.26); }
+  .vaud-map svg{ width:auto; max-width:100%; height:min(58vh, 500px); display:block; margin:0 auto; overflow:visible; }
+  /* contour officiel du canton (swisstopo) : terre claire et discrète, lacs dans le bleu de la marque */
+  .vaud-outline{ fill: rgba(242,242,242,.09); stroke: rgba(242,242,242,.62); stroke-width:2.2; stroke-linejoin:round; }
+  .vaud-lake{ fill: #155b80; stroke: rgba(24,156,216,.9); stroke-width:1.4; stroke-linejoin:round; } /* opaque : la frontière du canton qui passe dans les lacs ne se voit pas au travers */
+  .vaud-map{ position:relative; }
+  .map-credit{ position:absolute; right:0; bottom:-4px; margin:0; font-size:.56rem; letter-spacing:.06em; color: rgba(242,242,242,.32); pointer-events:none; }
+  .lake-label{ font-family:"Roboto Mono"; font-size:19px; letter-spacing:.18em; text-transform:uppercase; fill: rgba(242,242,242,.55); pointer-events:none; }
   .map-dot circle{ fill: var(--ink); }
   .map-dot .halo{ fill: var(--blue); opacity:.18; }
-  .map-dot .name{ font-family:"Roboto"; font-weight:700; font-size:21px; fill: var(--ink); }
-  .map-dot .sub{ font-family:"Roboto"; font-size:15px; fill: var(--ink-soft); }
+  .map-dot .name{ font-family:"Roboto"; font-weight:700; font-size:25px; fill: var(--ink); paint-order:stroke; stroke: rgba(13,13,15,.85); stroke-width:5px; stroke-linejoin:round; }
+  .map-dot .sub{ font-family:"Roboto"; font-size:18px; fill: var(--ink-soft); paint-order:stroke; stroke: rgba(13,13,15,.85); stroke-width:4px; stroke-linejoin:round; }
   .map-dot .date{ font-family:"Roboto Mono"; font-size:14px; fill: var(--ink-faint); }
   .route-line{ fill:none; stroke: var(--ink-soft); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
   .route-marker{ fill: var(--blue); stroke: var(--paper); stroke-width:3; filter: drop-shadow(0 0 6px rgba(24,156,216,.55)); }
@@ -642,6 +699,10 @@
   }
   .parcours-hint .bar{ position:relative; flex:1; max-width:180px; height:2px; background: var(--line); border-radius:2px; overflow:hidden; }
   .parcours-hint .bar i{ position:absolute; inset:0 auto 0 0; width:0%; background: var(--blue); transition: width .12s linear; }
+  .parcours-head{ display:flex; align-items:baseline; justify-content:space-between; gap: var(--unit); }
+  .parcours-count{ display:none; margin:0; font-size:.78rem; letter-spacing:.1em; color: var(--ink-faint); white-space:nowrap; }
+  .parcours-count #parcoursStep{ color: var(--blue); font-weight:500; }
+  .parcours-hint{ display:none; }
 
   #progress{ position:fixed; right:22px; top:50%; transform:translateY(-50%); z-index:400; width:1px; height:120px; background: var(--line); }
   #progress i{ position:absolute; left:-3px; width:7px; height:7px; border-radius:50%; background: var(--blue); top:0; }
@@ -655,46 +716,65 @@
   }
 
   @media (max-width: 760px){
-    /* Parcours : désactive complètement l'épinglage au scroll sur mobile
-       (même leçon déjà tirée pour les travaux, voir CLAUDE.md : "la
-       caméra se bloque" — ici ça rendait "Mon parcours" infranchissable,
-       impossible d'atteindre Contact). La section redevient un bloc
-       normal, de hauteur normale, qui défile comme le reste de la page ;
-       le script dédié (voir plus bas, `window.innerWidth <= 760`) affiche
-       alors directement toutes les étapes sans animation liée au scroll.
-       Placé APRÈS la règle de base `.parcours-track`/`.parcours-stage`
-       (même sélecteur, même spécificité : sinon la règle de base,
-       déclarée plus bas dans le fichier, l'emporterait quand même —
-       piège déjà rencontré pour le header, voir "Pièges connus" plus
-       haut dans CLAUDE.md). */
-    .parcours-track{ height:auto; overflow:visible; }
-    .parcours-stage{ position:static; height:auto; display:block; overflow:visible; }
-    /* retire aussi toutes les animations d'apparition de "Mon parcours"
-       (fondu des étapes, halo des points sur la carte) : en plus de ne
-       plus être épinglée, la section ne doit plus rien animer du tout au
-       scroll sur mobile — tout est visible d'emblée, sans transition. */
-    html.js .tl-item{ opacity:1; transform:none; transition:none; }
-    html.js .tl-item::before{ transition:none; }
-    html.js .map-dot{ opacity:1; transition:none; }
-    html.js .map-dot .halo{ transform:scale(1); transition:none; }
     .shots{ flex-direction:column; }
     .cf-row{ grid-template-columns:1fr; }
     .parcours-wrap{ grid-template-columns:1fr; gap: var(--unit); }
-    .vaud-map{ max-width:none; margin:0; position:static; }
-    .vaud-map svg{ height:33vh; }
-    .parcours-inner .section-sub{ display:none; }
+    .vaud-map{ max-width:none; margin:0; position:relative; }
     .map-dot .sub{ display:none; }
+    .map-dot .name{ font-size:31px; }
+    .lake-label{ font-size:24px; }
+    .lake-label--ne{ display:none; } /* déborderait sur le titre et le compteur d'étapes */
     #progress{ display:none; }
   }
+  /* ---- TÉLÉPHONE : « Mon parcours » comme sur ordinateur ----
+     La section reste à l'écran (sticky) pendant qu'on fait défiler : le trajet se dessine sur la
+     carte et les étapes s'enchaînent, une à la fois dans une carte sous la carte du canton, avec
+     un compteur (01 / 06) et une barre de progression. Piloté par le même script que sur
+     ordinateur (évènement scroll direct, aucune boucle rAF). Hauteurs en svh : stables quand la
+     barre d'adresse du navigateur apparaît / disparaît. Mouvement réduit : bloc suivant. */
+  @media (max-width: 760px) and (prefers-reduced-motion: no-preference){
+    .parcours-track{ height: 330svh; }
+    .parcours-stage{ position:sticky; top:0; height:100svh; display:block; overflow:hidden; }
+    .parcours-inner{ height:100%; display:flex; flex-direction:column; border-top:none;
+      padding-top: calc(var(--unit)*4.7 + env(safe-area-inset-top, 0px)); padding-bottom: calc(var(--unit)*1.1); }
+    .parcours-inner .eyebrow, .parcours-inner .section-sub{ display:none; }
+    .parcours-inner .section-title{ margin:0; font-size: clamp(1.55rem, 7.4vw, 2.1rem); }
+    .parcours-count{ display:block; }
+    .parcours-wrap{ flex:1 1 0; min-height:0; display:flex; flex-direction:column; gap: calc(var(--unit)*.8); margin-top: calc(var(--unit)*.6); }
+    .vaud-map{ flex:1 1 0; min-height:0; display:flex; align-items:center; justify-content:center; }
+    .vaud-map svg{ height:100%; width:auto; max-width:100%; }
+    .timeline{ flex:none; display:grid; max-width:none; border-left:none; padding: calc(var(--unit)*.95) calc(var(--unit)*1.1);
+      min-height:132px; align-content:start;
+      background: rgba(242,242,242,.05); border:1px solid var(--line); border-radius:16px; }
+    .tl-item::before{ display:none; }
+    html.js .timeline .tl-item{ grid-area:1/1; opacity:0; transform: translateY(12px); visibility:hidden;
+      transition: opacity .35s cubic-bezier(.2,.7,.2,1), transform .35s cubic-bezier(.2,.7,.2,1), visibility 0s linear .35s; }
+    html.js .timeline .tl-item.active{ opacity:1; transform:none; visibility:visible;
+      transition: opacity .35s cubic-bezier(.2,.7,.2,1), transform .35s cubic-bezier(.2,.7,.2,1), visibility 0s; }
+    /* détails toujours dépliés (les étapes cachées comprises) : la carte garde la hauteur de la plus grande
+       étape, donc la carte du canton ne bouge pas d'une étape à l'autre */
+    html.js .timeline .tl-item ul{ max-height:none; opacity:1; margin-top:8px; }
+    .tl-item h3{ font-size:1.12rem; }
+    .parcours-hint{ display:flex; margin-top: calc(var(--unit)*.8); }
+  }
+  @media (max-width: 760px) and (prefers-reduced-motion: reduce){
+    .parcours-track{ height:auto; }
+    .parcours-stage{ position:static; height:auto; display:block; overflow:visible; }
+    .vaud-map svg{ width:100%; height:auto; }
+  }
 
-  /* ---- TÉLÉPHONE : travaux en swipe NATIF ----
-     Sur mobile, le défilement horizontal piloté par le scroll vertical et le
-     dégradé de fond continu étaient saccadés/figés. Ici plus aucun script :
-     chaque catégorie est une bande de couleur unie dont les projets se
-     font défiler au doigt (scroll horizontal natif, avec accroche douce). */
   @media (max-width:760px){
     html{ overflow-x:hidden; }
-    body{ touch-action: pan-y; } /* la page ne se déplace jamais en horizontal ; seules les bandes (ci-dessous) le font */
+    body{ touch-action: pan-y; } /* la page ne se déplace jamais en horizontal */
+  }
+  /* ---- TÉLÉPHONE, VERSION DE SECOURS : travaux en swipe NATIF ----
+     Seulement pour les navigateurs qui ne connaissent pas les animations liées
+     au défilement en CSS (animation-timeline : iPhone avant iOS 26, Firefox).
+     Les autres ont le même effet que sur ordinateur (bloc « MOBILE » en fin de
+     <style>). Ici aucun script : chaque catégorie est une bande de couleur dont
+     les projets se font défiler au doigt (scroll horizontal natif). */
+  @supports not (animation-timeline: view()){
+  @media (max-width:760px){
     .tv-strip{
       overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch;
       scroll-snap-type:x proximity; scrollbar-width:none; overscroll-behavior-x:contain;
@@ -711,6 +791,7 @@
     .tv-more{ position:relative; z-index:1; margin-top: calc(var(--unit)*-3.5); padding-top:0; }
     .tv-cat:last-child{ padding-bottom: calc(var(--unit)*5.5); }
     .tv-title-card{ width:58vw; } /* laisse dépasser le 1er projet : on voit qu'on peut swiper */
+  }
   }
   @media (max-width:640px){
     /* le portrait déborde l'écran sur mobile : la flèche va dans l'espace libre à droite du cou */
@@ -757,6 +838,55 @@
     .cover-new-media{ width:36px; height:44px; border-radius:10px; }
     .cover-new-name{ font-size:.82rem; }
     .cover-new-date{ display:none; }
+  }
+  /* ================= TÉLÉPHONE : MÊMES EFFETS QUE SUR ORDINATEUR =================
+     Les animations liées au défilement sont faites en CSS natif (scroll-driven
+     animations : animation-timeline). Le navigateur les calcule en même temps
+     que le défilement, sur la carte graphique : aucun script au scroll, donc
+     rien qui puisse se figer ou saccader (les essais en JavaScript sur
+     téléphone l'étaient, voir CLAUDE.md). Un script ne fait que MESURER, au
+     chargement et quand l'écran change de taille : la distance que chaque bande
+     doit parcourir (--tx0 / --tx1) et les repères de couleur du fond (règle
+     @keyframes tvBg). Sans cette fonction CSS : version de secours plus haut.
+     Mouvement réduit : rien de tout ça. */
+  @property --glowi{ syntax:'<number>'; inherits:true; initial-value:0; }
+  @keyframes heroIntro{ 0%{ --glowi:0; } 62%{ --glowi:1; } 100%{ --glowi:.8; } }
+  /* écrans tactiles (pas de souris pour approcher le portrait) : la lueur bleue et les
+     icônes Ps / Ai / Id sortent toutes seules après l'apparition du nom, comme au survol */
+  @media (hover: none) and (prefers-reduced-motion: no-preference){
+    .cover-portrait-link{ --glow: var(--glowi); animation: heroIntro 1.7s cubic-bezier(.2,.7,.2,1) .6s both; }
+  }
+  @media (max-width:640px){
+    /* icônes plus serrées autour du portrait : elles restent dans l'écran et ne touchent pas la flèche */
+    /* le portrait prend toute la largeur du téléphone : les icônes passent DEVANT lui (sinon Ps et Id restent cachées derrière le buste) */
+    .cover-apps{ font-size:44px; top:47%; z-index:2; }
+    .cover-app--ps{ --tx:3.55; --ty:-.35; }
+    .cover-app--ai{ --tx:-3.05; --ty:-1.15; }
+    .cover-app--id{ --tx:-2.95; --ty:1.05; }
+    /* la lueur agrandit un peu le portrait : vers le haut, pour que le bas du t-shirt ne dépasse jamais sous le bandeau */
+    .cover-portrait{ transform-origin:50% 100%; }
+  }
+  @supports (animation-timeline: view()){
+    @media (max-width:760px) and (prefers-reduced-motion: no-preference){
+      /* ---- haut de page : le bandeau « Ma vitrine. » grandit jusqu'à remplir l'écran puis s'efface,
+         le portrait s'efface pendant qu'il grandit (comme sur ordinateur) ---- */
+      #cover{ view-timeline: --hero block; }
+      .cover-hint-bg{ transform-origin:50% 100%; box-shadow:none; will-change:transform, opacity;
+        animation: heroGrow linear both, heroFadeOut linear both;
+        animation-timeline: --hero, --hero; animation-range: exit 0% exit 42%, exit 42% exit 80%; }
+      .cover-portrait-link{ animation: heroIntro 1.7s cubic-bezier(.2,.7,.2,1) .6s both, heroFadeOut linear both;
+        animation-timeline: auto, --hero; animation-range: normal, exit 0% exit 42%; }
+      @keyframes heroGrow{ to{ transform: scaleY(var(--hint-s, 12)); } }
+      @keyframes heroFadeOut{ to{ opacity:0; } }
+
+      /* ---- vitrine : le défilement vertical fait glisser les projets de chaque bande, en miroir
+         une bande sur deux, et le fond de la page passe d'une couleur de catégorie à l'autre ---- */
+      .tv-cat{ view-timeline: --tvcat block; padding: calc(var(--unit)*5.5) 0; }
+      .tv-strip{ overflow:clip; }
+      .tv-strip-row{ will-change:transform; animation: tvSlide linear both; animation-timeline: --tvcat; animation-range: cover 20% cover 74%; }
+      @keyframes tvSlide{ from{ transform: translateX(var(--tx0, 0px)); } to{ transform: translateX(var(--tx1, 0px)); } }
+      body.tv-sda{ animation: tvBg linear both; animation-timeline: scroll(root block); }
+    }
   }
 </style>
 
@@ -828,40 +958,48 @@
       <div class="parcours-stage">
         <div class="parcours-inner block">
           <p class="eyebrow"></p>
-          <h2 class="section-title balance">Mon parcours</h2>
+          <div class="parcours-head">
+            <h2 class="section-title balance">Mon parcours</h2>
+            <p class="parcours-count mono" aria-hidden="true"><span id="parcoursStep">01</span> / <span id="parcoursTotal">06</span></p>
+          </div>
           <p class="section-sub">De l'école obligatoire à Mézières au CFC de médiamaticien au CPNV de Sainte-Croix.</p>
 
           <div class="parcours-wrap">
             <div class="vaud-map">
-              <svg viewBox="0 0 753 720" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
-                <path class="vaud-outline" d="M221,49 L221,117 L217,118 L216,134 L211,136 L210,150 L206,151 L156,291 L160,318 L145,344 L118,365 L80,420 L28,512 L8,602 L26,629 L34,631 L101,550 L102,530 L128,524 L289,443 L292,419 L349,420 L351,441 L361,457 L439,482 L491,520 L491,556 L516,611 L527,679 L570,711 L579,712 L606,681 L615,660 L615,648 L622,644 L661,556 L723,537 L745,489 L745,481 L710,447 L650,413 L627,362 L617,361 L614,348 L541,285 L541,267 L562,236 L610,200 L593,162 L547,146 L502,118 L386,87 L309,91 L293,80 L293,71 Z"/>
-                <path class="vaud-lake" d="M489,517 L438,481 L406,468 L363,457 L353,442 L353,426 L363,418 L363,407 L356,400 L342,402 L336,419 L272,420 L237,431 L205,449 L165,465 L118,522 L101,522 L96,526 L95,556 L33,631 L33,642 L49,697 L105,705 L173,688 L279,639 L338,607 L454,558 L486,539 Z"/>
-                <path class="vaud-lake" d="M522,46 L515,24 L448,8 L435,8 L350,37 L297,72 L297,84 L309,91 L371,87 L459,88 L460,82 L472,82 L522,57 Z"/>
-                <path class="vaud-lake" d="M163,303 L151,303 L142,312 L124,345 L124,355 L134,355 L144,346 L163,313 Z"/>
+              <svg viewBox="0 0 760 764" role="img" aria-label="Carte du canton de Vaud : Mézières, Lausanne et Sainte-Croix" preserveAspectRatio="xMidYMid meet">
+                <!-- Contour du canton de Vaud et lacs : swissBOUNDARIES3D et VECTOR25 (© swisstopo / OFEV, données libres), simplifiés -->
+                <path class="vaud-outline" fill-rule="evenodd" d="M620.6,40.9 L627.9,43.1 L634.5,48.5 L632.8,50.6 L633.4,52.4 L631.4,53.6 L632.4,62.2 L630.4,62.7 L631.8,64.0 L633.4,72.8 L631.2,77.6 L652.9,107.2 L648.5,110.6 L650.1,112.6 L649.0,115.0 L641.2,116.6 L641.5,117.8 L644.5,117.6 L639.0,121.5 L639.7,122.4 L634.9,123.9 L633.3,130.6 L636.8,129.4 L638.6,137.7 L633.8,141.8 L628.0,152.1 L625.4,152.8 L622.5,158.9 L621.6,159.9 L619.6,158.6 L618.2,161.1 L613.1,156.3 L616.2,152.3 L615.8,150.7 L619.7,147.6 L613.7,142.6 L617.3,136.1 L610.8,132.1 L608.4,133.1 L605.3,129.4 L604.7,133.0 L601.3,134.3 L600.5,136.2 L594.9,135.1 L591.5,131.0 L601.2,122.0 L583.9,103.6 L586.0,101.3 L584.3,99.8 L587.9,95.7 L587.3,94.4 L582.1,91.0 L578.1,93.0 L574.0,90.1 L551.6,63.9 L597.4,34.1ZM459.7,153.4 L436.1,175.7 L458.7,200.4 L461.6,198.4 L463.9,201.3 L458.5,206.4 L456.8,210.1 L461.2,206.8 L470.3,216.3 L474.5,213.9 L479.9,218.8 L479.6,220.5 L483.1,220.7 L487.2,225.5 L488.8,222.1 L491.9,224.0 L495.9,218.3 L498.8,220.2 L502.7,217.1 L501.9,215.5 L503.4,213.9 L508.0,212.0 L510.9,214.5 L509.7,216.4 L510.9,218.2 L520.6,223.5 L525.9,220.9 L529.6,221.8 L530.1,220.2 L533.1,219.3 L532.7,218.0 L536.3,218.0 L537.8,216.0 L539.2,216.3 L538.3,217.6 L540.0,219.7 L543.8,215.2 L543.5,211.7 L546.3,204.4 L549.3,202.9 L552.5,198.2 L550.3,193.4 L547.2,193.7 L545.7,192.0 L540.3,198.7 L536.4,196.4 L540.1,190.2 L536.5,179.1 L538.1,170.8 L546.2,158.4 L552.5,153.8 L550.4,152.6 L548.6,148.2 L546.0,147.3 L541.7,142.3 L531.5,146.5 L530.2,145.6 L528.7,143.1 L539.6,139.1 L541.0,141.2 L546.7,137.5 L540.5,129.1 L538.1,130.9 L533.4,126.6 L531.6,126.9 L512.9,103.0 L531.8,88.8 L552.6,112.3 L548.5,116.0 L548.9,117.7 L554.3,118.5 L556.0,121.9 L557.5,120.9 L559.6,126.1 L565.6,132.0 L565.2,134.5 L567.0,134.0 L569.4,138.2 L570.8,137.6 L573.7,143.0 L576.5,141.3 L572.1,132.3 L570.2,131.1 L569.6,128.6 L571.8,126.3 L574.7,126.9 L579.2,123.4 L588.5,135.9 L582.5,142.7 L581.1,147.4 L583.3,149.7 L581.6,152.4 L582.4,159.6 L583.8,160.7 L585.6,159.9 L588.2,162.7 L586.5,165.8 L585.5,164.9 L584.7,166.0 L587.1,168.4 L586.6,170.6 L590.7,172.7 L588.7,178.1 L584.9,182.1 L577.2,180.1 L573.6,176.4 L569.1,184.9 L570.5,185.8 L568.2,188.3 L569.7,192.8 L574.4,199.3 L567.8,207.6 L568.1,210.2 L569.4,210.4 L568.4,212.8 L564.1,217.1 L561.4,215.5 L558.6,216.8 L552.6,223.6 L553.6,224.3 L552.4,226.2 L554.9,227.1 L545.5,237.5 L543.9,235.1 L542.0,235.0 L538.2,239.6 L539.6,243.4 L543.3,242.2 L545.4,245.2 L551.8,242.7 L556.4,246.9 L558.4,250.8 L554.5,259.1 L555.3,260.9 L543.8,274.5 L543.0,273.3 L539.9,275.2 L533.4,280.9 L528.0,288.8 L529.3,290.0 L526.3,296.6 L520.9,300.0 L516.0,306.0 L513.1,303.8 L511.2,307.8 L509.6,308.1 L510.4,311.9 L515.1,315.1 L510.5,322.6 L512.9,324.3 L511.4,327.9 L507.4,326.9 L503.7,330.9 L497.2,328.3 L498.0,326.1 L491.3,324.8 L490.1,326.9 L487.6,326.9 L481.3,336.3 L482.0,337.6 L479.6,337.9 L478.9,336.1 L474.9,335.1 L469.7,336.8 L472.9,339.5 L468.6,350.7 L471.9,355.6 L472.7,372.4 L471.7,379.2 L469.2,380.5 L471.0,387.2 L466.9,402.6 L469.7,403.7 L473.1,400.3 L478.3,400.0 L477.2,397.6 L478.9,393.4 L482.9,395.2 L484.8,400.8 L491.6,402.7 L498.9,395.1 L501.6,397.6 L507.2,398.8 L512.1,403.1 L516.1,412.2 L519.2,410.3 L522.3,415.0 L524.6,409.8 L530.7,407.3 L532.9,408.1 L531.2,412.3 L533.1,415.8 L528.1,416.8 L526.7,419.2 L524.6,418.4 L518.2,427.0 L512.7,431.6 L507.6,442.9 L506.1,441.9 L507.0,438.2 L504.7,437.2 L503.9,433.2 L488.6,436.7 L485.4,436.2 L487.1,431.8 L485.6,431.2 L481.1,437.5 L480.3,442.1 L476.4,447.7 L484.7,459.4 L488.7,459.5 L489.6,465.4 L495.4,473.3 L497.7,473.4 L499.8,476.3 L508.4,476.0 L510.6,469.8 L520.2,459.3 L529.6,452.3 L528.9,463.7 L532.3,458.7 L538.6,458.8 L539.7,460.7 L547.1,463.8 L552.9,469.5 L565.1,469.1 L572.1,477.0 L576.1,478.8 L577.1,487.8 L581.7,493.0 L579.6,495.3 L580.3,505.9 L588.3,516.8 L583.0,525.9 L586.2,526.5 L600.7,519.0 L604.3,518.6 L606.9,506.0 L617.2,494.2 L631.2,482.6 L634.2,481.1 L638.2,483.5 L641.5,481.3 L648.5,483.0 L654.1,481.7 L655.6,483.0 L661.8,476.0 L669.5,472.6 L671.7,468.6 L677.9,463.7 L683.4,447.3 L685.5,445.9 L691.4,447.4 L694.8,445.9 L706.5,437.1 L712.7,429.8 L718.0,434.1 L722.2,442.0 L732.0,428.6 L740.5,423.4 L740.5,430.0 L745.9,437.7 L745.2,441.9 L747.9,452.7 L745.4,469.7 L741.9,475.4 L737.5,476.3 L739.4,478.1 L739.8,482.4 L732.3,483.4 L732.8,491.8 L736.4,501.9 L735.2,508.5 L733.6,509.8 L737.3,512.9 L733.3,515.0 L733.1,520.4 L731.2,523.6 L725.4,525.9 L714.2,524.8 L712.6,529.7 L723.3,546.7 L721.4,553.8 L721.9,558.6 L713.9,574.8 L713.1,580.2 L722.2,580.4 L721.5,585.1 L727.1,595.6 L733.3,592.7 L735.7,595.5 L733.3,598.0 L728.7,599.4 L731.1,607.5 L730.3,624.8 L710.0,647.5 L710.1,655.3 L714.9,660.8 L713.0,661.4 L713.6,663.9 L708.3,666.4 L709.5,677.3 L706.6,679.3 L703.1,679.2 L693.0,692.3 L688.8,693.3 L685.6,701.9 L679.9,706.6 L669.4,708.3 L667.6,714.3 L668.4,719.5 L658.2,730.6 L651.9,733.7 L647.0,739.1 L639.9,741.4 L636.3,739.5 L632.1,740.8 L624.2,746.7 L612.5,751.9 L607.5,742.3 L599.3,735.2 L597.0,721.8 L593.7,717.8 L593.4,710.6 L589.7,707.5 L585.6,700.7 L584.1,692.8 L570.9,678.8 L567.4,664.7 L553.3,652.4 L549.1,623.3 L541.9,614.9 L531.6,615.5 L527.1,612.7 L519.3,601.1 L522.5,591.2 L521.3,581.8 L507.5,568.3 L483.3,536.7 L395.9,510.5 L295.0,507.6 L236.6,543.3 L180.3,553.3 L128.7,591.4 L121.3,606.4 L103.1,597.0 L97.0,596.0 L94.6,591.0 L87.7,590.7 L83.6,587.0 L79.9,588.9 L81.0,591.0 L77.8,592.5 L78.8,595.7 L87.1,600.6 L92.4,601.5 L91.3,605.9 L97.7,610.4 L99.3,609.9 L115.5,618.2 L93.9,659.1 L58.2,640.3 L49.1,629.9 L48.7,627.1 L55.6,619.0 L55.8,615.7 L57.6,614.6 L56.9,609.8 L64.1,606.3 L65.5,602.2 L69.4,599.9 L70.4,593.3 L77.2,585.6 L77.1,584.0 L71.9,577.6 L70.8,573.3 L69.4,575.0 L64.8,575.1 L55.7,564.9 L42.3,554.6 L42.8,557.4 L37.8,555.0 L33.0,546.3 L12.1,539.3 L18.5,528.7 L19.0,525.3 L26.0,517.6 L26.5,514.9 L25.3,511.7 L19.2,506.1 L20.9,502.5 L18.7,500.4 L18.4,495.4 L33.6,481.4 L43.8,456.2 L59.8,437.3 L63.3,440.3 L69.5,432.2 L66.5,429.9 L71.6,424.6 L43.5,396.2 L50.6,389.6 L53.6,384.3 L61.8,377.5 L70.6,372.3 L75.3,366.7 L77.9,366.6 L86.4,361.7 L86.8,357.8 L97.3,350.6 L99.4,345.0 L102.2,343.5 L104.3,344.1 L111.6,335.7 L116.9,333.0 L120.2,327.4 L141.8,308.3 L143.8,305.7 L143.0,302.6 L151.1,295.4 L160.4,292.3 L177.9,281.6 L187.9,278.5 L194.7,274.3 L199.8,267.0 L202.2,268.2 L206.9,266.2 L206.7,261.6 L204.6,261.6 L215.1,259.8 L219.6,253.0 L217.4,249.1 L221.7,244.5 L225.2,242.4 L226.7,243.2 L239.9,239.4 L248.3,232.9 L248.6,228.6 L257.2,221.9 L256.8,217.9 L261.1,208.9 L246.7,197.3 L244.5,187.5 L250.6,184.5 L249.9,177.1 L252.2,169.3 L262.8,152.8 L266.1,153.3 L266.8,156.0 L276.4,157.2 L301.8,148.5 L310.8,139.4 L315.4,137.9 L319.3,134.2 L324.5,133.1 L341.7,124.1 L348.4,124.8 L358.3,120.1 L366.0,120.4 L377.5,104.9 L378.6,100.8 L391.8,92.1 L424.1,78.4 L423.8,80.9 L425.8,82.9 L421.9,96.6 L421.3,105.4 L423.9,106.0 L435.6,115.6 L434.2,124.8 L435.8,125.9 L430.7,139.3 L435.3,136.1 L444.7,137.5ZM74.9,606.2 L77.7,608.5 L79.8,602.8 L84.2,605.8 L85.9,603.9 L80.5,598.9 L79.4,601.0 L78.1,600.2ZM454.7,244.5 L451.7,250.6 L446.0,256.9 L442.0,257.7 L439.6,261.9 L441.4,265.1 L445.7,267.6 L446.6,269.8 L445.6,270.8 L447.9,274.9 L453.0,272.0 L457.2,267.2 L457.4,263.9 L461.6,258.8 L461.6,249.5 L462.9,247.9 L458.3,244.7 L456.6,246.3ZM475.0,266.6 L478.2,265.7 L482.0,260.9 L488.8,259.0 L494.6,261.5 L499.8,266.3 L509.3,268.9 L512.6,266.7 L512.0,261.4 L522.0,246.4 L518.0,242.7 L518.9,240.9 L514.1,238.4 L511.8,234.9 L510.3,233.9 L507.7,235.8 L508.6,231.4 L505.1,226.3 L503.3,226.1 L504.2,223.9 L501.7,225.4 L500.9,223.7 L499.6,226.6 L501.6,227.1 L498.4,231.2 L499.5,231.8 L489.5,240.5 L488.8,242.0 L490.1,242.6 L489.0,244.4 L487.7,244.0 L486.3,248.3 L480.6,254.3 L480.7,257.1 L474.9,259.0 L473.7,257.7 L470.1,260.1 L469.2,258.1 L467.2,258.6 L463.7,264.3 L466.8,267.7Z"/>
+                <path class="vaud-lake" d="M146.0,599.7 L143.4,601.0 L143.4,605.2 L140.5,611.1 L130.3,623.9 L131.4,627.7 L127.9,636.0 L125.4,639.8 L120.4,642.0 L121.4,646.9 L116.8,655.3 L112.1,658.5 L100.5,676.1 L94.9,676.8 L93.0,678.3 L90.7,683.2 L89.0,693.4 L90.4,697.0 L89.3,702.0 L78.5,721.0 L75.8,722.1 L76.9,723.6 L71.2,726.8 L70.2,726.1 L67.2,729.1 L66.2,727.2 L67.1,729.1 L65.0,730.5 L62.3,729.8 L61.2,728.2 L64.4,724.6 L66.9,725.4 L64.5,724.5 L63.6,718.7 L65.0,715.4 L62.2,710.6 L65.5,693.4 L64.1,688.5 L70.8,678.1 L73.4,677.2 L73.5,678.4 L76.6,669.1 L74.2,661.4 L77.2,654.7 L76.5,648.6 L81.6,644.5 L87.8,633.7 L93.6,627.8 L97.1,618.4 L97.3,613.8 L100.0,610.0 L100.2,602.5 L108.7,588.7 L116.6,581.3 L117.7,577.3 L123.8,571.0 L125.1,571.5 L125.7,567.5 L132.5,562.3 L136.4,562.5 L138.1,564.1 L143.0,563.5 L144.8,559.9 L147.4,558.9 L147.1,551.3 L152.5,543.5 L153.4,535.4 L156.1,535.0 L157.5,532.6 L162.5,530.2 L170.0,521.1 L170.8,517.6 L178.8,512.5 L183.3,505.6 L187.7,501.8 L191.2,502.2 L205.9,498.3 L211.5,499.3 L215.5,501.8 L216.0,503.5 L222.6,504.4 L234.3,496.0 L251.4,491.4 L255.4,487.0 L260.0,487.2 L259.9,481.4 L264.5,476.4 L272.3,475.4 L272.8,470.8 L276.4,467.1 L275.9,466.1 L277.3,466.1 L276.8,467.3 L280.1,464.0 L281.0,464.5 L284.2,460.6 L285.0,456.8 L288.7,454.1 L291.9,455.0 L292.0,453.5 L292.0,454.8 L294.0,454.0 L298.4,455.4 L306.0,461.6 L318.5,462.0 L321.7,461.1 L324.2,457.9 L328.9,456.9 L332.1,453.2 L335.1,452.5 L337.8,453.6 L339.7,452.3 L346.8,458.3 L348.8,459.1 L348.8,457.8 L350.5,457.8 L356.9,462.3 L357.1,460.9 L358.8,462.8 L360.2,462.2 L361.6,464.9 L365.6,462.8 L372.6,465.1 L381.8,464.0 L385.4,464.1 L387.5,465.9 L393.5,465.7 L397.7,468.5 L400.1,468.1 L407.9,471.3 L420.9,481.8 L434.7,479.4 L445.1,487.8 L455.8,493.4 L462.4,493.0 L474.9,496.6 L474.6,498.0 L476.0,496.9 L481.6,497.4 L483.4,499.2 L488.8,499.0 L491.1,505.6 L501.3,508.9 L506.4,518.0 L509.6,516.7 L514.5,517.2 L520.1,523.4 L522.3,522.5 L521.7,523.6 L525.0,525.3 L531.4,523.9 L534.2,525.7 L536.9,529.2 L536.7,533.0 L538.7,534.6 L542.5,534.0 L545.1,537.3 L545.5,541.8 L547.9,544.1 L550.0,551.5 L549.1,555.6 L546.5,558.4 L546.3,561.7 L543.1,564.0 L542.5,563.0 L542.4,564.8 L534.0,563.3 L528.1,565.3 L523.8,564.3 L522.3,560.5 L523.0,563.3 L521.0,564.3 L510.2,566.6 L506.0,564.7 L504.3,565.2 L505.9,569.8 L504.8,572.9 L503.9,571.7 L504.5,572.7 L503.2,573.3 L496.9,570.5 L486.8,572.8 L475.2,568.2 L471.8,565.0 L463.0,566.2 L444.1,559.2 L441.9,557.0 L428.9,555.0 L421.6,552.3 L400.4,552.1 L385.6,555.0 L367.3,553.6 L345.1,557.1 L337.0,556.7 L310.5,563.2 L296.3,555.0 L295.6,555.8 L296.1,554.7 L291.1,553.8 L291.8,555.9 L290.4,554.6 L290.8,556.2 L289.5,556.6 L289.1,554.8 L288.1,555.0 L286.7,555.8 L287.1,557.5 L285.8,555.7 L277.7,559.4 L273.3,563.3 L271.7,565.2 L271.5,573.6 L268.2,580.1 L264.1,581.7 L264.1,580.7 L263.2,582.3 L239.5,593.2 L228.1,593.4 L222.9,601.1 L218.8,602.6 L214.5,610.1 L212.0,609.9 L213.6,610.7 L208.2,609.0 L208.5,610.4 L204.9,608.1 L204.6,610.3 L204.2,607.7 L196.8,603.8 L196.6,604.9 L190.2,593.7 L189.5,586.2 L184.8,583.4 L177.2,583.7 L172.9,582.0 L171.4,584.4 L159.4,586.9 L159.4,588.6 L152.9,592.6Z"/>
+                <path class="vaud-lake" d="M418.9,160.7 L421.0,157.8 L429.0,154.5 L435.1,148.2 L442.7,143.6 L445.5,134.2 L448.1,131.4 L453.0,121.0 L454.7,119.2 L459.1,118.6 L465.8,108.1 L469.1,106.0 L475.7,97.1 L481.1,95.5 L484.0,91.2 L491.4,87.7 L495.5,88.4 L497.6,80.8 L501.8,76.7 L504.0,76.1 L504.9,77.2 L506.4,75.0 L509.5,74.9 L516.4,71.1 L518.7,59.4 L518.4,47.7 L519.5,48.4 L519.5,47.1 L523.2,45.4 L524.3,42.9 L539.0,39.3 L549.4,31.3 L553.0,32.2 L555.4,31.3 L554.5,30.6 L555.5,29.9 L556.6,31.4 L556.8,29.9 L557.4,30.9 L564.5,27.6 L563.7,26.0 L568.7,25.6 L570.5,23.5 L570.3,21.3 L579.8,16.0 L579.3,14.9 L584.0,12.1 L585.1,13.2 L587.2,12.7 L588.1,14.2 L588.0,12.9 L590.8,13.0 L592.7,17.8 L597.8,18.3 L599.9,20.3 L603.0,20.4 L603.7,18.8 L608.1,18.0 L608.4,20.1 L605.7,24.6 L612.3,17.6 L620.0,21.6 L626.5,34.7 L619.4,39.8 L613.8,38.6 L619.0,40.8 L619.4,44.6 L611.6,56.2 L585.9,72.2 L583.0,77.7 L570.1,89.0 L567.3,90.0 L566.4,88.1 L566.6,92.5 L560.9,96.2 L560.5,98.0 L551.8,102.8 L551.2,103.7 L554.8,105.2 L551.8,107.5 L550.5,106.4 L547.1,109.9 L548.2,106.1 L540.9,111.6 L536.3,112.8 L533.9,115.4 L531.8,111.9 L533.8,115.4 L533.2,118.6 L524.7,126.5 L523.5,130.0 L516.2,138.8 L508.7,144.7 L507.4,148.5 L506.6,147.1 L505.4,148.1 L506.6,149.6 L505.8,150.2 L504.7,148.2 L501.2,150.1 L498.5,153.0 L499.2,154.4 L495.8,153.9 L496.6,156.2 L493.3,159.7 L485.9,164.1 L478.8,166.1 L465.2,178.3 L464.1,180.6 L465.8,180.4 L462.3,182.8 L463.6,184.8 L462.1,183.0 L460.0,184.9 L460.2,186.3 L459.9,185.2 L458.8,185.8 L445.2,198.2 L438.9,198.0 L435.5,193.4 L433.4,195.7 L428.0,194.5 L420.7,195.1 L396.4,207.4 L389.6,212.3 L383.8,213.8 L378.1,213.3 L375.1,210.2 L376.3,209.3 L374.7,206.9 L372.5,208.1 L370.8,204.3 L369.7,200.6 L371.0,196.8 L385.5,185.9 L396.1,181.7 L397.9,180.0 L397.4,179.0 L398.4,179.7 L401.6,176.5 L401.9,174.2 L414.6,166.7Z"/>
+                <path class="vaud-lake" d="M175.3,319.6 L177.7,316.2 L180.9,318.5 L176.6,324.6 L176.9,329.7 L175.7,331.1 L172.4,331.7 L166.2,338.7 L163.0,340.1 L154.3,348.2 L149.5,350.2 L148.1,353.5 L141.6,355.4 L138.9,359.3 L136.0,359.8 L132.4,364.1 L130.7,363.0 L127.1,366.3 L125.6,365.7 L125.0,361.6 L128.1,360.0 L128.8,357.2 L131.7,356.0 L135.2,350.3Z"/>
+                <path class="vaud-lake" d="M180.1,306.1 L181.4,307.7 L175.3,317.6 L173.2,317.6 L172.4,316.5 L173.8,311.7Z"/>
+                <text class="lake-label" x="402" y="534" transform="rotate(-6 402 534)">Léman</text>
+                <text class="lake-label lake-label--ne" x="512" y="112" transform="rotate(-41 512 112)">Lac de Neuchâtel</text>
 
-                <path class="route-line" id="routeLine" d="M445,348 C420,370 385,398 356,417 C356,417 356,417 356,417 C356,417 356,417 356,417 C340,350 295,230 270,143"/>
+                <path class="route-line" id="routeLine" d="M451.7,385.4 C432,414 398,441 366.4,449.6 C366.4,449.6 366.4,449.6 366.4,449.6 C366.4,449.6 366.4,449.6 366.4,449.6 C338,386 312,262 288.7,179.8 C288.7,179.8 288.7,179.8 288.7,179.8"/>
 
                 <g class="map-dot" data-reach="0">
-                  <circle class="halo" cx="445" cy="348" r="20"/>
-                  <circle cx="445" cy="348" r="8"/>
-                  <text class="name" x="466" y="342">Mézières</text>
-                  <text class="sub" x="466" y="363">École obligatoire</text>
+                  <circle class="halo" cx="451.7" cy="385.4" r="20"/>
+                  <circle cx="451.7" cy="385.4" r="8"/>
+                  <text class="name" x="472.7" y="379.4">Mézières</text>
+                  <text class="sub" x="472.7" y="400.4">École obligatoire</text>
                 </g>
                 <g class="map-dot" data-reach="1">
-                  <circle class="halo" cx="356" cy="417" r="20"/>
-                  <circle cx="356" cy="417" r="8"/>
-                  <text class="name" x="377" y="411">Lausanne</text>
-                  <text class="sub" x="377" y="432">23bis · DGNSI · DGEP</text>
+                  <circle class="halo" cx="366.4" cy="449.6" r="20"/>
+                  <circle cx="366.4" cy="449.6" r="8"/>
+                  <text class="name" x="345.4" y="441.6" text-anchor="end">Lausanne</text>
+                  <text class="sub" x="345.4" y="462.6" text-anchor="end">23bis · DGNSI · DGEP</text>
                 </g>
                 <g class="map-dot" data-reach="4">
-                  <circle class="halo" cx="270" cy="143" r="20"/>
-                  <circle cx="270" cy="143" r="8"/>
-                  <text class="name" x="291" y="137">Sainte-Croix</text>
-                  <text class="sub" x="291" y="158">CPNV · médiamatique</text>
+                  <circle class="halo" cx="288.7" cy="179.8" r="20"/>
+                  <circle cx="288.7" cy="179.8" r="8"/>
+                  <text class="name" x="267.7" y="173.8" text-anchor="end">Sainte-Croix</text>
+                  <text class="sub" x="267.7" y="194.8" text-anchor="end">CPNV · médiamatique</text>
                 </g>
 
-                <circle class="route-marker" id="routeMarker" r="10" cx="445" cy="348"/>
+                <circle class="route-marker" id="routeMarker" r="10" cx="451.7" cy="385.4"/>
               </svg>
+              <p class="map-credit mono">Fond de carte © swisstopo · OFEV</p>
             </div>
 
             <div class="timeline">
@@ -901,61 +1039,72 @@
                 <div class="tl-head"><h3>CPNV, médiamatique</h3><span class="tl-date mono">En cours</span></div>
                 <p class="tl-loc">Sainte-Croix · CFC de médiamaticien</p>
               </article>
-              <article class="tl-item current" data-reach="4">
+              <article class="tl-item current" data-reach="5">
                 <div class="tl-head"><h3>Lancement en freelance</h3><span class="tl-date mono">Dès mars 2026</span></div>
                 <p class="tl-loc">LT Design · graphiste indépendant, en parallèle des cours</p>
               </article>
             </div>
           </div>
+          <div class="parcours-hint" aria-hidden="true"><span class="bar"><i id="parcoursBar"></i></span><span>Faites défiler</span></div>
 
         </div>
       </div>
     </div>
   </section>
 
-  <section id="contact" class="block grid-pattern pre-reveal">
-    <p class="eyebrow">Contact</p>
-    <h2 class="contact-title balance">Convaincu ?<br>Écrivez-moi</h2>
-    <p class="contact-lede">Si ces projets vous ont plu ou que vous avez une question, la boîte mail est ouverte, je réponds sous 48&nbsp;h.</p>
-
-    <form class="contact-form" id="contactForm" action="https://formsubmit.co/leo.tache.09@gmail.com" method="POST">
-      <input type="hidden" name="_subject" value="Nouveau message — portfolio">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-      <div class="cf-row">
-        <div class="cf-field">
-          <label for="cf-name">Nom</label>
-          <input type="text" id="cf-name" name="Nom" autocomplete="name" required>
+  <section id="contact" class="contact pre-reveal">
+    <div class="contact-ribbon" aria-hidden="true"><div class="contact-ribbon-track"><div><span>Identité visuelle</span><i aria-hidden="true">✦</i><span>Rebranding</span><i aria-hidden="true">✦</i><span>Affiches</span><i aria-hidden="true">✦</i><span>Sport design</span><i aria-hidden="true">✦</i><span>Édition &amp; print</span><i aria-hidden="true">✦</i></div><div><span>Identité visuelle</span><i aria-hidden="true">✦</i><span>Rebranding</span><i aria-hidden="true">✦</i><span>Affiches</span><i aria-hidden="true">✦</i><span>Sport design</span><i aria-hidden="true">✦</i><span>Édition &amp; print</span><i aria-hidden="true">✦</i></div></div></div>
+    <div class="contact-inner block grid-pattern">
+      <p class="eyebrow">Contact</p>
+      <div class="contact-grid">
+        <div class="contact-pitch">
+          <p class="contact-avail mono"><i aria-hidden="true"></i>Disponible pour de nouveaux projets</p>
+          <h2 class="contact-title"><span class="nw">Convaincu&nbsp;?</span><br><span class="nw">Écrivez-moi</span></h2>
+          <p class="contact-lede">Une identité visuelle, une affiche, un visuel sport ou un projet print&nbsp;? Racontez-moi votre idée, je vous réponds sous 48&nbsp;h.</p>
+          <ul class="contact-facts">
+            <li><b>48&nbsp;h</b><span>pour vous répondre</span></li>
+            <li><b>Lausanne</b><span>Suisse romande</span></li>
+            <li><b>Freelance</b><span>depuis mars 2026</span></li>
+          </ul>
+          <p class="contact-or mono">Ou retrouvez-moi sur</p>
+          <div class="contact-socials" data-lt-socials="pills">
+            <a class="cs-pill" href="https://instagram.com/lt_design_09" target="_blank" rel="noopener me"><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="cs-txt"><b>Instagram</b><small>@lt_design_09</small></span></a>
+            <a class="cs-pill" href="https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/" target="_blank" rel="noopener me"><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span><span class="cs-txt"><b>LinkedIn</b><small>Léo Tâche</small></span></a>
+          </div>
         </div>
-        <div class="cf-field">
-          <label for="cf-email">Email</label>
-          <input type="email" id="cf-email" name="email" autocomplete="email" required>
-        </div>
-      </div>
-      <div class="cf-field">
-        <label for="cf-message">Message</label>
-        <textarea id="cf-message" name="Message" rows="4" required></textarea>
-      </div>
-      <button type="submit" class="cf-submit">
-        <span>Envoyer</span>
-        <span class="arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-      </button>
-      <p class="cf-note">Vos données ne servent qu'à répondre à votre message. <a href="confidentialite.html">Protection des données</a></p>
-      <p class="cf-status" id="cfStatus" role="status" aria-live="polite" hidden></p>
-    </form>
 
-    <div class="contact-foot">
-      <div class="contact-foot-loc">Suisse romande · CPNV, Sainte-Croix</div>
-      <div class="contact-foot-social">
-        <a href="https://instagram.com/lt_design_09" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-        </a>
-        <a href="https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-        </a>
+        <form class="contact-form" id="contactForm" action="https://formsubmit.co/leo.tache.09@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="Nouveau message — portfolio">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <fieldset class="cf-topics">
+            <legend>Votre projet</legend>
+            <div class="cf-chips"><label class="cf-chip"><input type="radio" name="Projet" value="Identité visuelle"><span>Identité visuelle</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Affiche"><span>Affiche</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Sport design"><span>Sport design</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Print"><span>Print</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Autre"><span>Autre</span></label></div>
+          </fieldset>
+          <div class="cf-row">
+            <div class="cf-field">
+              <label for="cf-name">Nom</label>
+              <input type="text" id="cf-name" name="Nom" autocomplete="name" placeholder="Votre nom" required>
+            </div>
+            <div class="cf-field">
+              <label for="cf-email">Email</label>
+              <input type="email" id="cf-email" name="email" autocomplete="email" placeholder="vous@exemple.ch" required>
+            </div>
+          </div>
+          <div class="cf-field">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" name="Message" rows="5" placeholder="Quelques mots sur votre projet, vos délais…" required></textarea>
+          </div>
+          <button type="submit" class="cf-submit">
+            <span>Envoyer mon message</span>
+            <span class="arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h15M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+          <p class="cf-note">Vos données ne servent qu'à répondre à votre message. <a href="confidentialite.html">Protection des données</a></p>
+          <p class="cf-status" id="cfStatus" role="status" aria-live="polite" hidden></p>
+        </form>
       </div>
     </div>
   </section>
@@ -978,9 +1127,17 @@
   if (!reduced) {
     var vaudPath = document.querySelector('.vaud-outline');
     if (vaudPath) {
+      /* le contour du canton se dessine quand la carte arrive à l'écran */
       var len = vaudPath.getTotalLength();
       vaudPath.style.strokeDasharray = len;
       vaudPath.style.strokeDashoffset = len;
+      var drawOutline = function(){ vaudPath.style.transition = 'stroke-dashoffset 2.6s cubic-bezier(.45,0,.2,1)'; vaudPath.style.strokeDashoffset = 0; };
+      if ('IntersectionObserver' in window){
+        var drawIO = new IntersectionObserver(function(es){
+          if (es.some(function(e){ return e.isIntersecting; })){ drawIO.disconnect(); setTimeout(drawOutline, 80); }
+        }, { threshold: .15 });
+        drawIO.observe(vaudPath.ownerSVGElement);
+      } else drawOutline();
     }
     document.querySelectorAll('.map-dot').forEach(function(d, i){
       d.style.transitionDelay = (400 + i * 180) + 'ms';
@@ -1078,7 +1235,10 @@
       dots.forEach(function(d){
         d.classList.toggle('reached', +d.getAttribute('data-reach') <= reached);
       });
+      if (stepEl) stepEl.textContent = ('0' + (reached + 1)).slice(-2);
     }
+    var stepEl = document.getElementById('parcoursStep'), totalEl = document.getElementById('parcoursTotal');
+    if (totalEl) totalEl.textContent = ('0' + (segCount + 1)).slice(-2);
 
     /* sur mobile, pas d'épinglage au scroll (voir CLAUDE.md : la même
        idée avait déjà été essayée et rejetée pour les travaux — "la
@@ -1088,7 +1248,7 @@
        de piste sous 760px (voir plus haut) ; on traite ce cas comme
        `reduced` : tout est affiché d'emblée, sans consommer de hauteur de
        scroll supplémentaire. */
-    if (reduced || window.innerWidth <= 760) {
+    if (reduced) {
       apply(segCount);
       if (bar) bar.style.width = '100%';
       return;
@@ -1251,7 +1411,21 @@
   var portrait = document.querySelector('.cover-portrait-link');
   if (!hint || !bg) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.matchMedia('(max-width:760px)').matches) return; /* mobile : bandeau fixe, pas de croissance au scroll */
+  if (window.matchMedia('(max-width:760px)').matches){
+    /* téléphone : la croissance est faite en CSS natif (bloc MOBILE) ; on donne juste
+       l'échelle à atteindre pour couvrir tout le haut de page (--hint-s) */
+    if (window.CSS && CSS.supports && CSS.supports('animation-timeline: view()')){
+      var cover = document.getElementById('cover');
+      var setS = function(){
+        var h = hint.getBoundingClientRect().height || 80;
+        bg.style.setProperty('--hint-s', ((cover ? cover.offsetHeight : window.innerHeight) / h + .6).toFixed(2));
+      };
+      setS();
+      window.addEventListener('resize', setS, { passive:true });
+      window.addEventListener('load', setS, { once:true });
+    }
+    return;
+  }
 
   /* seul le fond (bg) est mis à l'échelle : le conteneur (hint), qui centre
      le texte, ne bouge jamais — le texte garde donc toujours la même taille.
@@ -1333,6 +1507,7 @@
   var glow = document.querySelector('.cover-portrait-glow');
   if (!link || !glow) return;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return; /* écran tactile : la lueur apparaît toute seule (CSS, heroIntro) */
 
   var mouseX = -9999, mouseY = -9999;
   var hasMouse = false;
@@ -1416,7 +1591,10 @@ var TRAVAUX_FAMILIES = [
   if (!root) return;
 
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var mobileLayout = window.matchMedia('(max-width:760px)').matches; /* swipe natif, sans script de scroll (voir CSS) */
+  var mobileLayout = window.matchMedia('(max-width:760px)').matches;
+  /* téléphone + navigateur récent : même effet que sur ordinateur, animé en CSS natif (bloc MOBILE du <style>) ;
+     sinon : version de secours en swipe natif avec dégradé statique */
+  var sda = mobileLayout && !reducedMotion && !!(window.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
   var ARROW = '<svg class="tv-cat-arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12H40M28 2L40 12L28 22"/></svg>';
 
   var bands = []; /* { el, strip, row } — pour le pilotage continu au scroll ci-dessous */
@@ -1485,7 +1663,7 @@ var TRAVAUX_FAMILIES = [
      chaque bande a sa couleur au centre et se fond vers le milieu de la
      couleur voisine en haut/en bas (noir de la page avant la première et
      après la dernière). Aucun script au scroll. */
-  if (mobileLayout && !reducedMotion){
+  if (mobileLayout && !reducedMotion && !sda){
     var mix = function(a, b){
       var pa = parseInt(a.slice(1), 16), pb = parseInt(b.slice(1), 16), out = [];
       [16, 8, 0].forEach(function(sh){ out.push(Math.round((((pa >> sh) & 255) + ((pb >> sh) & 255)) / 2)); });
@@ -1500,7 +1678,7 @@ var TRAVAUX_FAMILIES = [
       band.el.style.borderTop = 'none';
     });
   }
-  if (!reducedMotion && !mobileLayout) bands.forEach(function(band){ band.el.style.background = 'transparent'; });
+  if (!reducedMotion && (!mobileLayout || sda)) bands.forEach(function(band){ band.el.style.background = 'transparent'; });
   }
 
   build(TRAVAUX_FAMILIES);
@@ -1515,6 +1693,54 @@ var TRAVAUX_FAMILIES = [
     if (window.LT_wireVideos) window.LT_wireVideos();
   };
 
+  if (sda){
+    /* le CSS anime tout ; ici on MESURE seulement (au chargement, au redimensionnement, après une reconstruction) :
+       1) la distance horizontale de chaque bande (même calcul que computeMaxTravel sur ordinateur, miroir compris) ;
+       2) les repères de couleur du fond, aux mêmes endroits que sur ordinateur (noir une demi-hauteur d'écran
+          avant la 1re bande, la couleur de chaque bande quand elle est centrée à l'écran, noir à la fin),
+          écrits dans une règle @keyframes tvBg que le CSS déroule sur tout le défilement de la page. */
+    var SDA_BASE = '#0D0D0F';
+    var kfStyle = document.createElement('style');
+    kfStyle.id = 'tvBgKeyframes';
+    document.head.appendChild(kfStyle);
+    document.body.classList.add('tv-sda');
+    var sdaMeasure = function(){
+      bands.forEach(function(band){
+        var cs = getComputedStyle(band.strip);
+        var pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        var max = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + pad);
+        band.row.style.setProperty('--tx0', (band.reversed ? -max : 0) + 'px');
+        band.row.style.setProperty('--tx1', (band.reversed ? 0 : -max) + 'px');
+      });
+      if (!bands.length) return;
+      var vhh = window.innerHeight || document.documentElement.clientHeight;
+      var maxS = Math.max(1, document.documentElement.scrollHeight - vhh), y0 = window.scrollY || 0;
+      var stops = [];
+      bands.forEach(function(band, i){
+        var r = band.el.getBoundingClientRect();
+        if (i === 0) stops.push({ y: y0 + r.top - vhh * .5, c: SDA_BASE });
+        stops.push({ y: y0 + r.top + r.height / 2, c: band.color });
+        if (i === bands.length - 1) stops.push({ y: y0 + r.top + r.height, c: SDA_BASE });
+      });
+      var easeIn = 'animation-timing-function:cubic-bezier(.55,.085,.68,.53)'; /* même accélération (t²) que sur ordinateur */
+      var kf = '0%{background-color:' + SDA_BASE + '}', last = 0;
+      stops.forEach(function(st){
+        var pct = Math.max(last, Math.min(100, (st.y - vhh / 2) / maxS * 100));
+        last = pct;
+        kf += pct.toFixed(3) + '%{background-color:' + st.c + ';' + easeIn + '}';
+      });
+      kfStyle.textContent = '@keyframes tvBg{' + kf + '100%{background-color:' + SDA_BASE + '}}';
+    };
+    var sdaTimer = null;
+    var sdaLater = function(){ clearTimeout(sdaTimer); sdaTimer = setTimeout(sdaMeasure, 200); };
+    afterRebuild = sdaMeasure;
+    sdaMeasure();
+    window.addEventListener('load', sdaMeasure, { once: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sdaMeasure);
+    window.addEventListener('resize', sdaLater, { passive: true });
+    window.addEventListener('orientationchange', sdaLater);
+    return;
+  }
   if (reducedMotion || mobileLayout) return; /* la media query CSS empile tout verticalement, sans mouvement — chaque bande garde la couleur unie posée ci-dessus */
 
   function hexToRgb(hex){
@@ -1747,6 +1973,7 @@ var TRAVAUX_FAMILIES = [
     var data = {
       Nom: form.elements['Nom'].value.trim(),
       email: form.elements['email'].value.trim(),
+      Projet: (form.querySelector('input[name="Projet"]:checked') || {}).value || '',
       Message: form.elements['Message'].value.trim(),
       _subject: form.elements['_subject'].value,
       _template: form.elements['_template'].value,
@@ -1816,4 +2043,5 @@ var TRAVAUX_FAMILIES = [
   });
 })();
 </script>
+<script src="assets/socials.js"></script>
 <script src="assets/star.js"></script>
