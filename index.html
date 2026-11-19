@@ -530,47 +530,27 @@
   }
 
   /* ---- CONTACT ----
-     Bandeau défilant (les prestations), disponibilité, titre, 3 chiffres clés, réseaux en pastilles
-     et un formulaire plus engageant (type de projet en pastilles, gros bouton bleu). */
+     Bandeau défilant (les prestations), titre « Convaincu ? Écrivez-moi » et un formulaire plus
+     engageant (type de projet en pastilles, gros bouton bleu). Les réseaux sont dans le pied de page. */
   #contact{ position:relative; overflow:hidden; border-top:1px solid var(--line); }
-  .contact-ribbon{ position:relative; z-index:1; background: var(--blue); color:#fff; transform: rotate(-2deg) scale(1.06);
-    margin: calc(var(--unit)*3.2) 0 calc(var(--unit)*.5); padding: calc(var(--unit)*.85) 0; box-shadow: 0 18px 40px rgba(0,0,0,.35); }
+  .contact-ribbon{ position:relative; z-index:1; background: var(--blue); color:#fff; padding: calc(var(--unit)*.85) 0; }
   .contact-ribbon-track{ display:flex; width:max-content; animation: ribbon 34s linear infinite; }
   .contact-ribbon-track > div{ display:flex; align-items:center; flex:none; }
   .contact-ribbon span{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(1.15rem, 2.6vw, 1.9rem); letter-spacing:.01em; white-space:nowrap; padding: 0 calc(var(--unit)*1.2); }
   .contact-ribbon i{ font-style:normal; font-size: clamp(.9rem, 1.8vw, 1.3rem); opacity:.75; }
   @keyframes ribbon{ to{ transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce){ .contact-ribbon-track{ animation:none; } }
-  .contact-inner{ position:relative; border-top:none; padding-top: calc(var(--unit)*4.5); }
+  .contact-inner{ position:relative; border-top:none; padding-top: calc(var(--unit)*5); }
   /* halo bleu discret derrière le titre (même lumière que la lueur du portrait) */
   .contact-inner::before{ content:""; position:absolute; z-index:0; pointer-events:none; left:-10%; top:8%; width:62%; height:70%;
     background: radial-gradient(closest-side, rgba(24,156,216,.22), rgba(24,156,216,0)); filter: blur(10px); }
   .contact-inner > *{ position:relative; z-index:1; }
-  .contact-grid{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.08fr); gap: calc(var(--unit)*4); align-items:start; }
-  .contact-avail{ display:inline-flex; align-items:center; gap:10px; margin:0 0 calc(var(--unit)*1.4); padding:7px 14px 7px 11px; border-radius:999px;
-    font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink); background: rgba(242,242,242,.06); border:1px solid var(--line); }
-  .contact-avail i{ width:8px; height:8px; border-radius:50%; background:#3ddc84; box-shadow: 0 0 10px rgba(61,220,132,.75); }
+  .contact-grid{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.08fr); gap: calc(var(--unit)*4); align-items:center; }
   h2.contact-title{ font-family:"Archivo Black"; text-transform:uppercase; font-size: clamp(2.1rem, 4.3vw, 4.4rem); line-height:.95; margin:0 0 calc(var(--unit)*1.3); letter-spacing:-.02em; }
   h2.contact-title .nw{ white-space:nowrap; }
   @media (max-width: 860px){ h2.contact-title{ font-size: clamp(2.1rem, 10.5vw, 4.4rem); } }
   h2.contact-title em{ font-style:normal; color: var(--blue); }
   .contact-lede{ font-size: clamp(1.02rem,1.6vw,1.18rem); line-height:1.6; color: var(--ink-soft); max-width:44ch; margin:0 0 calc(var(--unit)*2); }
-  .contact-facts{ list-style:none; margin:0 0 calc(var(--unit)*2.2); padding:0; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: calc(var(--unit)*.75); max-width:520px; }
-  .contact-facts li{ display:flex; flex-direction:column; gap:4px; padding: calc(var(--unit)*.9) calc(var(--unit)*.95); border-radius:14px;
-    background: rgba(242,242,242,.04); border:1px solid var(--line); }
-  .contact-facts b{ font-family:"Archivo Black"; text-transform:uppercase; font-weight:400; font-size: clamp(.95rem,1.7vw,1.2rem); line-height:1.1; color:#fff; }
-  .contact-facts span{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-faint); }
-  .contact-or{ margin:0 0 calc(var(--unit)*.7); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color: var(--ink-faint); }
-  .contact-socials{ display:flex; flex-wrap:wrap; gap: calc(var(--unit)*.6); }
-  .cs-pill{ display:inline-flex; align-items:center; gap:11px; padding:8px 18px 8px 8px; border-radius:999px; text-decoration:none; color: var(--ink);
-    background: rgba(242,242,242,.05); border:1px solid var(--line);
-    transition: border-color .3s, background .3s, transform .3s cubic-bezier(.2,.7,.2,1); }
-  .cs-pill:hover, .cs-pill:focus-visible{ border-color: var(--blue); background: rgba(24,156,216,.12); transform: translateY(-2px); }
-  .cs-ico{ width:36px; height:36px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; background: var(--blue); color:#fff; }
-  .cs-ico svg{ width:17px; height:17px; }
-  .cs-txt{ display:flex; flex-direction:column; line-height:1.15; }
-  .cs-txt b{ font-size:.86rem; font-weight:700; }
-  .cs-txt small{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.04em; color: var(--ink-faint); }
 
   .contact-form{
     display:flex; flex-direction:column; gap: calc(var(--unit)*1.1);
@@ -625,12 +605,17 @@
     .contact-grid{ grid-template-columns:1fr; gap: calc(var(--unit)*2.4); }
   }
   @media (max-width: 520px){
-    .contact-facts{ gap:8px; }
-    .contact-facts li{ padding: 12px 10px; }
     .contact-form{ padding: calc(var(--unit)*1.25); border-radius:18px; }
-    .cs-pill{ flex:1 1 100%; }
   }
-  footer{ text-align:center; padding: var(--unit) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); }
+  footer{ text-align:center; padding: calc(var(--unit)*2.5) var(--gutter) calc(var(--unit)*2); font-family:"Roboto Mono"; font-size:.68rem; color: var(--ink-faint); border-top:1px solid var(--line); }
+  /* réseaux (liste commune : assets/socials.js) */
+  .ft-nets{ display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin: 0 0 calc(var(--unit)*1.8); }
+  .ft-net{ display:inline-flex; align-items:center; gap:9px; padding:7px 16px 7px 7px; border-radius:999px; text-decoration:none; color: var(--ink);
+    border:1px solid var(--line); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
+    transition: border-color .3s, color .3s, transform .3s cubic-bezier(.2,.7,.2,1); }
+  .ft-net span{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; background: var(--blue); color:#fff; }
+  .ft-net svg{ width:16px; height:16px; }
+  .ft-net:hover, .ft-net:focus-visible{ border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
 
   /* Parcours/Contact/footer n'avaient pas leur propre couleur de fond :
      ils affichaient simplement le fond du <body>, piloté en JS par le
@@ -723,7 +708,7 @@
     .map-dot .sub{ display:none; }
     .map-dot .name{ font-size:31px; }
     .lake-label{ font-size:24px; }
-    .lake-label--ne{ display:none; } /* déborderait sur le titre et le compteur d'étapes */
+    .lake-label--ne{ font-size:21px; }
     #progress{ display:none; }
   }
   /* ---- TÉLÉPHONE : « Mon parcours » comme sur ordinateur ----
@@ -744,16 +729,15 @@
     .vaud-map{ flex:1 1 0; min-height:0; display:flex; align-items:center; justify-content:center; }
     .vaud-map svg{ height:100%; width:auto; max-width:100%; }
     .timeline{ flex:none; display:grid; max-width:none; border-left:none; padding: calc(var(--unit)*.95) calc(var(--unit)*1.1);
-      min-height:132px; align-content:start;
+      align-content:start;
       background: rgba(242,242,242,.05); border:1px solid var(--line); border-radius:16px; }
     .tl-item::before{ display:none; }
     html.js .timeline .tl-item{ grid-area:1/1; opacity:0; transform: translateY(12px); visibility:hidden;
       transition: opacity .35s cubic-bezier(.2,.7,.2,1), transform .35s cubic-bezier(.2,.7,.2,1), visibility 0s linear .35s; }
     html.js .timeline .tl-item.active{ opacity:1; transform:none; visibility:visible;
       transition: opacity .35s cubic-bezier(.2,.7,.2,1), transform .35s cubic-bezier(.2,.7,.2,1), visibility 0s; }
-    /* détails toujours dépliés (les étapes cachées comprises) : la carte garde la hauteur de la plus grande
-       étape, donc la carte du canton ne bouge pas d'une étape à l'autre */
-    html.js .timeline .tl-item ul{ max-height:none; opacity:1; margin-top:8px; }
+    /* toutes les étapes sont empilées au même endroit : la carte garde la hauteur de la plus grande,
+       donc la carte du canton ne bouge pas d'une étape à l'autre */
     .tl-item h3{ font-size:1.12rem; }
     .parcours-hint{ display:flex; margin-top: calc(var(--unit)*.8); }
   }
@@ -870,10 +854,18 @@
     @media (max-width:760px) and (prefers-reduced-motion: no-preference){
       /* ---- haut de page : le bandeau « Ma vitrine. » grandit jusqu'à remplir l'écran puis s'efface,
          le portrait s'efface pendant qu'il grandit (comme sur ordinateur) ---- */
-      #cover{ view-timeline: --hero block; }
-      .cover-hint-bg{ transform-origin:50% 100%; box-shadow:none; will-change:transform, opacity;
-        animation: heroGrow linear both, heroFadeOut linear both;
-        animation-timeline: --hero, --hero; animation-range: exit 0% exit 42%, exit 42% exit 80%; }
+      /* haut de page : fond noir, sauf la bande du bas (exactement la hauteur du bandeau « Ma vitrine. ») qui est
+         bleue — le bandeau très agrandi a un bord légèrement transparent : derrière lui, il doit y avoir du bleu, pas du noir */
+      #cover{ view-timeline: --hero block; background: linear-gradient(to top, var(--blue) 0 clamp(64px, 9vh, 96px), var(--paper) 0); }
+      .cover-hint{ left:0; right:0; bottom:0; width:100%; height: clamp(64px, 9vh, 96px); transform:none; padding:0 var(--gutter); }
+      .cover-hint-bg{ border-radius:0; }
+      /* bottom:-2px : le bord du bandeau agrandi ne laisse jamais voir un trait du fond noir du haut de page */
+      .cover-hint-bg{ bottom:-2px; transform-origin:50% 100%; box-shadow:none; will-change:transform;
+        animation: heroGrow linear both; animation-timeline: --hero; animation-range: exit 0% exit 42%; }
+      /* pas d'ombre sous la photo (invisible sur le fond noir, mais elle débordait en voile sombre sur la vitrine bleue en dessous) */
+      .cover-portrait{ filter:none; transform-origin:50% 100%; } /* la lueur l'agrandit vers le haut : le bas ne dépasse jamais sous le bandeau */
+      .cover-portrait-link:hover .cover-portrait, .cover-portrait-link:focus-visible .cover-portrait{
+        filter: drop-shadow(0 0 3px var(--blue)) drop-shadow(0 0 16px rgba(24,156,216,.85)); }
       .cover-portrait-link{ animation: heroIntro 1.7s cubic-bezier(.2,.7,.2,1) .6s both, heroFadeOut linear both;
         animation-timeline: auto, --hero; animation-range: normal, exit 0% exit 42%; }
       @keyframes heroGrow{ to{ transform: scaleY(var(--hint-s, 12)); } }
@@ -974,7 +966,7 @@
                 <path class="vaud-lake" d="M175.3,319.6 L177.7,316.2 L180.9,318.5 L176.6,324.6 L176.9,329.7 L175.7,331.1 L172.4,331.7 L166.2,338.7 L163.0,340.1 L154.3,348.2 L149.5,350.2 L148.1,353.5 L141.6,355.4 L138.9,359.3 L136.0,359.8 L132.4,364.1 L130.7,363.0 L127.1,366.3 L125.6,365.7 L125.0,361.6 L128.1,360.0 L128.8,357.2 L131.7,356.0 L135.2,350.3Z"/>
                 <path class="vaud-lake" d="M180.1,306.1 L181.4,307.7 L175.3,317.6 L173.2,317.6 L172.4,316.5 L173.8,311.7Z"/>
                 <text class="lake-label" x="402" y="534" transform="rotate(-6 402 534)">Léman</text>
-                <text class="lake-label lake-label--ne" x="512" y="112" transform="rotate(-41 512 112)">Lac de Neuchâtel</text>
+                <text class="lake-label lake-label--ne" x="505" y="113" text-anchor="middle" transform="rotate(-41 505 113)">Lac de Neuchâtel</text>
 
                 <path class="route-line" id="routeLine" d="M451.7,385.4 C432,414 398,441 366.4,449.6 C366.4,449.6 366.4,449.6 366.4,449.6 C366.4,449.6 366.4,449.6 366.4,449.6 C338,386 312,262 288.7,179.8 C288.7,179.8 288.7,179.8 288.7,179.8"/>
 
@@ -1002,6 +994,11 @@
               <p class="map-credit mono">Fond de carte © swisstopo · OFEV</p>
             </div>
 
+            <!-- Détails des stages, retirés de la frise le 2026-11-19 (à replacer ailleurs) :
+                 Stage 23bis : Réalisation d'un mini-projet vidéo en équipe / Collaboration créative et respect d'un brief client
+                 Stage DGNSI : Participation à des projets de transformation numérique / Découverte de la gestion de services digitaux
+                 Stage DGEP  : Gestion des écoles professionnelles et des gymnases / Orientation professionnelle et qualité des formations
+            -->
             <div class="timeline">
               <article class="tl-item" data-reach="0">
                 <div class="tl-head"><h3>École obligatoire</h3><span class="tl-date mono">Mézières</span></div>
@@ -1011,28 +1008,16 @@
               <article class="tl-item" data-reach="1">
                 <div class="tl-head"><h3>Stage 23bis</h3><span class="tl-date mono">Juin 2023</span></div>
                 <p class="tl-loc">Lausanne · 1 semaine</p>
-                <ul>
-                  <li>Réalisation d'un mini-projet vidéo en équipe</li>
-                  <li>Collaboration créative et respect d'un brief client</li>
-                </ul>
               </article>
 
               <article class="tl-item" data-reach="2">
                 <div class="tl-head"><h3>Stage DGNSI</h3><span class="tl-date mono">Juil. 2023</span></div>
                 <p class="tl-loc">État de Vaud · 1 semaine</p>
-                <ul>
-                  <li>Participation à des projets de transformation numérique</li>
-                  <li>Découverte de la gestion de services digitaux</li>
-                </ul>
               </article>
 
               <article class="tl-item" data-reach="3">
                 <div class="tl-head"><h3>Stage DGEP</h3><span class="tl-date mono">Févr. 2024</span></div>
                 <p class="tl-loc">État de Vaud · 1 semaine</p>
-                <ul>
-                  <li>Gestion des écoles professionnelles et des gymnases</li>
-                  <li>Orientation professionnelle et qualité des formations</li>
-                </ul>
               </article>
 
               <article class="tl-item current" data-reach="4">
@@ -1054,23 +1039,11 @@
 
   <section id="contact" class="contact pre-reveal">
     <div class="contact-ribbon" aria-hidden="true"><div class="contact-ribbon-track"><div><span>Identité visuelle</span><i aria-hidden="true">✦</i><span>Rebranding</span><i aria-hidden="true">✦</i><span>Affiches</span><i aria-hidden="true">✦</i><span>Sport design</span><i aria-hidden="true">✦</i><span>Édition &amp; print</span><i aria-hidden="true">✦</i></div><div><span>Identité visuelle</span><i aria-hidden="true">✦</i><span>Rebranding</span><i aria-hidden="true">✦</i><span>Affiches</span><i aria-hidden="true">✦</i><span>Sport design</span><i aria-hidden="true">✦</i><span>Édition &amp; print</span><i aria-hidden="true">✦</i></div></div></div>
-    <div class="contact-inner block grid-pattern">
-      <p class="eyebrow">Contact</p>
+    <div class="contact-inner block">
       <div class="contact-grid">
         <div class="contact-pitch">
-          <p class="contact-avail mono"><i aria-hidden="true"></i>Disponible pour de nouveaux projets</p>
           <h2 class="contact-title"><span class="nw">Convaincu&nbsp;?</span><br><span class="nw">Écrivez-moi</span></h2>
           <p class="contact-lede">Une identité visuelle, une affiche, un visuel sport ou un projet print&nbsp;? Racontez-moi votre idée, je vous réponds sous 48&nbsp;h.</p>
-          <ul class="contact-facts">
-            <li><b>48&nbsp;h</b><span>pour vous répondre</span></li>
-            <li><b>Lausanne</b><span>Suisse romande</span></li>
-            <li><b>Freelance</b><span>depuis mars 2026</span></li>
-          </ul>
-          <p class="contact-or mono">Ou retrouvez-moi sur</p>
-          <div class="contact-socials" data-lt-socials="pills">
-            <a class="cs-pill" href="https://instagram.com/lt_design_09" target="_blank" rel="noopener me"><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span><span class="cs-txt"><b>Instagram</b><small>@lt_design_09</small></span></a>
-            <a class="cs-pill" href="https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/" target="_blank" rel="noopener me"><span class="cs-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span><span class="cs-txt"><b>LinkedIn</b><small>Léo Tâche</small></span></a>
-          </div>
         </div>
 
         <form class="contact-form" id="contactForm" action="https://formsubmit.co/leo.tache.09@gmail.com" method="POST">
@@ -1109,7 +1082,13 @@
     </div>
   </section>
 
-  <footer><img src="assets/logo-black.png" alt="" style="height:16px;width:auto;margin:0 auto 8px;opacity:.7"> Léo Tâche · <a href="confidentialite.html">Confidentialité</a></footer>
+  <footer>
+    <div class="ft-nets" data-lt-socials="footer">
+      <a class="ft-net" href="https://instagram.com/lt_design_09" target="_blank" rel="noopener me" aria-label="Instagram (nouvel onglet)"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span>Instagram</a>
+      <a class="ft-net" href="https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/" target="_blank" rel="noopener me" aria-label="LinkedIn (nouvel onglet)"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>LinkedIn</a>
+    </div>
+    <img src="assets/logo-black.png" alt="" style="height:16px;width:auto;margin:0 auto 8px;opacity:.7"> Léo Tâche · <a href="confidentialite.html">Confidentialité</a>
+  </footer>
 </main>
 
 <script>
@@ -1718,12 +1697,13 @@ var TRAVAUX_FAMILIES = [
       var stops = [];
       bands.forEach(function(band, i){
         var r = band.el.getBoundingClientRect();
-        if (i === 0) stops.push({ y: y0 + r.top - vhh * .5, c: SDA_BASE });
         stops.push({ y: y0 + r.top + r.height / 2, c: band.color });
         if (i === bands.length - 1) stops.push({ y: y0 + r.top + r.height, c: SDA_BASE });
       });
       var easeIn = 'animation-timing-function:cubic-bezier(.55,.085,.68,.53)'; /* même accélération (t²) que sur ordinateur */
-      var kf = '0%{background-color:' + SDA_BASE + '}', last = 0;
+      /* départ directement dans la couleur de la 1re bande (bleu) : c'est la couleur du bandeau « Ma vitrine. »
+         qui grandit juste au-dessus, donc pas de bas sombre sous lui (le haut de page a son propre fond noir) */
+      var kf = '0%{background-color:' + bands[0].color + '}', last = 0;
       stops.forEach(function(st){
         var pct = Math.max(last, Math.min(100, (st.y - vhh / 2) / maxS * 100));
         last = pct;

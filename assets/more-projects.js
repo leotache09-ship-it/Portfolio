@@ -1,6 +1,6 @@
 /*
- * "Autres projets" en bas des pages projet d'origine : 2 projets tirés au
- * hasard (jamais celui affiché) + un bouton "Tous les projets".
+ * "Autres projets" en bas des pages projet d'origine : 4 projets tirés au
+ * hasard (jamais celui affiché), en petites cartes, + un bouton "Tous les projets".
  * Les cartes déjà présentes dans le HTML restent le repli si le script ne
  * peut pas s'exécuter. Dépend de assets/lt-data.js (inclus avant).
  */
@@ -15,7 +15,9 @@
     '.more-all{ margin-top: calc(var(--unit,16px)*2); display:flex; justify-content:center; }' +
     '.more-all a{ display:inline-block; font-family:"Roboto Mono",monospace; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; color:var(--ink,#262121); border:1px solid currentColor; border-radius:999px; padding:13px 26px; transition:background .25s, color .25s; }' +
     '.more-all a svg{ width:1.15em; height:1.15em; margin:-3px 10px -3px 0; vertical-align:middle; }' +
-    '.more-all a:hover{ background:var(--ink,#262121); color:var(--paper,#fff); }';
+    '.more-all a:hover{ background:var(--ink,#262121); color:var(--paper,#fff); }' +
+    /* 4 suggestions plus petites (2 par ligne sur téléphone) */
+    '.more-grid{ grid-template-columns: repeat(4, minmax(0,1fr)) !important; gap: calc(var(--unit,16px)*1.1) calc(var(--unit,16px)*1.1) !important; max-width:1040px; margin-left:auto; margin-right:auto; }.more-grid .more-name{ font-size: clamp(.8rem, 1.3vw, .98rem); margin-top:8px; }@media (max-width:760px){ .more-grid{ grid-template-columns: repeat(2, minmax(0,1fr)) !important; gap: calc(var(--unit,16px)*.75) !important; } .more-grid .more-name{ font-size: clamp(.74rem, 3.3vw, .9rem); } }';
   document.head.appendChild(css);
 
   function addButton(){
@@ -37,7 +39,7 @@
   D.loadAll().then(function(all){
     var pool = (all || []).filter(function(p){ return p && p.slug !== slug && p.img; });
     if (pool.length < 1) return;
-    var picks = shuffle(pool.slice()).slice(0, 2);
+    var picks = shuffle(pool.slice()).slice(0, 4);
     grid.innerHTML = picks.map(function(p){
       var name = D.plain(p.name);
       return '<a class="more-card" href="' + D.esc(p.href) + '"><span class="more-media">' +

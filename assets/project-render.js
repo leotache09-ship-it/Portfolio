@@ -268,13 +268,13 @@
     return out;
   }
 
-  /* deux autres projets tirés au hasard (jamais celui affiché) */
+  /* quatre autres projets tirés au hasard (jamais celui affiché) */
   function pickOthers(all, slug){
     var pool = all.filter(function(p){ return p && p.slug !== slug; });
     for (var i = pool.length - 1; i > 0; i--){
       var j = Math.floor(Math.random() * (i + 1)), t = pool[i]; pool[i] = pool[j]; pool[j] = t;
     }
-    return pool.slice(0, 2);
+    return pool.slice(0, 4);
   }
 
   window.LT_RENDER = { applyTheme: applyTheme, themeVars: themeVars, renderBody: renderBody, pickOthers: pickOthers, inline: inline, hexOk: hexOk };

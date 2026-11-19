@@ -50,7 +50,8 @@
     });
   }
   function plain(html){
-    return String(html || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+    /* texte brut : sans balises, et sans entités (sinon « d&#39;Ailleurs » s'affichait tel quel une fois ré-échappé) */
+    return String(html || '').replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
   }
   function catOf(id){ for (var i = 0; i < CATS.length; i++) if (CATS[i].id === id) return CATS[i]; return CATS[0]; }
 

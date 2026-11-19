@@ -2,7 +2,7 @@
  * LT Design — réseaux sociaux : UNE seule liste pour tout le site.
  * Pour ajouter / modifier un réseau : changer NETS ci-dessous (un réseau sans adresse n'est pas affiché).
  *
- * - [data-lt-socials="pills"] : pastilles (icône + nom + pseudo), section Contact de l'accueil.
+ * - [data-lt-socials="footer"] : pastilles (icône + nom) du pied de page de l'accueil.
  * - [data-lt-follow]          : bloc « Un projet en tête ? » + bouton Contact + icônes rondes,
  *                               en bas de chaque page projet et de « Tous les projets ».
  * Les couleurs viennent des variables de la page (--ink, --line, --accent, --paper) : le bloc
@@ -30,10 +30,10 @@
     return '<a class="' + cls + '" href="' + esc(n.url) + '" target="_blank" rel="noopener me" aria-label="' + esc(n.label) + ' (nouvel onglet)">' + inner + '</a>';
   }
 
-  /* section Contact de l'accueil : remplace les pastilles écrites dans la page (Instagram, LinkedIn) par la liste complète */
-  Array.prototype.forEach.call(document.querySelectorAll('[data-lt-socials="pills"]'), function(el){
+  /* pied de page de l'accueil : remplace les liens écrits dans la page (Instagram, LinkedIn) par la liste complète */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lt-socials="footer"]'), function(el){
     el.innerHTML = NETS.map(function(n){
-      return link(n, 'cs-pill', '<span class="cs-ico">' + ICONS[n.id] + '</span><span class="cs-txt"><b>' + esc(n.label) + '</b><small>' + esc(n.handle) + '</small></span>');
+      return link(n, 'ft-net', '<span>' + ICONS[n.id] + '</span>' + esc(n.label));
     }).join('');
   });
 
