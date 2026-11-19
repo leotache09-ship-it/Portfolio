@@ -782,23 +782,28 @@
     .cover-point{ right:auto; left:73%; top:20.5%; width:52px; }
   }
 
-  /* ---- « Nouveau projet » : carte du dernier projet ajouté dans le mode créateur (injectée par JS) ---- */
+  /* ---- « Nouveau projet » : notification du dernier projet ajouté dans le mode créateur (injectée par JS) ----
+     Centrée horizontalement, à mi-distance entre le menu (≈ 56 px) et le haut du nom (= le padding-top de
+     #cover, clamp(112px, 24vh, 320px)), comme une notification de téléphone qui descend du haut de l'écran.
+     Texte aligné à gauche (sinon il hérite du centrage de #cover), date à côté de « Nouveau projet »,
+     petite flèche à droite. Centrage par left/right + margin:auto (pas de transform : le survol en utilise un). */
   .cover-new{
-    position:absolute; right:var(--gutter); top:calc(var(--unit)*5.2); z-index:5;
-    display:flex; align-items:center; gap:14px; max-width:min(340px, 78vw);
-    padding:10px 20px 10px 10px; border-radius:22px; text-decoration:none; color:#fff;
+    position:absolute; left:0; right:0; margin:0 auto; width:max-content; max-width:min(440px, calc(100% - var(--gutter) * 2));
+    top: calc((clamp(112px, 24vh, 320px) + 56px) / 2 - 31px); z-index:5;
+    display:flex; align-items:center; gap:13px; text-align:left;
+    padding:9px 14px 9px 9px; border-radius:20px; text-decoration:none; color:#fff;
     isolation:isolate; overflow:hidden;
     /* verre dépoli façon Apple : flou + saturation du fond, reflet en haut à gauche, liseré lumineux intérieur */
     background:
-      radial-gradient(120% 140% at 0% 0%, rgba(255,255,255,.34) 0%, rgba(255,255,255,.08) 45%, rgba(255,255,255,0) 70%),
-      linear-gradient(135deg, rgba(255,255,255,.20), rgba(255,255,255,.06));
+      radial-gradient(120% 140% at 0% 0%, rgba(255,255,255,.30) 0%, rgba(255,255,255,.08) 45%, rgba(255,255,255,0) 70%),
+      linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.05));
     -webkit-backdrop-filter:blur(24px) saturate(190%) brightness(1.08); backdrop-filter:blur(24px) saturate(190%) brightness(1.08);
-    border:1px solid rgba(255,255,255,.30);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.55), inset 0 -1px 0 rgba(255,255,255,.10), inset 0 0 22px rgba(255,255,255,.07),
+    border:1px solid rgba(255,255,255,.28);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(255,255,255,.08), inset 0 0 22px rgba(255,255,255,.06),
                 0 14px 36px rgba(0,0,0,.40), 0 2px 8px rgba(0,0,0,.30);
     text-shadow:0 1px 8px rgba(0,0,0,.35);
-    animation: coverNewIn .7s cubic-bezier(.2,.7,.2,1) .5s backwards;
-    transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, background-color .35s, border-color .35s;
+    animation: coverNewIn .75s cubic-bezier(.2,.7,.2,1) .6s backwards;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, border-color .35s;
   }
   .cover-new:hover, .cover-new:focus-visible{
     transform:translateY(-2px) scale(1.015); border-color:rgba(255,255,255,.5);
@@ -806,22 +811,25 @@
                 0 20px 44px rgba(0,0,0,.45), 0 0 34px rgba(24,156,216,.40);
   }
   .cover-new:active{ transform:scale(.99); }
-  /* cadre de l'image : il découpe le zoom/recadrage choisi dans le mode créateur (scale sur l'<img>) */
-  .cover-new-media{ width:58px; height:72px; flex:none; overflow:hidden; border-radius:13px; background:var(--card); box-shadow:0 0 0 1px rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.35); }
+  /* vignette carrée comme une icône d'app ; le cadre découpe le zoom/recadrage choisi dans le mode créateur */
+  .cover-new-media{ width:46px; height:46px; flex:none; overflow:hidden; border-radius:12px; background:var(--card); box-shadow:0 0 0 1px rgba(255,255,255,.25), 0 4px 12px rgba(0,0,0,.35); }
   .cover-new-img{ display:block; width:100%; height:100%; object-fit:cover; }
-  .cover-new-txt{ display:flex; flex-direction:column; gap:4px; min-width:0; }
-  .cover-new-tag{ display:flex; align-items:center; gap:7px; font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:#8fd6ff; }
-  .cover-new-tag i{ width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 8px rgba(24,156,216,.8); }
-  .cover-new-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size:1rem; line-height:1.1; overflow-wrap:anywhere; }
-  .cover-new-date{ font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.7); }
-  @keyframes coverNewIn{ from{ opacity:0; transform:translateY(10px); } }
+  .cover-new-txt{ display:flex; flex-direction:column; align-items:flex-start; gap:5px; min-width:0; }
+  .cover-new-tag{ display:flex; align-items:center; gap:7px; font-family:"Roboto Mono"; font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:#8fd6ff; white-space:nowrap; }
+  .cover-new-tag i{ width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 8px rgba(24,156,216,.8); flex:none; }
+  .cover-new-tag b{ font-weight:400; color:rgba(255,255,255,.62); letter-spacing:.08em; }
+  .cover-new-name{ font-family:"Archivo Black"; text-transform:uppercase; font-size:1rem; line-height:1.1; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cover-new-go{ flex:none; width:28px; height:28px; margin-left:6px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.22); transition: background .3s, transform .35s cubic-bezier(.2,.7,.2,1); }
+  .cover-new-go svg{ width:13px; height:13px; }
+  .cover-new:hover .cover-new-go{ background:var(--blue); transform:translateX(2px); }
+  @keyframes coverNewIn{ from{ opacity:0; transform:translateY(-14px) scale(.98); } }
   @media (prefers-reduced-motion: reduce){ .cover-new{ animation:none; } }
-  /* écrans étroits : petite pastille à gauche sous le menu (le bouton hamburger est à droite) */
-  @media (max-width:900px){
-    .cover-new{ right:auto; left:var(--gutter); top:calc(var(--unit)*4.6); padding:6px 16px 6px 6px; gap:10px; border-radius:16px; }
-    .cover-new-media{ width:36px; height:44px; border-radius:10px; }
-    .cover-new-name{ font-size:.82rem; }
-    .cover-new-date{ display:none; }
+  @media (max-width:640px){
+    .cover-new{ gap:11px; padding:7px 10px 7px 7px; border-radius:17px; top: calc((clamp(112px, 24vh, 320px) + 72px) / 2 - 27px); } /* menu plus haut sur téléphone (≈ 67 px) */
+    .cover-new-media{ width:40px; height:40px; border-radius:10px; }
+    .cover-new-name{ font-size:.86rem; }
+    .cover-new-go{ width:24px; height:24px; margin-left:2px; }
   }
   /* ================= TÉLÉPHONE : MÊMES EFFETS QUE SUR ORDINATEUR =================
      Les animations liées au défilement sont faites en CSS natif (scroll-driven
@@ -2018,9 +2026,9 @@ var TRAVAUX_FAMILIES = [
     a.innerHTML = '<span class="cover-new-media">' + (p.video
         ? '<video class="cover-new-img" src="' + e(p.video) + '" poster="' + e(p.img) + '" autoplay loop muted playsinline></video>'
         : '<img class="cover-new-img" src="' + e(p.img) + '" alt=""' + (p.imgStyle ? ' style="' + e(p.imgStyle) + '"' : '') + '>') + '</span>' +
-      '<span class="cover-new-txt"><span class="cover-new-tag"><i></i>Nouveau projet</span>' +
-      '<span class="cover-new-name">' + p.name + '</span>' +
-      (p.date ? '<span class="cover-new-date">' + p.date + '</span>' : '') + '</span>';
+      '<span class="cover-new-txt"><span class="cover-new-tag"><i></i>Nouveau projet' + (p.date ? '<b>· ' + p.date + '</b>' : '') + '</span>' +
+      '<span class="cover-new-name">' + e(LT_DATA.plain(p.name)) + '</span></span>' +
+      '<span class="cover-new-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></span>';
     cover.appendChild(a);
     /* s'efface en douceur quand on commence à descendre (évènement scroll direct, pas de boucle rAF) */
     function fade(){ var t = Math.min(1, (window.scrollY || 0) / ((window.innerHeight || 800) * .45)); a.style.opacity = String(1 - t); a.style.pointerEvents = t >= 1 ? 'none' : ''; }
