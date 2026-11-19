@@ -340,11 +340,10 @@
   #travaux{ position:relative; z-index:4; }
   .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
-  /* fin de la vitrine : sous la dernière bande, la couleur se fond en noir (dégradé) et finit en noir opaque
-     pile au début de « Mon parcours » — plus de bord net entre « Édition & print » et le parcours. Le fond de
-     la page descend lui aussi doucement vers le noir pendant ce passage (voir les scripts de la vitrine). */
-  .tv-more{ padding: calc(var(--unit)*2.5) var(--gutter) clamp(150px, 32vh, 340px); display:flex; justify-content:center;
-    background: linear-gradient(to bottom, rgba(13,13,15,0) 0%, rgba(13,13,15,.3) 30%, rgba(13,13,15,.75) 65%, #0D0D0F 100%); }
+  /* fin de la vitrine (choix de Léo, « solution 2 ») : aucun dégradé dessiné ni grand espace. « Mon parcours »
+     n'a pas de fond propre en haut : c'est le fond de la page qui passe doucement du vert au noir pendant qu'on
+     défile (noir quand le parcours arrive au milieu de l'écran, voir les scripts de la vitrine). Pas de bord. */
+  .tv-more{ padding: calc(var(--unit)*1.5) var(--gutter) calc(var(--unit)*3); display:flex; justify-content:center; }
   .tv-more a{
     display:inline-flex; align-items:center; gap:10px; text-decoration:none;
     font-family:"Roboto Mono"; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
@@ -625,10 +624,12 @@
      violet qui persiste derrière Parcours et Contact), tout ce qui suit
      héritait de la mauvaise couleur. Leur donner leur propre fond uni les
      rend immunisés contre ce bug, quelle qu'en soit la cause exacte. */
-  #parcours, #contact, footer{ background-color: var(--paper); }
+  #contact, footer{ background-color: var(--paper); }
+  /* #parcours : volontairement SANS fond propre — le vert de la dernière bande s'y éteint en défilant
+     (le fond de la page est noir dès que le parcours arrive au milieu de l'écran). */
 
   /* ---- parcours (séquence bloquée au scroll, desktop uniquement) ---- */
-  #parcours{ position:relative; } /* pas de trait en haut : la vitrine s'y fond en noir (voir .tv-more) */
+  #parcours{ position:relative; } /* pas de trait en haut : la vitrine s'y éteint en noir en défilant */
   /* `svh` (small viewport height) plutôt que `vh` : sur mobile, `100vh`
      inclut l'espace caché derrière la barre d'adresse qui se rétracte au
      scroll, donc la zone "collée" (.parcours-stage) devient réellement
@@ -888,6 +889,7 @@
       body.tv-sda{ animation: tvBg linear both; animation-timeline: scroll(root block); }
     }
   }
+
 </style>
 
 
