@@ -42,8 +42,9 @@ Site portfolio statique (HTML/CSS/JS vanilla, sans build) pour Léo Tâche,
   de l'accueil (`[data-lt-socials="footer"]`) et le bloc « Un projet
   en tête ? / Parlons-en » en bas des 11 pages projet, de `projet.html` et de
   `projets.html` (`<section data-lt-follow>` juste avant le `<footer>`).
-  Un réseau sans adresse n'est pas affiché : **l'adresse Facebook est encore
-  vide (à compléter dans `NETS`)**.
+  Un réseau sans adresse n'est pas affiché. Facebook :
+  `https://www.facebook.com/profile.php?id=61596299036351` (aussi écrit en
+  dur dans le pied de page de `index.html` et dans le JSON-LD `sameAs`).
 
 ## Design system
 
@@ -304,6 +305,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 **Tests** : `node tests-statiques.js` (syntaxe de tous les JS et scripts inline, JSON-LD, `<html lang>`/charset, références locales, sitemap, absence de mock/secret) — 102 vérifications au 2026-10-22. Tests d'intégration (mode créateur, rendu, mobile) faits avec un Supabase simulé injecté temporairement dans `assets/config.js` (jamais à committer ; restaurer avec `git checkout -- assets/config.js`).
 
 ## Changelog
+
+- 2026-11-19 — Facebook ajouté (adresse donnée par Léo) : `socials.js` (pied de page de l'accueil + bloc « Parlons-en » de toutes les pages projet et de « Tous les projets »), version écrite du pied de page de `index.html`, `sameAs` du JSON-LD (Person + ProfessionalService) et page de confidentialité (« Liens externes »). Formulaire de contact : le choix « Votre projet » (pastilles Identité visuelle, Affiche…) est retiré, champ `Projet` retiré de l'envoi. **Pas publié (commit local).**
 
 - 2026-11-19 — Retours de Léo sur la refonte : (1) téléphone : sous le bandeau bleu qui grandit, la vitrine est maintenant bleue aussi (fond du `body` bleu dès le départ, `#cover` avec son propre fond noir, bandeau qui ne s'efface plus ; plus de trait noir à la jonction ni d'ombre de la photo ; bandeau pleine largeur jusqu'à 760px) ; (2) « Mon parcours » : seulement le titre de chaque étape (+ date et lieu), les puces des stages sont retirées (gardées dans un commentaire HTML juste avant `.timeline`, à replacer ailleurs) ; nom du lac de Neuchâtel centré dans le lac, de nouveau visible sur téléphone ; (3) contact : bandeau des prestations bien droit, plus de « Contact », de « Disponible pour de nouveaux projets », de chiffres clés ni de croix en fond ; il reste « Convaincu ? Écrivez-moi », la phrase d'intro et le formulaire ; (4) Instagram / LinkedIn (+ Facebook dès que l'adresse sera dans `socials.js`) déplacés dans le pied de page de l'accueil ; (5) « Autres projets » : 4 suggestions plus petites au lieu de 2 (4 par ligne, 2 × 2 sur téléphone) — `more-projects.js`, `pickOthers` de `project-render.js`, `project-page.css` ; (6) `LT_DATA.plain()` enlève aussi `&#39;` / `&quot;` (« La Partie d&#39;Ailleurs » s'affichait ainsi dans les suggestions). Les « bandes bleues à gauche et à droite » signalées par Léo n'ont pas été identifiées (à préciser avec une capture). **Pas publié (commit local).**
 

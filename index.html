@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://leotache.ch/">
 <meta property="og:image" content="https://leotache.ch/assets/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://leotache.ch/#website", "url": "https://leotache.ch/", "name": "LT Design", "alternateName": ["Léo Tâche", "leotache.ch"], "inLanguage": "fr"}, {"@type": "ProfessionalService", "@id": "https://leotache.ch/#business", "name": "LT Design", "url": "https://leotache.ch/", "image": "https://leotache.ch/assets/og-image.jpg", "logo": "https://leotache.ch/assets/favicon-192.png", "description": "Je suis graphic designer en freelance et j'opère à Lausanne. Je fais des identités visuelles, du rebranding, des affiches, du sport design et du print.", "areaServed": {"@type": "City", "name": "Lausanne"}, "address": {"@type": "PostalAddress", "addressLocality": "Lausanne", "addressCountry": "CH"}, "founder": {"@id": "https://leotache.ch/#person"}, "sameAs": ["https://instagram.com/lt_design_09", "https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/"], "knowsAbout": ["Identité visuelle", "Rebranding", "Affiche", "Sport design", "Print"]}, {"@type": "Person", "@id": "https://leotache.ch/#person", "name": "Léo Tâche", "jobTitle": "Graphic designer freelance", "url": "https://leotache.ch/", "image": "https://leotache.ch/assets/leo-portrait.webp", "sameAs": ["https://instagram.com/lt_design_09", "https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/"], "workLocation": {"@type": "City", "name": "Lausanne"}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://leotache.ch/#website", "url": "https://leotache.ch/", "name": "LT Design", "alternateName": ["Léo Tâche", "leotache.ch"], "inLanguage": "fr"}, {"@type": "ProfessionalService", "@id": "https://leotache.ch/#business", "name": "LT Design", "url": "https://leotache.ch/", "image": "https://leotache.ch/assets/og-image.jpg", "logo": "https://leotache.ch/assets/favicon-192.png", "description": "Je suis graphic designer en freelance et j'opère à Lausanne. Je fais des identités visuelles, du rebranding, des affiches, du sport design et du print.", "areaServed": {"@type": "City", "name": "Lausanne"}, "address": {"@type": "PostalAddress", "addressLocality": "Lausanne", "addressCountry": "CH"}, "founder": {"@id": "https://leotache.ch/#person"}, "sameAs": ["https://instagram.com/lt_design_09", "https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/", "https://www.facebook.com/profile.php?id=61596299036351"], "knowsAbout": ["Identité visuelle", "Rebranding", "Affiche", "Sport design", "Print"]}, {"@type": "Person", "@id": "https://leotache.ch/#person", "name": "Léo Tâche", "jobTitle": "Graphic designer freelance", "url": "https://leotache.ch/", "image": "https://leotache.ch/assets/leo-portrait.webp", "sameAs": ["https://instagram.com/lt_design_09", "https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/", "https://www.facebook.com/profile.php?id=61596299036351"], "workLocation": {"@type": "City", "name": "Lausanne"}}]}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -530,8 +530,8 @@
   }
 
   /* ---- CONTACT ----
-     Bandeau défilant (les prestations), titre « Convaincu ? Écrivez-moi » et un formulaire plus
-     engageant (type de projet en pastilles, gros bouton bleu). Les réseaux sont dans le pied de page. */
+     Bandeau défilant (les prestations), titre « Convaincu ? Écrivez-moi » et le formulaire
+     (gros bouton bleu). Les réseaux sont dans le pied de page. */
   #contact{ position:relative; overflow:hidden; border-top:1px solid var(--line); }
   .contact-ribbon{ position:relative; z-index:1; background: var(--blue); color:#fff; padding: calc(var(--unit)*.85) 0; }
   .contact-ribbon-track{ display:flex; width:max-content; animation: ribbon 34s linear infinite; }
@@ -562,16 +562,6 @@
     transition: border-color .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s;
   }
   .contact-form:focus-within{ border-color: rgba(24,156,216,.7); box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 24px 60px rgba(0,0,0,.35), 0 0 0 4px rgba(24,156,216,.12); }
-  .cf-topics{ border:none; margin:0; padding:0; min-width:0; }
-  .cf-topics legend{ padding:0; margin:0 0 10px; font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); }
-  .cf-chips{ display:flex; flex-wrap:wrap; gap:8px; }
-  .cf-chip{ position:relative; cursor:pointer; }
-  .cf-chip input{ position:absolute; opacity:0; width:1px; height:1px; pointer-events:none; }
-  .cf-chip span{ display:inline-block; padding:8px 14px; border-radius:999px; font-size:.86rem; color: var(--ink-soft);
-    border:1px solid var(--line); background: rgba(13,13,15,.5); transition: background .25s, border-color .25s, color .25s; }
-  .cf-chip:hover span{ border-color: rgba(242,242,242,.4); color: var(--ink); }
-  .cf-chip input:checked + span{ background: var(--blue); border-color: var(--blue); color:#fff; }
-  .cf-chip input:focus-visible + span{ outline:2px solid var(--blue); outline-offset:2px; }
   .cf-row{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--unit); }
   .cf-field{ display:flex; flex-direction:column; gap:8px; }
   .cf-field label{ font-family:"Roboto Mono"; font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); }
@@ -1051,10 +1041,6 @@
           <input type="hidden" name="_template" value="table">
           <input type="hidden" name="_captcha" value="false">
           <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
-          <fieldset class="cf-topics">
-            <legend>Votre projet</legend>
-            <div class="cf-chips"><label class="cf-chip"><input type="radio" name="Projet" value="Identité visuelle"><span>Identité visuelle</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Affiche"><span>Affiche</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Sport design"><span>Sport design</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Print"><span>Print</span></label><label class="cf-chip"><input type="radio" name="Projet" value="Autre"><span>Autre</span></label></div>
-          </fieldset>
           <div class="cf-row">
             <div class="cf-field">
               <label for="cf-name">Nom</label>
@@ -1086,6 +1072,7 @@
     <div class="ft-nets" data-lt-socials="footer">
       <a class="ft-net" href="https://instagram.com/lt_design_09" target="_blank" rel="noopener me" aria-label="Instagram (nouvel onglet)"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></span>Instagram</a>
       <a class="ft-net" href="https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/" target="_blank" rel="noopener me" aria-label="LinkedIn (nouvel onglet)"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>LinkedIn</a>
+      <a class="ft-net" href="https://www.facebook.com/profile.php?id=61596299036351" target="_blank" rel="noopener me" aria-label="Facebook (nouvel onglet)"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></span>Facebook</a>
     </div>
     <img src="assets/logo-black.png" alt="" style="height:16px;width:auto;margin:0 auto 8px;opacity:.7"> Léo Tâche · <a href="confidentialite.html">Confidentialité</a>
   </footer>
@@ -1953,7 +1940,6 @@ var TRAVAUX_FAMILIES = [
     var data = {
       Nom: form.elements['Nom'].value.trim(),
       email: form.elements['email'].value.trim(),
-      Projet: (form.querySelector('input[name="Projet"]:checked') || {}).value || '',
       Message: form.elements['Message'].value.trim(),
       _subject: form.elements['_subject'].value,
       _template: form.elements['_template'].value,

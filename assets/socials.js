@@ -12,7 +12,7 @@
   var NETS = [
     { id:'instagram', label:'Instagram', handle:'@lt_design_09', url:'https://instagram.com/lt_design_09' },
     { id:'linkedin',  label:'LinkedIn',  handle:'Léo Tâche',     url:'https://www.linkedin.com/in/l%C3%A9o-t%C3%A2che-a55606406/' },
-    { id:'facebook',  label:'Facebook',  handle:'LT Design',     url:'' /* À COMPLÉTER : adresse de la page Facebook */ }
+    { id:'facebook',  label:'Facebook',  handle:'LT Design',     url:'https://www.facebook.com/profile.php?id=61596299036351' }
   ].filter(function(n){ return !!n.url; });
 
   var SVG = ' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
