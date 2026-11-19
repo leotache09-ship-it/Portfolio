@@ -336,7 +336,11 @@
   #travaux{ position:relative; z-index:4; }
   .tv-cat{ padding: calc(var(--unit)*4.5) 0; color:#fff; }
   .tv-cat + .tv-cat{ border-top: 1px solid rgba(255,255,255,.85); }
-  .tv-more{ padding: calc(var(--unit)*2) var(--gutter) calc(var(--unit)*4); display:flex; justify-content:center; }
+  /* fin de la vitrine : sous la dernière bande, la couleur se fond en noir (dégradé) et finit en noir opaque
+     pile au début de « Mon parcours » — plus de bord net entre « Édition & print » et le parcours. Le fond de
+     la page descend lui aussi doucement vers le noir pendant ce passage (voir les scripts de la vitrine). */
+  .tv-more{ padding: calc(var(--unit)*2.5) var(--gutter) clamp(150px, 32vh, 340px); display:flex; justify-content:center;
+    background: linear-gradient(to bottom, rgba(13,13,15,0) 0%, rgba(13,13,15,.3) 30%, rgba(13,13,15,.75) 65%, #0D0D0F 100%); }
   .tv-more a{
     display:inline-flex; align-items:center; gap:10px; text-decoration:none;
     font-family:"Roboto Mono"; font-size:.74rem; letter-spacing:.14em; text-transform:uppercase;
@@ -618,7 +622,7 @@
   #parcours, #contact, footer{ background-color: var(--paper); }
 
   /* ---- parcours (séquence bloquée au scroll, desktop uniquement) ---- */
-  #parcours{ position:relative; border-top:1px solid var(--line); }
+  #parcours{ position:relative; } /* pas de trait en haut : la vitrine s'y fond en noir (voir .tv-more) */
   /* `svh` (small viewport height) plutôt que `vh` : sur mobile, `100vh`
      inclut l'espace caché derrière la barre d'adresse qui se rétracte au
      scroll, donc la zone "collée" (.parcours-stage) devient réellement
@@ -762,7 +766,7 @@
     .tv-strip{ scroll-padding-left: var(--gutter); }
     .tv-cat{ padding: calc(var(--unit)*3) 0; }
     /* « Plus de travaux » remonte sur la fin du dégradé vert → noir de la dernière bande */
-    .tv-more{ position:relative; z-index:1; margin-top: calc(var(--unit)*-3.5); padding-top:0; }
+    .tv-more{ position:relative; z-index:1; margin-top: calc(var(--unit)*-3.5); padding-top:0; padding-bottom: calc(var(--unit)*4); background:none; }
     .tv-cat:last-child{ padding-bottom: calc(var(--unit)*5.5); }
     .tv-title-card{ width:58vw; } /* laisse dépasser le 1er projet : on voit qu'on peut swiper */
   }
@@ -1685,16 +1689,21 @@ var TRAVAUX_FAMILIES = [
       bands.forEach(function(band, i){
         var r = band.el.getBoundingClientRect();
         stops.push({ y: y0 + r.top + r.height / 2, c: band.color });
-        if (i === bands.length - 1) stops.push({ y: y0 + r.top + r.height, c: SDA_BASE });
       });
+      /* noir atteint quand « Mon parcours » arrive au milieu de l'écran (fondu doux, voir .tv-more) */
+      var parcoursEl = document.getElementById('parcours');
+      var lastR = bands[bands.length - 1].el.getBoundingClientRect();
+      stops.push({ y: y0 + Math.max(lastR.bottom, parcoursEl ? parcoursEl.getBoundingClientRect().top : lastR.bottom), c: SDA_BASE, end: true });
       var easeIn = 'animation-timing-function:cubic-bezier(.55,.085,.68,.53)'; /* même accélération (t²) que sur ordinateur */
       /* départ directement dans la couleur de la 1re bande (bleu) : c'est la couleur du bandeau « Ma vitrine. »
          qui grandit juste au-dessus, donc pas de bas sombre sous lui (le haut de page a son propre fond noir) */
       var kf = '0%{background-color:' + bands[0].color + '}', last = 0;
-      stops.forEach(function(st){
+      var easeInOut = 'animation-timing-function:cubic-bezier(.45,0,.55,1)'; /* dernière bande -> noir : doux */
+      stops.forEach(function(st, i){
         var pct = Math.max(last, Math.min(100, (st.y - vhh / 2) / maxS * 100));
         last = pct;
-        kf += pct.toFixed(3) + '%{background-color:' + st.c + ';' + easeIn + '}';
+        var next = stops[i + 1];
+        kf += pct.toFixed(3) + '%{background-color:' + st.c + ';' + (next && next.end ? easeInOut : easeIn) + '}';
       });
       kfStyle.textContent = '@keyframes tvBg{' + kf + '100%{background-color:' + SDA_BASE + '}}';
     };
@@ -1755,12 +1764,15 @@ var TRAVAUX_FAMILIES = [
      `getComputedStyle` + `scrollWidth`/`clientWidth` à CHAQUE frame évite
      un gros travail de mise en page répété 60×/seconde, qui pouvait saccader
      le défilement (surtout perceptible en remontant vite sur mobile). */
+  var endGap = 0; /* distance entre le bas de la dernière bande et le début de « Mon parcours » (le fondu vers le noir) */
   function computeMaxTravel(){
     bands.forEach(function(band){
       var stripCs = getComputedStyle(band.strip);
       var padding = parseFloat(stripCs.paddingLeft) + parseFloat(stripCs.paddingRight);
       band.maxTravel = Math.max(0, band.row.scrollWidth - band.strip.clientWidth + padding);
     });
+    var parcoursEl = document.getElementById('parcours'), lastBand = bands[bands.length - 1];
+    if (parcoursEl && lastBand) endGap = Math.max(0, parcoursEl.getBoundingClientRect().top - lastBand.el.getBoundingClientRect().bottom);
   }
   computeMaxTravel();
   /* re-mesure une fois la page (polices, mises en page) vraiment stabilisée,
@@ -1800,7 +1812,7 @@ var TRAVAUX_FAMILIES = [
        avant l'entrée réelle de la bande, pour accompagner le carré du hero
        plutôt que d'attendre qu'il ait déjà grandi et disparu. */
     stops.unshift({ y: scrollY + first.top - vh * 0.5, color: BASE_BG });
-    stops.push({ y: scrollY + last.top + last.height, color: BASE_BG });
+    stops.push({ y: scrollY + last.top + last.height + endGap, color: BASE_BG }); /* noir quand « Mon parcours » arrive au milieu de l'écran */
 
     var refY = scrollY + vh / 2;
     var bg = stops[0].color;
@@ -1814,7 +1826,8 @@ var TRAVAUX_FAMILIES = [
           var frac = (refY - stops[i].y) / (stops[i + 1].y - stops[i].y);
           /* accélération progressive (ease-in) : chaque couleur met plus de
              temps à arriver, sans changer le point exact où elle est atteinte. */
-          bg = lerpColor(stops[i].color, stops[i + 1].color, frac * frac);
+          /* dernier passage (dernière bande -> noir) : doux au début et à la fin (smoothstep) */
+          bg = lerpColor(stops[i].color, stops[i + 1].color, i === stops.length - 2 ? frac * frac * (3 - 2 * frac) : frac * frac);
           break;
         }
       }
