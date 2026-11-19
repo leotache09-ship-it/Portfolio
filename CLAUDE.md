@@ -306,6 +306,8 @@ Aucun `package.json` : le site n'embarque aucune bibliothèque npm. Vérifié en
 
 ## Changelog
 
+- 2026-11-19 — Notification « Nouveau projet » : finalement **à droite** (demande de Léo), bord droit aligné sur le menu (`right: var(--gutter)` : même bord que « Contact » sur ordinateur et que le bouton menu sur téléphone), même hauteur à mi-distance menu / nom, apparition qui glisse depuis la droite. **Pas publié (commit local).**
+
 - 2026-11-19 — Carte « Nouveau projet » replacée comme une **notification** (retour de Léo : « un peu foutue ») : centrée horizontalement (`left:0; right:0; margin:auto; width:max-content`, pas de `transform` pour garder l'effet de survol), à mi-distance entre le menu et le haut du nom (`top` calculé depuis le `padding-top` de `#cover`, réglage séparé sur téléphone où le menu est plus haut), apparition qui descend du haut ; texte aligné à gauche (il héritait du `text-align:center` de `#cover` : « Nouveau projet » à gauche mais nom et date centrés), date à côté de « Nouveau projet », vignette carrée façon icône d'app, petite flèche ronde à droite, nom sur une ligne (points de suspension si trop long). Mesuré : écarts menu/carte et carte/nom ≈ 34/29 px sur ordinateur, 51/44 px sur téléphone. **Pas publié (commit local).**
 
 - 2026-11-19 — Accueil : (1) l'en-tête n'a plus les croix (`grid-pattern` retiré) et passe en **verre dépoli** (teinte sombre légère + `backdrop-filter: blur(22px) saturate(180%)`, reflet clair, liseré lumineux, ombre douce) ; le menu ouvert sur téléphone prend le même verre (plus opaque). (2) Bandeau défilant du contact : le **logo** (blanc, `assets/logo-black.png` + `filter:invert(1)`) remplace les étoiles ✦ entre les prestations. **Pas publié (commit local).**

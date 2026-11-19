@@ -783,12 +783,12 @@
   }
 
   /* ---- « Nouveau projet » : notification du dernier projet ajouté dans le mode créateur (injectée par JS) ----
-     Centrée horizontalement, à mi-distance entre le menu (≈ 56 px) et le haut du nom (= le padding-top de
-     #cover, clamp(112px, 24vh, 320px)), comme une notification de téléphone qui descend du haut de l'écran.
-     Texte aligné à gauche (sinon il hérite du centrage de #cover), date à côté de « Nouveau projet »,
-     petite flèche à droite. Centrage par left/right + margin:auto (pas de transform : le survol en utilise un). */
+     À droite, alignée sur le bord droit du menu (gutter), à mi-distance entre le menu (≈ 56 px) et le haut du
+     nom (= le padding-top de #cover, clamp(112px, 24vh, 320px)) ; elle glisse depuis la droite comme une
+     notification d'ordinateur. Texte aligné à gauche (sinon il hérite du centrage de #cover), date à côté de
+     « Nouveau projet », petite flèche à droite. */
   .cover-new{
-    position:absolute; left:0; right:0; margin:0 auto; width:max-content; max-width:min(440px, calc(100% - var(--gutter) * 2));
+    position:absolute; right:var(--gutter); width:max-content; max-width:min(440px, calc(100% - var(--gutter) * 2));
     top: calc((clamp(112px, 24vh, 320px) + 56px) / 2 - 31px); z-index:5;
     display:flex; align-items:center; gap:13px; text-align:left;
     padding:9px 14px 9px 9px; border-radius:20px; text-decoration:none; color:#fff;
@@ -823,7 +823,7 @@
     background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.22); transition: background .3s, transform .35s cubic-bezier(.2,.7,.2,1); }
   .cover-new-go svg{ width:13px; height:13px; }
   .cover-new:hover .cover-new-go{ background:var(--blue); transform:translateX(2px); }
-  @keyframes coverNewIn{ from{ opacity:0; transform:translateY(-14px) scale(.98); } }
+  @keyframes coverNewIn{ from{ opacity:0; transform:translateX(28px); } }
   @media (prefers-reduced-motion: reduce){ .cover-new{ animation:none; } }
   @media (max-width:640px){
     .cover-new{ gap:11px; padding:7px 10px 7px 7px; border-radius:17px; top: calc((clamp(112px, 24vh, 320px) + 72px) / 2 - 27px); } /* menu plus haut sur téléphone (≈ 67 px) */
